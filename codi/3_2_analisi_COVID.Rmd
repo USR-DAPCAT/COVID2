@@ -1,0 +1,593 @@
+---
+title: "Impacto de la  diabetes mellitus en personas hospitalizadas por COVID19"
+author: "Rai Puig & Jordi Real"
+website: "https://github.com/USR-DAPCAT/"
+
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+
+
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    fig_caption: true
+    css: logos_css/usr_styles.css
+  pdf_document: default
+  word_document: default
+
+params:
+  dir_dades: "dades/mostra"
+  
+---
+
+&nbsp;
+<script>
+   $(document).ready(function() {
+     $head = $('#header');
+     $head.prepend('<img src=\"https://www.idiapjgol.org/images/logo.png\" style=\"float: right ;width: 130px;\"/>')
+     $head.prepend('<img src=\"https://avatars2.githubusercontent.com/u/57066591?s=200&v=4\" style=\"margin-left:25% ;width: 80px;\"/>')
+     $head.prepend('<img src=\"logos_css/logoDAP_Cat.png\" style=\"float: left:1;width: 185px;\"/>')
+   });
+</script>
+
+
+<div class="watermark">DRAFT</div>
+
+****
+
+
+## 0. Estado:
+
+**Últimas actualizaciones** 
+
+&check; FLOW CHARTS Criterios de Inclusión y Descriptiva GENERAL.Ingresos , Urgencías <br/>
+&check; Descriptiva Problemas de salud <br/>
+&check; Descriptiva Constantes Vitales <br/>
+&check; Descriptiva Laboratorio <br/>
+&check; Descriptiva Mediacmentos <br/>
+&check; Descriptiva EVENTOS <br/>
+&check; Modelos de Moeratlidad <br/>
+
+**Realizado**
+
+&check; Lectura / importación de archivos  <br/>
+&check; Generación de conductors   <br/>
+&check; Revisión de códigos  <br/>
+&check; Agregación de datos segun protocolo <br/>
+&check; Cálculo de varibles y recodificaciones <br/>
+&check; Descriptiva exploratoria <br/>
+&check; FLOW CHARTS Criterios de Inclusión y Descriptiva GENERAL.Ingresos , Urgencías <br/>
+&check; Descriptiva Problemas de salud <br/>
+&check; Descriptiva Constantes Vitales <br/>
+&check; Descriptiva Laboratorio <br/>
+&check; Descriptiva Mediacmentos <br/>
+&check; Descriptiva EVENTOS <br/>
+&check; Modelos de Moeratlidad <br/>
+
+**Pendent**
+
+* Revisión y depuración d'errors 
+
+# Fase de validación de base
+
+## Fase Preparación
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, include=F,size="huge")
+
+library("dplyr")
+library("lubridate")
+library("base")
+library("expss")
+library("frequency")
+library("table1")
+
+# load package
+library("sjPlot")
+library("sjmisc")
+library("sjlabelled")
+
+##########
+#6.8.2020#
+##########
+
+# Funcions 
+link_source<-paste0("https://github.com/jrealgatius/Stat_codis/blob/master/funcions_propies.R","?raw=T")
+devtools::source_url(link_source)
+dir_dades<-"dades"
+directori_dades<-params$dir_dades
+directori_dades<-dir_dades
+
+conductor<-here::here("conductor_Covid.xlsx")
+conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
+
+load(here::here("COVID2.Rdata"))
+
+
+#--------------------------------------------------------------#
+#T1 : CONDUCTOR!
+#--------------------------------------------------------------#
+dt_plana_covid1_agr<-dt_plana_covid1_agr%>%mutate(exclusio1=ifelse(DIAG.ING.INPAT=="COVID19 - POSITIVO",0,1)) 
+
+dt_plana_covid1_agr<-dt_plana_covid1_agr%>%mutate(exclusio2=ifelse(EDAD.AGE>18,0,1)) 
+
+C_DIABETICS<-C_DIABETICS%>%transmute(PATIENT.ID=idp,DIAB=1)
+
+dt_plana_covid1_agr<-dt_plana_covid1_agr %>%left_join(C_DIABETICS,by="PATIENT.ID")
+dt_plana_covid1_agr<-dt_plana_covid1_agr%>% mutate(DIAB=ifelse(is.na(DIAB),0,1))
+dt_plana_covid1_agr<-dt_plana_covid1_agr%>% mutate(DIAB=ifelse(DIAB==0,"No","Si")) 
+
+dt_plana_covid1_agr$Ad_UCI<-
+  ifelse(is.na(dt_plana_covid1_agr$F_ENTRADA_UC.ICU_DATE_IN),"No","Si" )
+
+# FER-HO 16:00 17:30!.6.7.2020
+
+dt_plana_covid1_agr$EDAD.AGE2<-
+  ifelse(dt_plana_covid1_agr$EDAD.AGE<=65,"<=65 años",">65 años")
+
+dt_plana_covid1_agr$EDAD.AGE3<-
+  ifelse(dt_plana_covid1_agr$EDAD.AGE<=55,"<=55 años",">55 años")
+
+
+dt_plana_covid1_agr$Death<-
+  ifelse(dt_plana_covid1_agr$MOTIVO_ALTA.DESTINY_DISCHARGE_ING=="Fallecimiento","Si","No")
+
+
+
+
+dt_plana_covid1_agr_lab<-factoritzar.NO.YES(dt_plana_covid1_agr,"factor",conductor)
+dt_plana_covid1_agr_lab<-etiquetar_valors(dt=dt_plana_covid1_agr_lab,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid1_agr_lab<-etiquetar(d=dt_plana_covid1_agr_lab,taulavariables=conductor)
+
+
+variables_noconductuals<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula01",taulavariables = conductor)%in%names(dt_plana_covid1_agr_lab)]
+formula_taula01<-formula.text("Taula01",y="",taulavariables = conductor,elimina = variables_noconductuals)
+
+
+#flow chartS : eps m'ha fallat!!! 
+
+flow_chart1<-criteris_exclusio_diagrama(dt=dt_plana_covid1_agr_lab,
+                                        taulavariables=conductor,
+                                        criteris = "exc_pre",
+                                        ordre="exc_ordre",
+                                        grups=NA,
+                                        etiquetes="descripcio",
+                                        sequencial = T,
+                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+                                        colors=c("white","grey"),
+                                        forma=c("ellipse","box"))
+
+
+flow_chart1B<-criteris_exclusio_diagrama(dt=dt_plana_covid1_agr_lab,
+                                      taulavariables=conductor,
+                                        criteris = "exc_pre",
+                                        ordre="exc_ordre",
+                                        grups="DIAB",
+                                        etiquetes="descripcio",
+                                        sequencial = T,
+                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+                                        colors=c("white","grey"),
+                                        forma=c("ellipse","box"))
+
+dt_plana_covid1_agr_exc<-dt_plana_covid1_agr
+
+
+dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
+  mutate(INCLUSION = ifelse(exclusio1 == 1| exclusio2==1 , "NO", "Si"))
+
+
+dt_plana_covid1_agr_exc2<-dt_plana_covid1_agr_exc%>%filter(INCLUSION=="Si")
+
+kk0<-length(dt_plana_covid1_agr_exc$INCLUSION)
+kk1<-length(dt_plana_covid1_agr_exc2$INCLUSION)
+
+dt_plana_covid1_agr_exc<-criteris_exclusio(dt_plana_covid1_agr_exc,taulavariables=conductor,criteris="exc_pre")
+
+
+variables_noconductuals1<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula01",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc)]
+variables_noconductuals2<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula01B",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc)]
+variables_noconductuals3<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula07",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc)]
+
+formula_taula01<-formula.text("Taula01",y="",taulavariables = conductor,elimina = variables_noconductuals1)
+formula_taula01_C<-formula.text("Taula01",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals1)
+formula_taula01_C2<-formula.text("Taula01B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals2)
+#
+formula_taula01_C3<-formula.text("Taula07",y="MUERTO",taulavariables = conductor,elimina = variables_noconductuals3)
+#
+dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
+  left_join(dt_plana_covid_INGRES_agr,by = "PATIENT.ID")
+
+dt_plana_covid1_agr_exc$DG.SDRA<-ifelse(is.na(dt_plana_covid1_agr_exc$DG.SDRA),"No",dt_plana_covid1_agr_exc$DG.SDRA)
+dt_plana_covid1_agr_exc$DG.TEP<-ifelse(is.na(dt_plana_covid1_agr_exc$DG.TEP),"No",dt_plana_covid1_agr_exc$DG.TEP )
+dt_plana_covid1_agr_exc$DG.COMP_NEURO<-ifelse(is.na(dt_plana_covid1_agr_exc$DG.COMP_NEURO),"No",dt_plana_covid1_agr_exc$DG.COMP_NEURO)
+dt_plana_covid1_agr_exc$DG.ENCEFALITIS<-ifelse(is.na(dt_plana_covid1_agr_exc$DG.ENCEFALITIS),"No",dt_plana_covid1_agr_exc$DG.ENCEFALITIS)
+dt_plana_covid1_agr_exc$DG.Mechanical_ventialtion <-ifelse(is.na(dt_plana_covid1_agr_exc$DG.Mechanical_ventialtion ),"No",dt_plana_covid1_agr_exc$DG.Mechanical_ventialtion)
+dt_plana_covid1_agr_exc$DG.TVP<-ifelse(is.na(dt_plana_covid1_agr_exc$DG.TVP),"No",dt_plana_covid1_agr_exc$DG.TVP)
+dt_plana_covid1_agr_exc$DG.COMP_NEUMO <-ifelse(is.na(dt_plana_covid1_agr_exc$DG.COMP_NEUMO ),"No",dt_plana_covid1_agr_exc$DG.COMP_NEUMO )
+dt_plana_covid1_agr_exc$Neurologic_Comp <-ifelse(is.na(dt_plana_covid1_agr_exc$Neurologic_Comp ),"No",dt_plana_covid1_agr_exc$Neurologic_Comp )
+
+
+
+
+#8.5.2020
+#
+# fem el  + OUTCOMES!!!
+
+dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
+  mutate(Death_DG.Mechanical_ventialtion = ifelse(Death == "Si"| DG.Mechanical_ventialtion=="Si" , "Si", "No"))
+
+dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
+  mutate(Death_DG.Mechanical_ventialtion_Ad_UCI = ifelse(Death == "Si"| DG.Mechanical_ventialtion=="Si" | Ad_UCI=="Si", "Si", "No"))
+
+dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
+  mutate(DG.Mechanical_ventialtion_Ad_UCI = ifelse(DG.Mechanical_ventialtion=="Si" | Ad_UCI=="Si", "Si", "No"))
+
+
+
+
+
+
+
+dt_plana_covid1_agr_exc_lab<-factoritzar.NO.YES(dt_plana_covid1_agr_exc,"factor",conductor)
+dt_plana_covid1_agr_exc_lab<-etiquetar_valors(dt=dt_plana_covid1_agr_exc_lab,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid1_agr_exc_lab<-etiquetar(d=dt_plana_covid1_agr_exc_lab,taulavariables=conductor)
+
+
+
+
+
+T01C<-descrTable(formula_taula01_C,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=dt_plana_covid1_agr_exc_lab,
+                 max.xlev = 100, 
+                 show.p.overall=TRUE,
+                 show.n = T,
+                 hide.no="No",simplify=F)
+
+dt_plana_covid1_agr_exc_lab2<-dt_plana_covid1_agr_exc_lab%>%filter(URG=="Si")
+
+T01C2<-descrTable(formula_taula01_C2,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=dt_plana_covid1_agr_exc_lab2,
+                 max.xlev = 100, 
+                 show.p.overall=FALSE,
+                 show.n = T,
+                 hide.no="No",simplify=F)
+
+dt_plana_covid1_agr_exc2_lab<-dt_plana_covid1_agr_exc_lab
+
+
+dt_plana_covid1_agr_exc2_DIAB_lab<-dt_plana_covid1_agr_exc2_lab%>%filter(DIAB=="Si")
+dt_plana_covid1_agr_exc2_NO_DIAB_lab<-dt_plana_covid1_agr_exc2_lab%>%filter(DIAB=="No")
+
+
+
+variables_noconductuals4<-extreure.variables("Taula08",taulavariables = conductor)[!extreure.variables("Taula08",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc2_DIAB_lab)]
+formula_taula1_04<-formula.text("Taula08",y="SEXO.SEX",taulavariables = conductor,elimina = variables_noconductuals4)
+formula_taula1_05<-formula.text("Taula08",y="EDAD.AGE2",taulavariables = conductor,elimina = variables_noconductuals4)
+formula_taula1_06<-formula.text("Taula08",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals4)
+
+T01C3_DIAB_A<-descrTable(formula_taula1_04,
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_DIAB_lab,
+                         max.xlev = 100, 
+                         show.p.overall=FALSE,
+                         show.n = T,
+                         hide.no="No",simplify=F)
+
+T01C3_DIAB_B<-descrTable(formula_taula1_05,                            
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_DIAB_lab,
+                         max.xlev = 100, 
+                         show.p.overall=FALSE,
+                         show.n = T,
+                         hide.no="No",simplify=F)
+T01C3_NO_DIAB_A<-descrTable(formula_taula1_04,      
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_NO_DIAB_lab,
+                         max.xlev = 100, 
+                         show.p.overall=FALSE,
+                         show.n = T,
+                         hide.no="No",simplify=F)
+
+T01C3_NO_DIAB_B<-descrTable(formula_taula1_05,       
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_NO_DIAB_lab,
+                         max.xlev = 100, 
+                         show.p.overall=FALSE,
+                         show.n = T,
+                         hide.no="No",simplify=F)
+
+
+T01C3_C<-descrTable( formula_taula1_06,  
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_lab,
+                         max.xlev = 100, 
+                         show.p.overall=TRUE,
+                         show.n = T,
+                         hide.no="No",simplify=F)
+
+dt_plana_EX<-dt_plana_covid1_agr%>%select(PATIENT.ID,exclusio1,exclusio2,DIAB) 
+
+
+############# R E P A S: [23.6.2020]
+#T02 
+
+dt_plana_covid2_agr2<-dt_plana_covid2_agr2 %>%left_join(dt_plana_EX,by="PATIENT.ID")
+dt_plana_covid2_agr_b_2<-dt_plana_covid2_agr_b_2%>%left_join(dt_plana_EX,by="PATIENT.ID")
+
+
+dt_plana_covid2_agr3<-factoritzar.NO.YES(dt_plana_covid2_agr2,"factor",conductor)
+dt_plana_covid2_agr3<-etiquetar_valors(dt=dt_plana_covid2_agr3,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid2_agr3<-etiquetar(d=dt_plana_covid2_agr3,taulavariables=conductor)
+variables_noconductuals<-extreure.variables("Taula02",taulavariables = conductor)[!extreure.variables("Taula02",taulavariables = conductor)%in%names(dt_plana_covid2_agr3)]
+formula_taula02<-formula.text("Taula02",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
+dt_plana_covid2_agr_exc<-dt_plana_covid2_agr3
+dt_plana_covid2_agr_exc<-criteris_exclusio(dt_plana_covid2_agr_exc,taulavariables=conductor,criteris="exc_pre")
+
+
+dt_plana_covid2_agr_b_3<-factoritzar.NO.YES(dt_plana_covid2_agr_b_2,"factor",conductor)
+dt_plana_covid2_agr_b_3<-etiquetar_valors(dt=dt_plana_covid2_agr_b_3,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid2_agr_b_3<-etiquetar(d=dt_plana_covid2_agr_b_3,taulavariables=conductor)
+
+variables_noconductuals<-extreure.variables("Taula02B",taulavariables = conductor)[!extreure.variables("Taula02B",taulavariables = conductor)%in%names(dt_plana_covid2_agr_b_3)]
+formula_taula02_b<-formula.text("Taula02B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+dt_plana_covid2_agr_b_exc<-criteris_exclusio(dt_plana_covid2_agr_b_3,taulavariables=conductor,criteris="exc_pre")
+
+dt_plana_covid2_agr_exc<-dt_plana_covid2_agr_exc%>%select(-DIAB)
+dt_plana_covid2_agr_b_exc<-dt_plana_covid2_agr_b_exc%>%select(-DIAB)
+dt_plana_EXC<-dt_plana_covid1_agr_exc%>%select(PATIENT.ID,DIAB)
+
+dt_plana_covid2_agr_exc2<-dt_plana_EXC %>%
+  left_join(dt_plana_covid2_agr_exc,by="PATIENT.ID")
+
+dt_plana_covid2_agr_b_exc2<-dt_plana_EXC %>%
+  left_join(dt_plana_covid2_agr_b_exc,by="PATIENT.ID")
+
+
+dt_plana_covid2_agr_exc2<- dplyr:: mutate_at(dt_plana_covid2_agr_exc2, vars( starts_with("DG.") ),funs(ifelse(.=="No"  | is.na(.)  ,"No","Si")))
+                                                                                                                   
+dt_plana_covid2_agr_b_exc2<-dplyr::mutate_at(dt_plana_covid2_agr_b_exc2, vars( starts_with("DG.") ), funs( ifelse(.=="No"  | is.na(.)  ,"No","Si")))
+
+
+dt_plana_covid2_agr_exc2<-etiquetar_valors(dt=dt_plana_covid2_agr_exc2,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid2_agr_exc2<-etiquetar(d=dt_plana_covid2_agr_exc2,taulavariables=conductor)
+
+T02<-descrTable(formula_taula02,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid2_agr_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F)
+
+dt_plana_covid2_agr_b_exc2<-etiquetar_valors(dt=dt_plana_covid2_agr_b_exc2,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid2_agr_b_exc2<-etiquetar(d=dt_plana_covid2_agr_b_exc2,taulavariables=conductor)
+
+T02B<-descrTable(formula_taula02_b,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid2_agr_b_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F)
+
+#T03 amb FUNCIONS!Constants Vitals,sequència d'una mateixa var v1.1,v1.2,v1.3
+
+dt_plana_covid3_agr2<-dt_plana_covid3_agr2%>%left_join(dt_plana_EX,by="PATIENT.ID")
+dt_plana_covid3_agr3<-factoritzar.NO.YES(dt_plana_covid3_agr2,"factor",conductor)
+dt_plana_covid3_agr3<-etiquetar_valors(dt=dt_plana_covid3_agr3,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid3_agr3<-etiquetar(d=dt_plana_covid3_agr3,taulavariables=conductor)
+variable.names(dt_plana_covid3_agr3)
+
+variables_noconductuals<-extreure.variables("Taula03",taulavariables = conductor)[!extreure.variables("Taula03",taulavariables = conductor)%in%names(dt_plana_covid3_agr3)]
+formula_taula03<-formula.text("Taula03",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
+dt_plana_covid3_agr3_exc<-dt_plana_covid3_agr3
+dt_plana_covid3_agr3_exc<-criteris_exclusio(dt_plana_covid3_agr3_exc,taulavariables=conductor,criteris="exc_pre")
+
+#BASAL!
+dt_plana_covid3_agr3_exc<-etiquetar_valors(dt=dt_plana_covid3_agr3_exc,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid3_agr3_exc<-etiquetar(d=dt_plana_covid3_agr3_exc,taulavariables=conductor)
+
+T03BB<-descrTable(formula_taula03,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=dt_plana_covid3_agr3_exc,
+                 max.xlev = 100, 
+                 show.p.overall=TRUE,
+                 show.n = T,
+                 hide.no="No",simplify=F)
+                 
+#---------------------------------------------------------------------#
+#T04 LABORATORI[anaítiques]:sequència d'una mateixa var v1.1,v1.2,v1.3
+#---------------------------------------------------------------------#
+dt_plana_covid4_agr3$PATIENT.ID<-as.double(dt_plana_covid4_agr3$PATIENT.ID)
+dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%left_join(dt_plana_EX,by="PATIENT.ID")
+dt_plana_covid4_agr3_exc<-criteris_exclusio(dt_plana_covid4_agr3,taulavariables=conductor,criteris="exc_pre")
+#
+dt_plana_covid4_agr3_exc<-factoritzar.NO.YES(dt_plana_covid4_agr3_exc,"factor",conductor)
+dt_plana_covid4_agr3_exc<-etiquetar_valors(dt=dt_plana_covid4_agr3_exc,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+
+variables_noconductuals<-extreure.variables("Taula04",taulavariables = conductor)[!extreure.variables("Taula04",taulavariables = conductor)%in%names(dt_plana_covid4_agr3_exc)]
+formula_taula04<-formula.text("Taula04",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
+dt_plana_covid4_agr3_exc<-etiquetar_valors(dt=dt_plana_covid4_agr3_exc,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid4_agr3_exc<-etiquetar(d=dt_plana_covid4_agr3_exc,taulavariables=conductor)
+
+T04<-descrTable(formula_taula04,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid4_agr3_exc,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F)
+
+#--------------------------------------------------------------#
+#T05-->T5_6 :FARMACS , falten codis Bogdan!
+#--------------------------------------------------------------#
+dt_plana_covid5_6_agr2<-dt_plana_covid5_6_agr2%>%left_join(dt_plana_EX,by="PATIENT.ID")
+dt_plana_covid5_6_agr2_exc<-criteris_exclusio(dt_plana_covid5_6_agr2,taulavariables=conductor,criteris="exc_pre")
+
+dt_plana_covid5_6_agr<-dt_plana_covid5_6_agr%>%left_join(dt_plana_EX,by="PATIENT.ID")
+dt_plana_covid5_6_agr_exc<-criteris_exclusio(dt_plana_covid5_6_agr,taulavariables=conductor,criteris="exc_pre")
+
+variables_noconductuals<-extreure.variables("Taula05",taulavariables = conductor)[!extreure.variables("Taula05",taulavariables = conductor)%in%names(dt_plana_covid5_6_agr2_exc)]
+formula_taula5_6<-formula.text("Taula05",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
+variables_noconductuals2<-extreure.variables("Taula05B",taulavariables = conductor)[!extreure.variables("Taula05B",taulavariables = conductor)%in%names(dt_plana_covid5_6_agr_exc)]
+formula_taula5_6B<-formula.text("Taula05B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
+dt_plana_covid5_6_agr2_exc<-dt_plana_covid5_6_agr2_exc%>%select(-DIAB)
+dt_plana_covid5_6_agr_exc<-dt_plana_covid5_6_agr_exc%>%select(-DIAB)
+dt_plana_EXC<-dt_plana_covid1_agr_exc%>%select(PATIENT.ID,DIAB)
+dt_plana_covid5_6_agr2_exc2<-dt_plana_EXC %>%
+  left_join(dt_plana_covid5_6_agr2_exc,by="PATIENT.ID")
+dt_plana_covid5_6_agr_exc2<-dt_plana_EXC %>%
+  left_join(dt_plana_covid5_6_agr_exc,by="PATIENT.ID")
+
+dt_plana_covid5_6_agr_exc2<-mutate_at(dt_plana_covid5_6_agr_exc2, vars( starts_with("DG.") ), funs( ifelse(.=="No"  | is.na(.)  ,"No","Si")))
+dt_plana_covid5_6_agr2_exc2<-mutate_at(dt_plana_covid5_6_agr2_exc2, vars( starts_with("DG.") ), funs( ifelse(.=="No"  | is.na(.)  ,"No","Si")))
+
+dt_plana_covid5_6_agr2_exc2<-etiquetar_valors(dt=dt_plana_covid5_6_agr2_exc2,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid5_6_agr2_exc2<-etiquetar(d=dt_plana_covid5_6_agr2_exc2,taulavariables=conductor)
+
+dt_plana_covid5_6_agr_exc2<-etiquetar_valors(dt=dt_plana_covid5_6_agr_exc2,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
+dt_plana_covid5_6_agr_exc2<-etiquetar(d=dt_plana_covid5_6_agr_exc2,taulavariables=conductor)
+
+
+T05<-descrTable(formula_taula5_6,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid5_6_agr2_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F)
+
+T05B<-descrTable(formula_taula5_6B,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid5_6_agr_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F)
+
+
+# Preparem el Model::
+
+k<-dt_plana_covid5_6_agr2_exc2%>%select(PATIENT.ID,DG.HTA,DG.OB,DG.Hyperlip)
+dt_plana_covid1_agr_exc2_lab2<-dt_plana_covid1_agr_exc2_lab%>%left_join(k)
+
+dt_plana_covid1_agr_exc2_lab2$agecat<-9999
+dt_plana_covid1_agr_exc2_lab2$agecat<-ifelse(dt_plana_covid1_agr_exc2_lab2$EDAD.AGE<20,"0",dt_plana_covid1_agr_exc2_lab2$agecat)
+dt_plana_covid1_agr_exc2_lab2$agecat<-ifelse(dt_plana_covid1_agr_exc2_lab2$EDAD.AGE>=20 & dt_plana_covid1_agr_exc2_lab2$EDAD.AGE<=39
+                                               ,"1",dt_plana_covid1_agr_exc2_lab2$agecat)
+dt_plana_covid1_agr_exc2_lab2$agecat<-ifelse(dt_plana_covid1_agr_exc2_lab2$EDAD.AGE>=40 & dt_plana_covid1_agr_exc2_lab2$EDAD.AGE<=59
+                                             ,"2",dt_plana_covid1_agr_exc2_lab2$agecat)
+dt_plana_covid1_agr_exc2_lab2$agecat<-ifelse(dt_plana_covid1_agr_exc2_lab2$EDAD.AGE>59,"3",dt_plana_covid1_agr_exc2_lab2$agecat)
+dt_plana_covid1_agr_exc2_lab2$Death2<-ifelse(dt_plana_covid1_agr_exc2_lab2$Death=="Si",1,0)
+dt_plana_covid1_agr_exc2_lab2$SEXO.SEX<- relevel(dt_plana_covid1_agr_exc2_lab2$SEXO.SEX, ref = "Mujer")
+dt_plana_covid1_agr_exc2_lab2$Ad_UCI<-ifelse(dt_plana_covid1_agr_exc2_lab2$Ad_UCI=="Si",1,0)
+
+
+
+
+#i)
+mylogit <- glm(Death2 ~ SEXO.SEX + EDAD.AGE + DIAB, data = dt_plana_covid1_agr_exc2_lab2, family = "binomial")
+PP1A<-summary(mylogit)
+PP1B<-exp(cbind(OR = coef(mylogit), confint(mylogit)))
+
+
+PP1C<-tab_model(mylogit)
+
+#KK<-table1( ~ SEXO.SEX + EDAD.AGE + DIAB, data = dt_plana_covid1_agr_exc2_lab2| Death2, data=dt_plana_covid1_agr_exc2_lab2)
+#ib)
+mylogitb <- glm(Death2 ~ SEXO.SEX + agecat + DIAB+DG.HTA+DG.OB+DG.Hyperlip, data = dt_plana_covid1_agr_exc2_lab2, family = "binomial")
+PP2A<-summary(mylogitb)
+PP2B<-exp(cbind(OR = coef(mylogitb), confint(mylogitb)))
+#ic)
+mylogitc <- glm(Death2 ~ SEXO.SEX + EDAD.AGE3 + DIAB+DG.HTA+DG.OB+DG.Hyperlip, data = dt_plana_covid1_agr_exc2_lab2, family = "binomial")
+PP3A<-summary(mylogitc)
+PP3B<-exp(cbind(OR = coef(mylogitc), confint(mylogitc)))
+#ii)
+mylogit2 <- glm(Death2 ~ SEXO.SEX + EDAD.AGE2 + DIAB+DG.HTA+DG.OB+DG.Hyperlip, data = dt_plana_covid1_agr_exc2_lab2, family = "binomial")
+PP4A<-summary(mylogit2)
+PP4B<-exp(cbind(OR = coef(mylogit2), confint(mylogit2)))
+#iii)
+mylogit3 <- glm(Ad_UCI ~  SEXO.SEX + EDAD.AGE + DIAB+DG.HTA+DG.OB+DG.Hyperlip, data = dt_plana_covid1_agr_exc2_lab2, family = "binomial")
+PP5A<-summary(mylogit3)
+PP5B<-exp(cbind(OR = coef(mylogit3), confint(mylogit3)))
+#iv)
+mylogit4 <- glm(Ad_UCI ~ SEXO.SEX + EDAD.AGE2 + DIAB+DG.HTA+DG.OB+DG.Hyperlip, data = dt_plana_covid1_agr_exc2_lab2, family = "binomial")
+PP6A<-summary(mylogit4)
+PP6B<-exp(cbind(OR = coef(mylogit4), confint(mylogit4)))
+```
+## 1.Flow Chart.Descriptiva GENERAL.
+```{r resultats0, include=T}
+flow_chart1
+flow_chart1B
+
+
+#"poblacion inicial"
+#kk0
+
+#"poblacion final"
+#kk1
+
+export2md(T01C,caption="**TABLA 1a. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso,  si ha habido, datos del paso por UCI, si ha habido.Todos los pacientes.**")
+
+export2md(T01C2,caption="**TABLA 1b. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
+```
+## 2.Descriptiva  Problemas de salud
+```{r resultats2, include=T}
+export2md(T05,caption="**Tabla 2a. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
+
+export2md(T05B,caption="**Tabla 2b. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
+```
+## 3.Descriptiva  Constantes Vitales
+```{r resultats3, include=T}
+export2md(T03BB,caption="**TABLA 3.Registros de las constantes vitales  durante el ingreso(no se recogen las de UCI),con la función!.**")
+```
+## 4.Descriptiva  Laboratorio
+```{r resultats4, include=T}
+export2md(T04,caption="**TABLA 4. Registros de los resultados de peticiones de laboratorio realizadas durante el ingreso,con la función!.**")
+```
+## 5.Descriptiva  Mediacmentos
+```{r resultats5, include=T}
+export2md(T02,caption="**TABLA 5a. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
+export2md(T02B,caption="**TABLA 5b. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
+```
+## 6.Descriptiva  EVENTOS
+```{r resultats6, include=T}
+export2md(T01C3_C,caption="**TABLA 6.Eventos y complicaciones  en pacientes diabéticos i no diabéticos **")
+export2md(T01C3_DIAB_A,caption="**TABLA 6a. Eventos y complicaciones  en pacientes diabéticos+Sexo **")
+export2md(T01C3_DIAB_B,caption="**TABLA 6b. Eventos y complicaciones  en pacientes diabéticos <=65 años, > 65 años **")
+export2md(T01C3_NO_DIAB_A,caption="**TABLA 6c. Eventos y complicaciones  en pacientes no diabéticos+Sexo **")
+export2md(T01C3_NO_DIAB_B,caption="**TABLA 6d. Eventos y complicaciones  en pacientes no diabéticos <=65 años, > 65 años **")
+```
+## 7.Modelos de Mortalidad
+```{r resultats7, include=T}
+PP1C
+```
+
+&nbsp;
+<hr />
+<p style="text-align: center;">A work by $Jordi Real$ $Rai Puig$ </a></p>
+<p style="text-align: center;">$Llepali System$ </a></p>
+<p style="text-align: center;"><span style="color: #808080;"><em><https://github.com/USR-DAPCAT/></em></span></p>
+
+
