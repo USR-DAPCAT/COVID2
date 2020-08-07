@@ -1,4 +1,4 @@
-#06/08/2020
+#07/08/2020
 
 rm(list=ls())
 dir_dades="dades/mostra"
