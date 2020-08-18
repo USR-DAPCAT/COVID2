@@ -53,7 +53,6 @@ library("lubridate")
 library("base")
 library("expss")
 library("frequency")
-# load package
 library("sjPlot")
 library("sjmisc")
 library("sjlabelled")
@@ -100,8 +99,9 @@ dt_03<-read.csv2(here::here(directori_dades,"03.csv"),sep=";",dec=",",header = T
 #iv)    En la tabla de laboratorio se encuentran los resultados de las determinaciones (398.884 registros)
 #       de todas las peticiones realizadas a cada paciente durante su ingreso y 
 #       en la urgencia previa, si hubiera tenido. 
-#dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
-dt_04 <- read.delim(here::here(directori_dades,"04.txt"),header = TRUE)%>% as_tibble()
+dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
+# dt_04 <- readr::read_delim(here::here(directori_dades,"04.csv"), ";", escape_double = FALSE, trim_ws = TRUE) %>% as_tibble()
+
 #       Y por último en las tablas de codificación CIE10, 
 #       aparecen los registros de la información de diagnósticos y procedimientos
 #       codificada según la clasificación internacional CIE10 en su última versión distribuida 
@@ -123,10 +123,7 @@ dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(co
 ```
 ## 2. Agregacio de dades
 ```{r agregacio}
-
 source(here::here("codi/funcions_Covid.r"))
-
-
 
 ###############################################
 # dt_plana_COVID1 (TaulaPLANA1  Principal!!!) #
@@ -186,9 +183,13 @@ pacient19<-dt_plana_covid1%>%filter(year_ingres==2019)%>%select(PATIENT.ID)
 #SAT_02_ULTIMA.LAST_URG.EMERG
 #TA_MAX_ULTIMA.LAST_URGEMERG
 #TA_MIN_ULTIMA.LAST_URG.EMERG
+```
 
+
+```{r agregacio2}
 # 5.8.2020 !
 # Los que tienen 0.00 se tienen que contar como missings,TEMP_PRIMERA.FIRST_URG.EMERG.......ETC
+
 
 dt_plana_covid1<-dt_plana_covid1%>%
   mutate(TEMP_PRIMERA.FIRST_URG.EMERG = ifelse(TEMP_PRIMERA.FIRST_URG.EMERG==0,NA, TEMP_PRIMERA.FIRST_URG.EMERG))
@@ -233,8 +234,6 @@ dt_plana_covid1<-dt_plana_covid1%>%
 
 
 
-
-
 dt_plana_covid1_agr<-dt_plana_covid1
 dt_plana_covid1_org<-dt_plana_covid1
 
@@ -243,7 +242,10 @@ dt_plana_covid1_org<-dt_plana_covid1
 
 
 # A tibble: 2,307 x 29
+```
 
+
+```{r agregacio3}
 ###############################################
 ##[T2]##.Farmacs.Mètode:Aggregador.
 ###############################################
@@ -276,9 +278,10 @@ dt_plana_covid2_agr_b<-agregar_problemes(select(dt_plana_covid2B,idp,cod,dat),
 #dt_plana_covid2_agr
 #dt_plana_covid2_agr_b
 ################################################################################
+```
 
 
-
+```{r agregacio4}
 ####################################################################
 ##[T3]##.Constants Vitals.Mètode:Preparció com Laboratori.Spread.
 ####################################################################
@@ -355,12 +358,10 @@ analitiques.agr<-agregar_vars_covid(dt =dt_plana_covid3_B)
 
 dt_plana_covid3_agr<-dt_plana_covid3_agr %>%
   left_join(analitiques.agr  ,by="PATIENT.ID")
+```
 
 
-
-
-
-
+```{r agregacio5}
 ####################################################################
 ##[T4]##.ANALITIQUES: Spread.
 ####################################################################
@@ -407,12 +408,18 @@ dt_plana_covid3_agr<-dt_plana_covid3_agr %>%
 #37)  CREA – CREATININA1
 #38)  HDL – COLESTEROL HDL1
 #39)  COL – COLESTEROL TOTAL1
+
 #
 #-----------------------------------------------------------------------------------------------#
 dt_plana_covid4<-dt_04
 #-----------------------------------------------------------------------------------#
 dt_plana_covid4B<-dt_plana_covid4%>%select(PATIENT.ID,FECHA_PETICION.LAB_DATE,DETERMINACION.ITEM_LAB,RESULTADO.VAL_RESULT)%>%
   transmute(PATIENT.ID=PATIENT.ID,dat=FECHA_PETICION.LAB_DATE,valor=RESULTADO.VAL_RESULT,cod=DETERMINACION.ITEM_LAB)
+
+```
+
+
+```{r agregacio6}
 #-----------------------------------------------------------------------------------------------#
 KK<-str_split_fixed(dt_plana_covid4B$cod, "--",2)
 dt_plana_covid4B<-cbind(dt_plana_covid4B,cod2=KK[,1])
@@ -434,9 +441,10 @@ variable.names(dt_cataleg_analitica4C)
 dt_cataleg_analitica4C<-dt_cataleg_analitica4C%>%as_tibble()%>%select(-domini)
 
 dt_plana_covid4_agr<-dt_cataleg_analitica4C
+```
 
 
-
+```{r agregacio7}
 #1)   Determinación|TROPO -- TROPONINA
 dt_plana_covid4_agr$cod<-ifelse(dt_plana_covid4_agr$cod=="TROPO ","US_troponina_",dt_plana_covid4_agr$cod)
 
@@ -522,9 +530,10 @@ dt_plana_covid4_agr_CORONA<-dt_plana_covid4_agr_CORONA%>%filter(valor=="Se detec
 dt_plana_covid4_agr_CORONA<-dt_plana_covid4_agr_CORONA%>%transmute( PATIENT.ID,CORONA=valor)
 
 #table(dt_plana_covid4_agr_CORONA$PATIENT.ID)
+```
 
 
-
+```{r agregacio8}
 #i)
 dt_plana_covid4_agr_B<-dt_plana_covid4_agr%>%
   transmute(PATIENT.ID,dat=dat,valor=valor,cod=cod)%>%filter(cod=="US_troponina_" |
@@ -564,10 +573,10 @@ dt_plana_covid4_agr_B<-dt_plana_covid4_agr%>%
                                                              cod=="BT_"           |
                                                              cod=="HDL_"          |
                                                              cod=="COL_")
- 
+```
 
 
-                                                            
+```{r agregacio9}
 #1) # fer els missings!!!
 dt_plana_covid4_agr_B$valor             <-as.double(dt_plana_covid4_agr_B$valor)
 #
@@ -626,12 +635,11 @@ vect2<- c(
 dt_plana_covid4_agr2 <-
   vect2%>% 
   map(~dt_spread(dt_plana_covid4_agr,.x)) %>% 
-  reduce(full_join,by="PATIENT.ID") 
+  reduce(full_join,by="PATIENT.ID")
+```
 
 
-
-
-
+```{r agregacio10}
 # Abans de passar-ho a número Real, DESCRIPTIU ERRORS!
 
 
@@ -713,9 +721,10 @@ dt_plana_covid4_agr2$HDL_1          <-as.double(dt_plana_covid4_agr2$HDL_1)
 dt_plana_covid4_agr2$COL_1          <-as.double(dt_plana_covid4_agr2$COL_1)
 #38
 #"G_CORONAV_"
+```
 
 
-
+```{r agregacio11}
 analitiques.agr2<-agregar_vars_covid2(dt =dt_plana_covid4_agr_B)
 
 # 25.7.2020
@@ -750,8 +759,10 @@ dt_plana_covid4_agr3<-dt_plana_covid4_agr2 %>%
 ###################################################################
 # hipòtesis tos blancs, per tant 1.159=1.
   ## Filtrado glomerular:39.91 ml/min/1,73 m²
+```
 
 
+```{r agregacio12}
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(sexvar = ifelse(SEXO.SEX == "MALE", 1, 1.018))
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(alpha = ifelse(SEXO.SEX == "MALE", -0.411, -0.329))
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(kappa = ifelse(SEXO.SEX == "MALE", 0.9, 0.7))
@@ -766,11 +777,10 @@ dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(gfr = ifelse(Ethnicity == "b
 
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%
   mutate_at(vars(starts_with("CORONA") ),funs(ifelse(is.na(.),"No se detecta",.)))
+```
 
 
-
-
-
+```{r agregacio13}
 ####################################################################
 ##[T5]##.ANALITIQUES: PROBLEMES DE SALUT!
 ####################################################################
@@ -804,13 +814,11 @@ dt_plana_covid5_6_agr2<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
 dt_plana_covid5_6_agr<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
                                           bd.dindex = "20000601",
                                           dt.agregadors=select(dt_cataleg2,cod,agr=agr),
-                                          finestra.dies=c(-Inf,Inf),prefix = "DG.") 
+                                          finestra.dies=c(-Inf,Inf),prefix = "DG.")
+```
 
 
-
-
-
-
+```{r events}
 #############################################################################################
 #                   E V E N T S                                                             #
 #############################################################################################
@@ -867,10 +875,10 @@ dt_plana_covid_INGRES_agr2<-dt_plana_covid_INGRES_agr2 %>%select(idp,DG.COMP_NEU
 dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3 %>%select(idp,DG.VENT1,DG.VENT3,
                                                                  DG.VENT4,DG.VENT5,DG.VENT6,
                                                                 DG.VENT7,DG.VENT8,DG.VENT9,DG.VENT10)
-                                                                 
+```
 
 
-
+```{r events2}
 dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr %>%
   mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Si")))%>%
   mutate(PATIENT.ID=idp)%>% select(-idp)
@@ -909,11 +917,10 @@ dt_plana_covid_INGRES_agr$PATIENT.ID<-as.numeric(dt_plana_covid_INGRES_agr$PATIE
 # TOTAL TAULES:[]
 # falta fer Taula2 fàrmacs !!i fer MAPS i vector ! , 
 ########################################################################################
+```
 
 
-
-
-
+```{r diabetics}
 #############################################################################################
 #                   B U S C A R     D I A B E T I C S                                              
 
@@ -930,7 +937,7 @@ CATAL_INSU<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod
 #----------------------------------------------------------------------------#
 #                          DM--> PROBLEMES     [dt_plana_covid5_gather +dt_plana_covid6_gather] 
 #                          DM--> FARMACS       [dt_plana_covid2B]
-#                          DM--> LABORATORI    [dt_plana_covid4_agr] MAX HbA1c>6.5%                          
+#                          DM--> LABORATORI    [dt_plana_covid4_agr] MAX HbA1c>=6.5%                          
 #----------------------------------------------------------------------------#
 #
 #----------------------------------------------------------------------------#
@@ -962,10 +969,10 @@ dt_plana_DM_agr1<-agregar_problemes(select(dt_plana_covid56_gather2,idp,cod,dat)
 GRUP1<-dt_plana_covid56_gather2%>%inner_join(dt_plana_DM_agr1,by="idp")%>%select(idp,cod)
 GRUP1<-GRUP1%>%inner_join(CATAL,by="cod")
 #----------------------------------------------------------------------------#
+```
 
 
-
-
+```{r diabetics2}
 ##[T2]##.Farmacs.Mètode:Aggregador.
 #dt_plana_covid2
 dt_plana_covid2B<-dt_plana_covid2%>% transmute(idp=PATIENT.ID,cod=as.character(ID_ATC7),dat="20200520") 
@@ -984,16 +991,17 @@ dt_plana_DM_agr2<-agregar_problemes(select(dt_plana_covid2B,idp,cod,dat),
 GRUP2<-dt_plana_covid2B%>%inner_join(dt_plana_DM_agr2,by="idp")%>%select(idp,cod)
 GRUP2<-GRUP2%>%inner_join(CATAL,by="cod")
 #----------------------------------------------------------------------------#
+```
 
 
-
+```{r diabetics3}
 # Agrego per CIP I agafo la última situació 
 #dt_demografiques<-dt_demografiques %>% 
 #  transmute(CIP,sexe,situacio,dNaixement=lubridate::ymd(dNaixement),ABS,dsituacio=lubridate::ymd(dsituacio)) %>% 
 #  group_by(CIP) %>% dplyr::slice(which.max(dsituacio)) %>% ungroup()
 
 
-#                          DM--> LABORATORI    [dt_plana_covid4_agr] MAX HbA1c>6.5%      
+#                          DM--> LABORATORI    [dt_plana_covid4_agr] MAX HbA1c>=6.5%      
 
 
 #
@@ -1001,19 +1009,15 @@ GRUP2<-GRUP2%>%inner_join(CATAL,by="cod")
 
 #dt_plana_DM_agr3                   <-dt_plana_covid4_agr
 #dt_plana_DM_agr3$valor             <-as.double(dt_plana_DM_agr3$valor)
-#dt_plana_DM_agr3<-dt_plana_DM_agr3%>% filter(cod=="HBA1C_" & valor >6.5 )
+#dt_plana_DM_agr3<-dt_plana_DM_agr3%>% filter(cod=="HBA1C_" & valor >=6.5 )
 
 
 dt_plana_DM_agr3                   <-dt_plana_covid4_agr_B
 dt_plana_DM_agr3$valor             <-as.double(dt_plana_DM_agr3$valor)
-dt_plana_DM_agr3<-dt_plana_DM_agr3%>% filter(cod=="HBA1C_" & valor >6.5 )
+dt_plana_DM_agr3<-dt_plana_DM_agr3%>% filter(cod=="HBA1C_" & valor >=6.5 )
 GRUP3<-dt_plana_DM_agr3%>%select(PATIENT.ID,valor, cod)
 dt_plana_DM_agr3<-dt_plana_DM_agr3%>% transmute(idp=PATIENT.ID,dtindex="20000601", DG.DM="20200520")
 dt_plana_DM_agr3$idp<-as.numeric(dt_plana_DM_agr3$idp)
-
-
-
-
 
 
 DIA_INDEX<-dt_01%>%transmute(idp=PATIENT.ID,DIA.INDEX=F_INGRESO.ADMISSION_D_ING.INPAT)
@@ -1063,15 +1067,14 @@ GRUP4<-DIA_INDEX2%>%inner_join(dt_plana_DM_agr4,by="idp")%>%inner_join(CATAL_INS
 #GRUP3
 #GRUP4
 #-----------------------------------------------------------------------------------------------------#
+```
 
 
-
-
-
+```{r diabetics4}
 #-------------------------------------------------------#
 dt_plana_DM_agr5<-dt_plana_covid4_agr3%>%select(PATIENT.ID,max_pacient_valor_GLU_)
-GRUP5<-dt_plana_DM_agr5%>% filter(max_pacient_valor_GLU_>200 )
-dt_plana_DM_agr5<-dt_plana_DM_agr5%>% filter(max_pacient_valor_GLU_>200 )
+GRUP5<-dt_plana_DM_agr5%>% filter(max_pacient_valor_GLU_>=200 )
+dt_plana_DM_agr5<-dt_plana_DM_agr5%>% filter(max_pacient_valor_GLU_>=200 )
 dt_plana_DM_agr5<-dt_plana_DM_agr5%>%transmute(idp=PATIENT.ID)
 dt_plana_DM_agr5$idp<-as.numeric(dt_plana_DM_agr5$idp)
 #-------------------------------------------------------#
@@ -1103,18 +1106,13 @@ C_NO_DIABETICS<-dt_plana_covid1_agr %>% transmute(idp=PATIENT.ID)%>% anti_join(C
 #dt_plana_covid1_agr
 #C_DIABETICS
 #C_NO_DIABETICS
+```
 
 
-
-
-
-
-
-      ##############################################
+```{r recodes1}
+##############################################
       #R E C O D I F I C A C I Ó TAULES PLANES     #
       ##############################################
-
-
 #---------------------------------------------------------------------------------------#
 ##[T1]##.Població.Mètode:Directa.  
 #[OK!!] 
@@ -1172,8 +1170,10 @@ dt_plana_covid2_agr_b_2<-dt_plana_covid2_agr_b %>%
   mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Si")))%>%
   mutate(PATIENT.ID=idp)%>% select(-dtindex,-idp)
 ##########################################################################
+```
 
 
+```{r recodes2}
 # Recodificacions automatiques
 
 
@@ -1201,10 +1201,10 @@ dt_plana_covid4_agr2<-dt_plana_covid4_agr2
 #%>%left_join(dt_plana_covid1_agr2,by="PATIENT.ID")
 
 ###########################################################################
+```
 
 
-
-
+```{r recodes3}
 ##[T5]/[T6]##Problemes.Salut Urgència.Mètode:Aggregador/Problemes.Salut Ingrés.Mètode:Aggregador.
 #[arreglar idp, no dtindex, dg-->(0,1)+conductor] + dt_plana_covid1_agr2
 dt_plana_covid5_6_agr2<-dt_plana_covid5_6_agr2%>%
@@ -1221,8 +1221,10 @@ dt_plana_covid5_6_agr<-dt_plana_covid5_6_agr%>%
 
 #dt_plana_covid_agr5_6                           #A tibble: 2,225 x 62
 ########################################################################################
+```
 
 
+```{r recodes4}
 # Eliminem el PACIENT 2019!
 
 dt_plana_covid1_org<-dt_plana_covid1_org%>%filter(PATIENT.ID!="577")
@@ -1241,9 +1243,6 @@ GRUP2<-   GRUP2%>%filter(idp!="577")
 GRUP3<-   GRUP3%>%filter(PATIENT.ID!="577")
 GRUP4<-   GRUP4%>%filter(idp!="577")
 GRUP5<-   GRUP5%>%filter(PATIENT.ID!="577")
-
-
-
 
 
 ```
