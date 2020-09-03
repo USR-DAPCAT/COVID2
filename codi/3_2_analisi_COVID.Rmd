@@ -97,7 +97,6 @@ knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, include=F,size
 library("dplyr")
 library("lubridate")
 library("base")
-library("expss")
 library("frequency")
 library("table1")
 
@@ -167,6 +166,7 @@ dt_plana_covid1_agr_lab<-etiquetar(d=dt_plana_covid1_agr_lab,taulavariables=cond
 
 variables_noconductuals<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula01",taulavariables = conductor)%in%names(dt_plana_covid1_agr_lab)]
 
+
 formula_taula01<-formula.text("Taula01",y="",taulavariables = conductor,elimina = variables_noconductuals)
 
 
@@ -221,8 +221,8 @@ variables_noconductuals2<-extreure.variables("Taula01",taulavariables = conducto
 variables_noconductuals3<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula07",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc)]
 
 formula_taula01<-formula.text("Taula01",y="",taulavariables = conductor,elimina = variables_noconductuals1)
-formula_taula01_C<-formula.text("Taula01",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals1)
-formula_taula01_C2<-formula.text("Taula01B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals2)
+
+
 #
 formula_taula01_C3<-formula.text("Taula07",y="MUERTO",taulavariables = conductor,elimina = variables_noconductuals3)
 #
@@ -265,6 +265,8 @@ dt_plana_covid1_agr_exc_lab<-etiquetar(d=dt_plana_covid1_agr_exc_lab,taulavariab
 
 
 ```{r taules1, include = FALSE}
+
+formula_taula01_C<-formula.text("Taula01",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals1)
 T01C<-descrTable(formula_taula01_C,
                  method =2,
                  Q1 = 0, Q3 = 1,
@@ -274,8 +276,9 @@ T01C<-descrTable(formula_taula01_C,
                  show.n = T,
                  hide.no="No",simplify=F)
 
-dt_plana_covid1_agr_exc_lab2<-dt_plana_covid1_agr_exc_lab%>%filter(URG=="Si")
 
+formula_taula01_C2<-formula.text("Taula01B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals2)
+dt_plana_covid1_agr_exc_lab2<-dt_plana_covid1_agr_exc_lab%>%filter(URG=="Si")
 T01C2<-descrTable(formula_taula01_C2,
                  method =2,
                  Q1 = 0, Q3 = 1,
@@ -665,7 +668,10 @@ c("ajuste1","ajuste2","ajuste3") %>%
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
                     title = "Mortality models",
-                    p.style = "asterisk")
+                    p.style = "numeric_stars")
+
+
+
 
 
 c("ajuste4","ajuste5","ajuste6") %>% 
@@ -673,7 +679,7 @@ c("ajuste4","ajuste5","ajuste6") %>%
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
                     title = "Mortality models",
-                    p.style = "asterisk")
+                    p.style = "numeric_stars")
 
 
 ```
@@ -693,14 +699,14 @@ c("ajuste1","ajuste2","ajuste3") %>%
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
                     title = "Muerte y/o Ventilación mecánica",
-                    p.style = "asterisk")
+                    p.style = "numeric_stars")
 
 c("ajuste4","ajuste5","ajuste6") %>% 
   map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
                     title = "Muerte y/o Ventilación mecánica",
-                    p.style = "asterisk")
+                    p.style = "numeric_stars")
 
 
 
@@ -719,7 +725,7 @@ c("ajuste1","ajuste2","ajuste3") %>%
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
                     title = "Muerte y/o Ventilación mecánica y/o UCI",
-                    p.style = "asterisk")
+                    p.style = "numeric_stars")
 
 
 c("ajuste4","ajuste5","ajuste6") %>% 
@@ -727,7 +733,7 @@ c("ajuste4","ajuste5","ajuste6") %>%
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
                     title = "Muerte y/o Ventilación mecánica y/o UCI",
-                    p.style = "asterisk")
+                    p.style = "numeric_stars")
 
 
 ```

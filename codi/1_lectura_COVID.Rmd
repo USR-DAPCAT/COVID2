@@ -50,8 +50,7 @@ params:
 
 library("dplyr")
 library("lubridate")
-library("base")
-library("expss")
+# library("expss")
 library("frequency")
 library("sjPlot")
 library("sjmisc")
@@ -66,10 +65,7 @@ directori_dades<-params$dir_dades
 
 directori_dades<-dir_dades
 
-
-
 conductor_codis2<-here::here("Codis_Covid_Agrupadores_juny")
-
 
 
 #   template: template.html
@@ -261,6 +257,8 @@ dt_plana_covid2_agr<-agregar_problemes(select(dt_plana_covid2B,idp,cod,dat),
                                        finestra.dies=c(-Inf,Inf),prefix = "DG.") 
 #dt_plana_covid2_agr
 # A tibble: 2,301 x 74
+
+
 
 # Canviar prefix de DG(Diagnostic) --> FP (Fàrmac prescrit)
 
