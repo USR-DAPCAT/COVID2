@@ -663,6 +663,10 @@ export2md(T01C3_NO_DIAB_B,caption="**TABLA 6d. Eventos y complicaciones  en paci
 ## 7.Modelos de Mortalidad
 ```{r resultats7, include=T, warning=F}
 
+
+
+export2md(T01C3_NO_DIAB_B,caption="**TABLA 6d. Eventos y complicaciones  en pacientes no diabéticos <=65 años, > 65 años **")
+
 c("ajuste1","ajuste2","ajuste3") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
@@ -683,13 +687,17 @@ c("ajuste4","ajuste5","ajuste6") %>%
 
 ```{r exemple_forestplot1, include=T}
 
-# Exemple d'un forest plot d'un model
+# [[Exemple d'un forest plot d'un model]]
 
 c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6") %>% 
   map(~formula.text(x=.x,"Death2",taulavariables = conductor,dt=dades)) %>% 
   map(~glm(formula=.x,data = dades, family = "binomial")) %>% 
   map(~parameters::model_parameters(.x,exponentiate = TRUE))%>% 
   map(~forest.plot.v2(dadesmodel=.x,label="Parameter",mean="Coefficient",lower="CI_low",upper="CI_high",intercept=0))
+
+
+
+
 ```
 
 
