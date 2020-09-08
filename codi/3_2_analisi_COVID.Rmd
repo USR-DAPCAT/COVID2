@@ -687,7 +687,9 @@ c("ajuste4","ajuste5","ajuste6") %>%
 
 ```{r exemple_forestplot1, include=T}
 
-# [[Exemple d'un forest plot d'un model]]
+# [[Exemple d'un forest plot d'un model, elimino la fila interceptl]]
+# filter 0 fora."Parameters"
+
 
 c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6") %>% 
   map(~formula.text(x=.x,"Death2",taulavariables = conductor,dt=dades)) %>% 
