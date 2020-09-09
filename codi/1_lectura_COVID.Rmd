@@ -46,11 +46,11 @@ params:
 
 ```{r setup, include = FALSE}
 
-#6.8.2020#
+#9.9.2020#
 
 library("dplyr")
 library("lubridate")
-# library("expss")
+library("expss")
 library("frequency")
 library("sjPlot")
 library("sjmisc")
@@ -356,6 +356,7 @@ analitiques.agr<-agregar_vars_covid(dt =dt_plana_covid3_B)
 
 dt_plana_covid3_agr<-dt_plana_covid3_agr %>%
   left_join(analitiques.agr  ,by="PATIENT.ID")
+
 ```
 
 
@@ -644,11 +645,15 @@ dt_plana_covid4_agr2 <-
   vect2%>% 
   map(~dt_spread(dt_plana_covid4_agr,.x)) %>% 
   reduce(full_join,by="PATIENT.ID")
+
 ```
 
 
 ```{r agregacio10}
 # Abans de passar-ho a número Real, DESCRIPTIU ERRORS!
+
+
+
 
 
 #1) dades qualit?
@@ -699,7 +704,6 @@ dt_plana_covid4_agr2$INR_1          <-as.double(dt_plana_covid4_agr2$INR_1)
 dt_plana_covid4_agr2$HGB_1          <-as.double(dt_plana_covid4_agr2$HGB_1)
 #23 ok
 dt_plana_covid4_agr2$HBA1C_1          <-as.double(dt_plana_covid4_agr2$HBA1C_1)
-dt_plana_covid4_agr2$HBA1C_2          <-as.double(dt_plana_covid4_agr2$HBA1C_2)
 #24 dades qualit?
 dt_plana_covid4_agr2$GPT_1          <-as.double(dt_plana_covid4_agr2$GPT_1)
 #25 ok
@@ -730,6 +734,17 @@ dt_plana_covid4_agr2$HDL_1          <-as.double(dt_plana_covid4_agr2$HDL_1)
 dt_plana_covid4_agr2$COL_1          <-as.double(dt_plana_covid4_agr2$COL_1)
 #38
 #"G_CORONAV_"
+
+
+#8.9.2020
+
+#La fórmula del HA1B en mmols es (S'ha de crear una nova variable i la poses a les taules):
+# Càlcul de Variable nueva IFCC HbA1c (nmmol/mol) = (10.93*HB1AC)-23.50
+
+dt_plana_covid4_agr2<-dt_plana_covid4_agr2%>%mutate(HA1C_MMOLS1 =((10.93*HBA1C_1) - 23.50))
+
+
+
 ```
 
 
@@ -787,13 +802,6 @@ dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(gfr = ifelse(Ethnicity == "b
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%
   mutate_at(vars(starts_with("CORONA") ),funs(ifelse(is.na(.),"No se detecta",.)))
 
-#8.9.2020
-
-#La fórmula del HA1B en mmols es (S'ha de crear una nova variable i la poses a les taules):
-# Càlcul de Variable nueva IFCC HbA1c (nmmol/mol) = (10.93*HB1AC)-23.50
-
-dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(HA1C_MMOLS1 =(10.93*HBA1C_1) - 23.50)
-#dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(HA1C_MMOLS2 =(10.93*HBA1C_2) - 23.50)
 
 
 
