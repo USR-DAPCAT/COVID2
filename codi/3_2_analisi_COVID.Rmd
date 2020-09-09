@@ -41,10 +41,16 @@ params:
 
 **Últimas actualizaciones** 
 
+
+> Setiembre/2020
+
+&check; actualizaciones modelos de mortalidad  <br/>
+&check; actualizaciones Nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
+
 > Agost/2020
 
 &check; Nuevos modelos de mortalidad  <br/>
-&check; Nuevos modelos de Ventilación Mecànica y/o mortalidad <br/>
+&check; Nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
 &check; Comprobar valores de máximos de glucosa basal. <br/>
 
 **Realizado**
@@ -128,7 +134,6 @@ conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
 ```{r lectura, include = FALSE}
 
 load(here::here("COVID2.Rdata"))
-
 
 ```
 
@@ -613,7 +618,7 @@ dades<-
 dades<-dades %>% mutate_at(extreure.variables("factor",conductor,dt=dades),as.factor)
 
 ## Reetiquetar
-dades<-etiquetar(dades,taulavariables=conductor, camp_descripcio = "descripcio2")
+dades<-etiquetar(dades,taulavariables=conductor, camp_descripcio = "descripcio")
 
 
 ```
@@ -674,7 +679,7 @@ c("ajuste1","ajuste2","ajuste3") %>%
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Mortality models",
+                    title = "Modelos de Moratlidad",
                     p.style = "numeric_stars")
 
 
@@ -682,7 +687,7 @@ c("ajuste4","ajuste5","ajuste6","ajuste7") %>%
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6","M7"),
-                    title = "Mortality models",
+                    title = "Modelos de Moratlidad",
                     p.style = "numeric_stars")
 
 
@@ -690,14 +695,14 @@ c("ajuste8a") %>%
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_DIAB))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8a"),
-                    title = "Mortality models diabetics",
+                    title = "Modelos de Moratlidad Grupo Diabético",
                     p.style = "numeric_stars")
 
 c("ajuste8b") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_NO_DIAB))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8b"),
-                    title = "Mortality models no diabetics",
+                    title = "Modelos de Moratlidad Grupo No Diabético",
                     p.style = "numeric_stars")
 
 
@@ -718,7 +723,7 @@ c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6","ajuste7","ajuste8
                       lower="CI_low",
                       upper="CI_high",
                       intercept=0,
-                      label_X="Differences standardized (95% CI) Models [Mortality]"))
+                      label_X="Diferencias modelos estandarizados (IC del 95%) [Mortalidad]"))
 
 
 
@@ -753,14 +758,14 @@ c("ajuste8a") %>%
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_DIAB))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8a"),
-                    title = "Mortality models diabetics",
+                    title = "Muerte y/o Ventilación mecánica Grupo de diabeticos",
                     p.style = "numeric_stars")
 
 c("ajuste8b") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_NO_DIAB))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8b"),
-                    title = "Mortality models no diabetics",
+                    title = "Muerte y/o Ventilación mecánica Grupo de no diabeticos",
                     p.style = "numeric_stars")
 
 
@@ -781,7 +786,7 @@ c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6","ajuste7","ajuste8
                       lower="CI_low",
                       upper="CI_high",
                       intercept=0,
-                      label_X="Differences standardized (95% CI) Models [Mortality+Respiratory Ventilation] "))
+                      label_X="Diferencias modelos estandarizados (IC del 95%) [Muerte y/o Ventilación mecánica] "))
 
 # preguntar Jordi sobre Labels!  
 
@@ -824,7 +829,13 @@ c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6") %>%
   map(~formula.text(x=.x,"Death_DG.Mechanical_ventialtion_Ad_UCI=='Si'",taulavariables = conductor,dt=dades)) %>% 
   map(~glm(formula=.x,data = dades, family = "binomial")) %>% 
   map(~parameters::model_parameters(.x,exponentiate = TRUE))%>% 
-  map(~forest.plot.v2(dadesmodel=.x,label="Parameter",mean="Coefficient",lower="CI_low",upper="CI_high",intercept=0))
+  map(~forest.plot.v2(dadesmodel=.x,
+                      label="Parameter",
+                      mean="Coefficient",
+                      lower="CI_low",
+                      upper="CI_high",
+                      intercept=0,
+                      label_X="Diferencias modelos estandarizados (IC del 95%) [Muerte y/o Ventilación mecánica y/o UCI]"))
 
 
 ```
