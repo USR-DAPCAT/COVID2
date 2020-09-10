@@ -41,19 +41,24 @@ params:
 
 **Últimas actualizaciones** 
 
-
 > Setiembre/2020
 
-&check; actualizaciones modelos de mortalidad  <br/>
-&check; actualizaciones Nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
+&check; Ampliar tablas descriptivas P25, Median , P75 etc.. <br/>
+&check; Cálculo de nuevas variable IFCC HBA1C, agrupador Comp_cardiovascular <br/>
+&check; Calcular y añadir p valores en tabla 2 <br/>
+&check; Actualizaciones modelos de mortalidad modelo definitivo <br/>
+&check; actualizaciones nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
+&check; Modelos por subgrupos <br/>
+&check; Forest plot de modelos <br/>
+
+
+**Realizado**
 
 > Agost/2020
 
 &check; Nuevos modelos de mortalidad  <br/>
 &check; Nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
 &check; Comprobar valores de máximos de glucosa basal. <br/>
-
-**Realizado**
 
 > Agost/2020
 
@@ -128,6 +133,41 @@ conductor<-here::here("conductor_Covid.xlsx")
 conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
 
 
+
+# Llanço taula i camp que vull etiquetar i cambia nom del camp en funció d'etiqueta
+
+etiquetar_taula<-function(taula=resumtotal,camp="variable",taulavariables="variables_R.xls",camp_descripcio="descripcio",idcamp="camp") {
+  
+  # taula=porca
+  # taulavariables=conductor
+  # camp="Parameter"
+  # camp_descripcio="desc_model"
+  # idcamp="camp2"
+
+  ####  Llegir etiquetes i variables a analitzar ####
+  variables <- read_conductor(taulavariables)
+  camp_sym<-sym(camp)
+  idcamp_sym<-sym(camp_sym)
+
+  # Canviar nom de camp de variables al de la taula 
+  # colnames(variables)[colnames(variables)=="camp"] <- camp
+  colnames(variables)[colnames(variables)==idcamp] <- camp
+
+  # Canviar arguments per ser evaluats
+  camp_eval<-sym(camp)
+  camp_descripcio_eval<-sym(camp_descripcio)
+  # Canviar el format de la taula 
+  taula %>% left_join(dplyr::select(variables,c(!!camp_eval,camp_descripcio)),by=quo_name(camp_eval)) %>% 
+    rename(descripcio=!!camp_descripcio) %>% 
+    mutate(!!camp_eval:=descripcio) %>% 
+    dplyr::select(-descripcio)
+ 
+}
+
+# Cambia nom dels elements d'un vector 
+
+
+
 ```
 
 
@@ -170,22 +210,15 @@ dt_plana_covid1_agr_lab<-etiquetar(d=dt_plana_covid1_agr_lab,taulavariables=cond
 ```
 
 
-```{r preparacio2, include = FALSE}
-
-variables_noconductuals<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula01",taulavariables = conductor)%in%names(dt_plana_covid1_agr_lab)]
+## 1.Flow Chart.Descriptiva GENERAL.
 
 
-formula_taula01<-formula.text("Taula01",y="",taulavariables = conductor,elimina = variables_noconductuals)
 
-
-```
-
-
-```{r flow_chart, include = FALSE}
+```{r flow_chart, include = TRUE}
 #flow chartS : eps m'ha fallat!!! 
 
 
-flow_chart1<-criteris_exclusio_diagrama(dt=dt_plana_covid1_agr_lab,
+criteris_exclusio_diagrama(dt=dt_plana_covid1_agr_lab,
                                         taulavariables=conductor,
                                         criteris = "exc_pre",
                                         ordre="exc_ordre",
@@ -197,7 +230,7 @@ flow_chart1<-criteris_exclusio_diagrama(dt=dt_plana_covid1_agr_lab,
                                         forma=c("ellipse","box"))
 
 
-flow_chart1B<-criteris_exclusio_diagrama(dt=dt_plana_covid1_agr_lab,
+criteris_exclusio_diagrama(dt=dt_plana_covid1_agr_lab,
                                       taulavariables=conductor,
                                         criteris = "exc_pre",
                                         ordre="exc_ordre",
@@ -224,16 +257,7 @@ kk1<-length(dt_plana_covid1_agr_exc2$INCLUSION)
 
 dt_plana_covid1_agr_exc<-criteris_exclusio(dt_plana_covid1_agr_exc,taulavariables=conductor,criteris="exc_pre")
 
-variables_noconductuals1<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula01",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc)]
-variables_noconductuals2<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula01B",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc)]
-variables_noconductuals3<-extreure.variables("Taula01",taulavariables = conductor)[!extreure.variables("Taula07",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc)]
 
-formula_taula01<-formula.text("Taula01",y="",taulavariables = conductor,elimina = variables_noconductuals1)
-
-
-#
-formula_taula01_C3<-formula.text("Taula07",y="MUERTO",taulavariables = conductor,elimina = variables_noconductuals3)
-#
 dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
   left_join(dt_plana_covid_INGRES_agr,by = "PATIENT.ID")
 
@@ -264,38 +288,12 @@ dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
 dt_plana_covid1_agr_exc<-dt_plana_covid1_agr_exc%>%
   mutate(DG.Mechanical_ventialtion_Ad_UCI = ifelse(DG.Mechanical_ventialtion=="Si" | Ad_UCI=="Si", "Si", "No"))
 
-
-
 dt_plana_covid1_agr_exc_lab<-factoritzar.NO.YES(dt_plana_covid1_agr_exc,"factorYN",conductor)
 dt_plana_covid1_agr_exc_lab<-etiquetar_valors(dt=dt_plana_covid1_agr_exc_lab,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
 dt_plana_covid1_agr_exc_lab<-etiquetar(d=dt_plana_covid1_agr_exc_lab,taulavariables=conductor)
 ```
 
 
-```{r taules1, include = FALSE}
-
-formula_taula01_C<-formula.text("Taula01",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals1)
-T01C<-descrTable(formula_taula01_C,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=dt_plana_covid1_agr_exc_lab,
-                 max.xlev = 100, 
-                 show.p.overall=TRUE,
-                 show.n = T,
-                 hide.no="No",simplify=F)
-
-
-formula_taula01_C2<-formula.text("Taula01B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals2)
-dt_plana_covid1_agr_exc_lab2<-dt_plana_covid1_agr_exc_lab%>%filter(URG=="Si")
-T01C2<-descrTable(formula_taula01_C2,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=dt_plana_covid1_agr_exc_lab2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F)
-```
 
 
 ```{r taules2, include = FALSE}
@@ -304,57 +302,9 @@ dt_plana_covid1_agr_exc2_lab<-dt_plana_covid1_agr_exc_lab
 dt_plana_covid1_agr_exc2_DIAB_lab<-dt_plana_covid1_agr_exc2_lab%>%filter(DIAB=="Si")
 dt_plana_covid1_agr_exc2_NO_DIAB_lab<-dt_plana_covid1_agr_exc2_lab%>%filter(DIAB=="No")
 
-
-
 variables_noconductuals4<-extreure.variables("Taula08",taulavariables = conductor)[!extreure.variables("Taula08",taulavariables = conductor)%in%names(dt_plana_covid1_agr_exc2_DIAB_lab)]
-formula_taula1_04<-formula.text("Taula08",y="SEXO.SEX",taulavariables = conductor,elimina = variables_noconductuals4)
-formula_taula1_05<-formula.text("Taula08",y="EDAD.AGE2",taulavariables = conductor,elimina = variables_noconductuals4)
-formula_taula1_06<-formula.text("Taula08",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals4)
-
-T01C3_DIAB_A<-descrTable(formula_taula1_04,
-                         method =2,
-                         Q1 = 0, Q3 = 1,
-                         data=dt_plana_covid1_agr_exc2_DIAB_lab,
-                         max.xlev = 100, 
-                         show.p.overall=FALSE,
-                         show.n = T,
-                         hide.no="No",simplify=F)
-
-T01C3_DIAB_B<-descrTable(formula_taula1_05,                            
-                         method =2,
-                         Q1 = 0, Q3 = 1,
-                         data=dt_plana_covid1_agr_exc2_DIAB_lab,
-                         max.xlev = 100, 
-                         show.p.overall=FALSE,
-                         show.n = T,
-                         hide.no="No",simplify=F)
-T01C3_NO_DIAB_A<-descrTable(formula_taula1_04,      
-                         method =2,
-                         Q1 = 0, Q3 = 1,
-                         data=dt_plana_covid1_agr_exc2_NO_DIAB_lab,
-                         max.xlev = 100, 
-                         show.p.overall=FALSE,
-                         show.n = T,
-                         hide.no="No",simplify=F)
-
-T01C3_NO_DIAB_B<-descrTable(formula_taula1_05,       
-                         method =2,
-                         Q1 = 0, Q3 = 1,
-                         data=dt_plana_covid1_agr_exc2_NO_DIAB_lab,
-                         max.xlev = 100, 
-                         show.p.overall=FALSE,
-                         show.n = T,
-                         hide.no="No",simplify=F)
 
 
-T01C3_C<-descrTable( formula_taula1_06,  
-                         method =2,
-                         Q1 = 0, Q3 = 1,
-                         data=dt_plana_covid1_agr_exc2_lab,
-                         max.xlev = 100, 
-                         show.p.overall=TRUE,
-                         show.n = T,
-                         hide.no="No",simplify=F)
 ```
 
 
@@ -372,8 +322,7 @@ dt_plana_covid2_agr_b_2<-dt_plana_covid2_agr_b_2%>%left_join(dt_plana_EX,by="PAT
 dt_plana_covid2_agr3<-factoritzar.NO.YES(dt_plana_covid2_agr2,"factorYN",conductor)
 dt_plana_covid2_agr3<-etiquetar_valors(dt=dt_plana_covid2_agr3,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
 dt_plana_covid2_agr3<-etiquetar(d=dt_plana_covid2_agr3,taulavariables=conductor)
-variables_noconductuals<-extreure.variables("Taula02",taulavariables = conductor)[!extreure.variables("Taula02",taulavariables = conductor)%in%names(dt_plana_covid2_agr3)]
-formula_taula02<-formula.text("Taula02",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
 
 dt_plana_covid2_agr_exc<-dt_plana_covid2_agr3
 dt_plana_covid2_agr_exc<-criteris_exclusio(dt_plana_covid2_agr_exc,taulavariables=conductor,criteris="exc_pre")
@@ -386,8 +335,7 @@ dt_plana_covid2_agr_b_3<-etiquetar(d=dt_plana_covid2_agr_b_3,taulavariables=cond
 
 
 ```{r taules4, include = FALSE}
-variables_noconductuals<-extreure.variables("Taula02B",taulavariables=conductor)[!extreure.variables("Taula02B",taulavariables = conductor)%in%names(dt_plana_covid2_agr_b_3)]
-formula_taula02_b<-formula.text("Taula02B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
 dt_plana_covid2_agr_b_exc<-criteris_exclusio(dt_plana_covid2_agr_b_3,taulavariables=conductor,criteris="exc_pre")
 
 dt_plana_covid2_agr_exc<-dt_plana_covid2_agr_exc%>%select(-DIAB)
@@ -412,26 +360,12 @@ dt_plana_covid2_agr_exc2<-etiquetar(d=dt_plana_covid2_agr_exc2,taulavariables=co
 
 
 ```{r taules5, include = FALSE}
-T02<-descrTable(formula_taula02,
-                method =2,
-                Q1 = 0, Q3 = 1,
-                data=dt_plana_covid2_agr_exc2,
-                max.xlev = 100, 
-                show.p.overall=TRUE,
-                show.n = T,
-                hide.no="No",simplify=F)
+
 
 dt_plana_covid2_agr_b_exc2<-etiquetar_valors(dt=dt_plana_covid2_agr_b_exc2,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
 dt_plana_covid2_agr_b_exc2<-etiquetar(d=dt_plana_covid2_agr_b_exc2,taulavariables=conductor)
 
-T02B<-descrTable(formula_taula02_b,
-                method =2,
-                Q1 = 0, Q3 = 1,
-                data=dt_plana_covid2_agr_b_exc2,
-                max.xlev = 100, 
-                show.p.overall=TRUE,
-                show.n = T,
-                hide.no="No",simplify=F)
+
 ```
 
 
@@ -444,8 +378,7 @@ dt_plana_covid3_agr3<-etiquetar_valors(dt=dt_plana_covid3_agr3,variables_factors
 dt_plana_covid3_agr3<-etiquetar(d=dt_plana_covid3_agr3,taulavariables=conductor)
 variable.names(dt_plana_covid3_agr3)
 
-variables_noconductuals<-extreure.variables("Taula03",taulavariables = conductor)[!extreure.variables("Taula03",taulavariables = conductor)%in%names(dt_plana_covid3_agr3)]
-formula_taula03<-formula.text("Taula03",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
+
 
 dt_plana_covid3_agr3_exc<-dt_plana_covid3_agr3
 dt_plana_covid3_agr3_exc<-criteris_exclusio(dt_plana_covid3_agr3_exc,taulavariables=conductor,criteris="exc_pre")
@@ -454,14 +387,7 @@ dt_plana_covid3_agr3_exc<-criteris_exclusio(dt_plana_covid3_agr3_exc,taulavariab
 dt_plana_covid3_agr3_exc<-etiquetar_valors(dt=dt_plana_covid3_agr3_exc,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
 dt_plana_covid3_agr3_exc<-etiquetar(d=dt_plana_covid3_agr3_exc,taulavariables=conductor)
 
-T03BB<-descrTable(formula_taula03,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=dt_plana_covid3_agr3_exc,
-                 max.xlev = 100, 
-                 show.p.overall=TRUE,
-                 show.n = T,
-                 hide.no="No",simplify=F)
+
 ```
 
 
@@ -476,32 +402,15 @@ dt_plana_covid4_agr3_exc<-criteris_exclusio(dt_plana_covid4_agr3,taulavariables=
 dt_plana_covid4_agr3_exc<-factoritzar.NO.YES(dt_plana_covid4_agr3_exc,"factorYN",conductor)
 dt_plana_covid4_agr3_exc<-etiquetar_valors(dt=dt_plana_covid4_agr3_exc,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
 
-variables_noconductuals<-extreure.variables("Taula04",taulavariables = conductor)[!extreure.variables("Taula04",taulavariables = conductor)%in%names(dt_plana_covid4_agr3_exc)]
-formula_taula04<-formula.text("Taula04",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
 
 dt_plana_covid4_agr3_exc<-etiquetar_valors(dt=dt_plana_covid4_agr3_exc,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
 dt_plana_covid4_agr3_exc<-etiquetar(d=dt_plana_covid4_agr3_exc,taulavariables=conductor)
-
-
 
 dt_plana_covid4_agr3_exc %>% select(DIAB,
                                     mean_pacient_valor_GLU_,
                                     max_pacient_valor_GLU_,
                                     min_pacient_valor_GLU_,
                                     median_pacient_valor_GLU_) %>% group_by(DIAB) %>% summarise_all(max,na.rm = T)
-
-T04<-descrTable(formula_taula04,
-                method =2,
-                Q1 = 0, Q3 = 1,
-                data=dt_plana_covid4_agr3_exc,
-                max.xlev = 100, 
-                show.p.overall=TRUE,
-                show.n = T,
-                hide.no="No",simplify=F,digits = 2)
-
-
-
-
 ```
 
 
@@ -509,17 +418,14 @@ T04<-descrTable(formula_taula04,
 #--------------------------------------------------------------#
 #T05-->T5_6 :FARMACS , falten codis Bogdan!
 #--------------------------------------------------------------#
+
+
 dt_plana_covid5_6_agr2<-dt_plana_covid5_6_agr2%>%left_join(dt_plana_EX,by="PATIENT.ID")
 dt_plana_covid5_6_agr2_exc<-criteris_exclusio(dt_plana_covid5_6_agr2,taulavariables=conductor,criteris="exc_pre")
 
 dt_plana_covid5_6_agr<-dt_plana_covid5_6_agr%>%left_join(dt_plana_EX,by="PATIENT.ID")
 dt_plana_covid5_6_agr_exc<-criteris_exclusio(dt_plana_covid5_6_agr,taulavariables=conductor,criteris="exc_pre")
 
-variables_noconductuals<-extreure.variables("Taula05",taulavariables = conductor)[!extreure.variables("Taula05",taulavariables = conductor)%in%names(dt_plana_covid5_6_agr2_exc)]
-formula_taula5_6<-formula.text("Taula05",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
-
-variables_noconductuals2<-extreure.variables("Taula05B",taulavariables = conductor)[!extreure.variables("Taula05B",taulavariables = conductor)%in%names(dt_plana_covid5_6_agr_exc)]
-formula_taula5_6B<-formula.text("Taula05B",y="DIAB",taulavariables = conductor,elimina = variables_noconductuals)
 
 dt_plana_covid5_6_agr2_exc<-dt_plana_covid5_6_agr2_exc%>%select(-DIAB)
 dt_plana_covid5_6_agr_exc<-dt_plana_covid5_6_agr_exc%>%select(-DIAB)
@@ -538,25 +444,6 @@ dt_plana_covid5_6_agr2_exc2<-etiquetar(d=dt_plana_covid5_6_agr2_exc2,taulavariab
 dt_plana_covid5_6_agr_exc2<-etiquetar_valors(dt=dt_plana_covid5_6_agr_exc2,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta2")
 dt_plana_covid5_6_agr_exc2<-etiquetar(d=dt_plana_covid5_6_agr_exc2,taulavariables=conductor)
 
-
-
-T05<-descrTable(formula_taula5_6,
-                method =2,
-                Q1 = 0, Q3 = 1,
-                data=dt_plana_covid5_6_agr2_exc2,
-                max.xlev = 100, 
-                show.p.overall=TRUE,
-                show.n = T,
-                hide.no="No",simplify=F)
-
-T05B<-descrTable(formula_taula5_6B,
-                method =2,
-                Q1 = 0, Q3 = 1,
-                data=dt_plana_covid5_6_agr_exc2,
-                max.xlev = 100, 
-                show.p.overall=TRUE,
-                show.n = T,
-                hide.no="No",simplify=F)
 ```
 
 
@@ -565,6 +452,7 @@ T05B<-descrTable(formula_taula5_6B,
 
 k<-dt_plana_covid5_6_agr2_exc2%>%select(PATIENT.ID,DG.HTA,DG.OB,DG.Hyperlip)
 dt_plana_covid1_agr_exc2_lab2<-dt_plana_covid1_agr_exc2_lab%>%left_join(k)
+rm(k)
 
 dt_plana_covid1_agr_exc2_lab2$agecat<-9999
 dt_plana_covid1_agr_exc2_lab2$agecat<-ifelse(dt_plana_covid1_agr_exc2_lab2$EDAD.AGE<20,"0",dt_plana_covid1_agr_exc2_lab2$agecat)
@@ -580,14 +468,10 @@ dt_plana_covid1_agr_exc2_lab2$Ad_UCI<-ifelse(dt_plana_covid1_agr_exc2_lab2$Ad_UC
 # Canvi de categoria de referencia funció refcat()
 dt_plana_covid1_agr_exc2_lab2<-refcat(dt_plana_covid1_agr_exc2_lab2,conductor,"refcat",sheet="etiquetes")
 
-
-
-
 ```
 
 
 ```{r fusio_dt_general, include=FALSE}
-
 # Fusió base de dades total
 
 # Elimino columnes ja incloses en dt_plana_covid1_agr_exc2_lab2 
@@ -613,6 +497,8 @@ dades<-
   left_join(select(dt_plana_covid2_agr_exc2,-c(DIAB,exclusio1)),by="PATIENT.ID") %>% 
   left_join(select(dt_plana_covid2_agr_b_exc2,-c(DIAB,exclusio2,exclusio1)),by="PATIENT.ID")
   
+# Juntar en plana "DG.COMP_CARDIOVASC"
+dades<-dades %>% left_join(dt_plana_covid5_6_agr2_exc2%>% select(PATIENT.ID, DG.COMP_CARDIOVASC),by="PATIENT.ID")
 
 ## Factoritzar
 dades<-dades %>% mutate_at(extreure.variables("factor",conductor,dt=dades),as.factor)
@@ -624,96 +510,353 @@ dades<-etiquetar(dades,taulavariables=conductor, camp_descripcio = "descripcio")
 ```
 
 
+## 1.Descriptivo general
 
 
-## 1.Flow Chart.Descriptiva GENERAL.
-```{r resultats0, include=T}
-flow_chart1
-flow_chart1B
+```{r resultats1, include=T}
 
-#"poblacion inicial"
-#kk0
 
-#"poblacion final"
-#kk1
+formula<-formula.text("Taula01",y="DIAB",taulavariables = conductor,dt=dt_plana_covid1_agr_exc) 
 
-export2md(T01C,caption="**TABLA 1a. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso,  si ha habido, datos del paso por UCI, si ha habido.Todos los pacientes.**")
+descrTable(formula,method =2,
+           Q1 = 0.25, Q3 = 0.75,
+           data=dt_plana_covid1_agr_exc_lab,
+           max.xlev = 100, 
+           show.p.overall=TRUE,
+           show.n = T,
+           hide.no="No",
+           simplify=F) %>% 
+  export2md(caption="**TABLA 1a. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso,  si ha habido, datos del paso por UCI, si ha habido.Todos los pacientes.**")
 
-export2md(T01C2,caption="**TABLA 1b. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
+
+# formula<-formula_table1("Taula01",y="DIAB",taulavariables = conductor,dt=dt_plana_covid1_agr_exc_lab) 
+table1::table1(~EDAD.AGE|DIAB, 
+               data = dt_plana_covid1_agr_exc_lab,overall="Total",caption="Taula 1a",
+               render.continuous=c(.="Mean (SD)", .="Median [Q1, Q3]"))
+
+# Genero filtre dades solament urgencies
+dt_plana_covid1_agr_exc_lab2<-dt_plana_covid1_agr_exc_lab%>%filter(URG=="Si")
+
+formula<-formula.text("Taula01B",y="DIAB",taulavariables = conductor,dt=dt_plana_covid1_agr_exc_lab2) 
+
+descrTable(formula,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=dt_plana_covid1_agr_exc_lab2,
+                 max.xlev = 100, 
+                 show.p.overall=FALSE,
+                 show.n = T,
+                 hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 1b. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
+
+
+table1::table1(~EDAD.AGE|DIAB, 
+               data = dt_plana_covid1_agr_exc_lab2,caption="Taula 1b",
+               render.continuous=c(.="Mean (SD)", .="Median [Q1, Q3]"))
+
 ```
 ## 2.Descriptiva  Problemas de salud
 ```{r resultats2, include=T}
-export2md(T05,caption="**Tabla 2a. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
 
-export2md(T05B,caption="**Tabla 2b. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
+formula<-formula.text("Taula05",y="DIAB",taulavariables = conductor,dt=dt_plana_covid5_6_agr2_exc2)
+
+descrTable(formula,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid5_6_agr2_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F) %>% 
+  export2md(caption="**Tabla 2a. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
+
+
+
+
+formula<-formula.text("Taula05B",y="DIAB",taulavariables = conductor,dt=dt_plana_covid5_6_agr_exc2)
+
+descrTable(formula,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid5_6_agr_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F) %>% 
+  export2md(caption="**Tabla 2b. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
+
+
 ```
 ## 3.Descriptiva  Constantes Vitales
 ```{r resultats3, include=T}
-export2md(T03BB,caption="**TABLA 3.Registros de las constantes vitales  durante el ingreso(no se recogen las de UCI),con la función!.**")
+
+
+formula<-formula.text("Taula03",y="DIAB",taulavariables = conductor,dt=dt_plana_covid3_agr3_exc)
+
+descrTable(formula,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=dt_plana_covid3_agr3_exc,
+                 max.xlev = 100, 
+                 show.p.overall=TRUE,
+                 show.n = T,
+                 hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 3.Registros de las constantes vitales  durante el ingreso(no se recogen las de UCI),con la función!.**")
+
+
+formula<-formula_table1("Taula03",y="DIAB",taulavariables = conductor,dt=dt_plana_covid3_agr3_exc) 
+table1::table1(formula, 
+               data = dt_plana_covid3_agr3_exc,caption="**TABLA 3.Registros de las constantes vitales  durante el ingreso(no se recogen las de UCI),con la función!.**",
+               render.continuous=c(.="Mean (SD)", .="Median [Q1, Q3]"))
+
+
+
+
 ```
 ## 4.Descriptiva  Laboratorio
 ```{r resultats4, include=T}
-export2md(T04,caption="**TABLA 4. Registros de los resultados de peticiones de laboratorio realizadas durante el ingreso,con la función!.**")
+
+formula<-formula.text("Taula04",y="DIAB",taulavariables = conductor,dt=dt_plana_covid4_agr3_exc)
+
+descrTable(formula,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid4_agr3_exc,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F,digits = 2) %>% 
+  export2md(caption="**TABLA 4. Registros de los resultados de peticiones de laboratorio realizadas durante el ingreso,con la función!.**")
+
+
+
+formula<-formula_table1("Taula04",y="DIAB",taulavariables = conductor,dt=dt_plana_covid4_agr3_exc) 
+table1::table1(formula, 
+               data = dt_plana_covid4_agr3_exc,caption="**TABLA 4. Registros de los resultados de peticiones de laboratorio realizadas durante el ingreso,con la función!.**",
+               render.continuous=c(.="Mean (SD)", .="Median [Q1, Q3]"))
+
+
+
 ```
-## 5.Descriptiva  Mediacmentos
+## 5.Descriptiva  Medicamentos
 ```{r resultats5, include=T}
-export2md(T02,caption="**TABLA 5a. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
-export2md(T02B,caption="**TABLA 5b. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
+
+
+formula<-formula.text("Taula02",y="DIAB",taulavariables = conductor,dt = dt_plana_covid2_agr_exc2 )
+
+descrTable(formula,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid2_agr_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 5a. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
+
+
+
+formula<-formula.text("Taula02B",y="DIAB",taulavariables = conductor,dt = dt_plana_covid2_agr_b_exc2)
+
+T02B<-descrTable(formula,
+                method =2,
+                Q1 = 0, Q3 = 1,
+                data=dt_plana_covid2_agr_b_exc2,
+                max.xlev = 100, 
+                show.p.overall=TRUE,
+                show.n = T,
+                hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 5b. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
+
+
+
+
 ```
 ## 6.Descriptiva  EVENTOS
 ```{r resultats6, include=T}
-export2md(T01C3_C,caption="**TABLA 6.Eventos y complicaciones  en pacientes diabéticos i no diabéticos **")
-export2md(T01C3_DIAB_A,caption="**TABLA 6a. Eventos y complicaciones  en pacientes diabéticos+Sexo **")
-export2md(T01C3_DIAB_B,caption="**TABLA 6b. Eventos y complicaciones  en pacientes diabéticos <=65 años, > 65 años **")
-export2md(T01C3_NO_DIAB_A,caption="**TABLA 6c. Eventos y complicaciones  en pacientes no diabéticos+Sexo **")
-export2md(T01C3_NO_DIAB_B,caption="**TABLA 6d. Eventos y complicaciones  en pacientes no diabéticos <=65 años, > 65 años **")
+
+
+formula<-formula.text("Taula08",y="DIAB",taulavariables = conductor,dt = dt_plana_covid1_agr_exc2_lab)
+
+descrTable(formula,  
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_lab,
+                         max.xlev = 100, 
+                         show.p.overall=TRUE,
+                         show.n = T,
+                         hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6.Eventos y complicaciones  en pacientes diabéticos i no diabéticos **")
+
+
+
+formula<-formula.text("Taula08",y="SEXO.SEX",taulavariables = conductor,dt = dt_plana_covid1_agr_exc2_DIAB_lab)
+descrTable(formula,
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_DIAB_lab,
+                         max.xlev = 100, 
+                         show.p.overall=TRUE,
+                         show.n = T,
+                         hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6a. Eventos y complicaciones  en pacientes diabéticos+Sexo **")
+
+
+
+
+formula<-formula.text("Taula08",y="EDAD.AGE2",taulavariables = conductor,dt = dt_plana_covid1_agr_exc2_DIAB_lab)
+descrTable(formula,                            
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_DIAB_lab,
+                         max.xlev = 100, 
+                         show.p.overall=TRUE,
+                         show.n = T,
+                         hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6b. Eventos y complicaciones  en pacientes diabéticos <=65 años, > 65 años **")
+
+
+
+
+formula<-formula.text("Taula08",y="EDAD.AGE2",taulavariables = conductor,dt = dt_plana_covid1_agr_exc2_NO_DIAB_lab)
+
+descrTable(formula,       
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=dt_plana_covid1_agr_exc2_NO_DIAB_lab,
+                         max.xlev = 100, 
+                         show.p.overall=TRUE,
+                         show.n = T,
+                         hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6d. Eventos y complicaciones  en pacientes no diabéticos <=65 años, > 65 años **")
+
+
+
+
 ```
-## 7.Modelos de Mortalidad
+## 7.Modelos de Mortalidad y de mal pronostico (VM o muerte) población total
 ```{r resultats7, include=T, warning=F}
-
-
-dades_DIAB<-dades%>%filter(DG.DM=="Si")
-dades_NO_DIAB<-dades%>%filter(DG.DM=="No")
-
 c("ajuste1","ajuste2","ajuste3") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Modelos de Moratlidad",
+                    title = "Modelos de Mortalidad",
                     p.style = "numeric_stars")
 
 
-c("ajuste4","ajuste5","ajuste6","ajuste7") %>% 
+c("ajuste4","ajuste5","ajuste6") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6","M7"),
-                    title = "Modelos de Moratlidad",
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
+                    title = "Modelos de Mortalidad",
                     p.style = "numeric_stars")
 
 
-c("ajuste8a") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_DIAB))%>% 
+# *Muerte y/o Ventilación mecánica*
+
+c("ajuste1","ajuste2","ajuste3") %>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8a"),
-                    title = "Modelos de Moratlidad Grupo Diabético",
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
+                    title = "Muerte y/o Ventilación mecánica",
                     p.style = "numeric_stars")
 
-c("ajuste8b") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_NO_DIAB))%>% 
+c("ajuste4","ajuste5","ajuste6") %>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8b"),
-                    title = "Modelos de Moratlidad Grupo No Diabético",
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
+                    title = "Muerte y/o Ventilación mecánica",
                     p.style = "numeric_stars")
 
 
 ```
 
-```{r exemple_forestplot1, include=T}
+
+## 8.Modelos finales de Mortalidad población total 
+
+```{r resultats7.2, include=T, warning=F}
+
+M1_Exitus<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=dades)%>% 
+  glm(data = dades, family = "binomial") 
+
+M2_VM<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades)%>% 
+  glm(data = dades, family = "binomial") 
+
+list(M1_Exitus,M2_VM) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                    title = "Modelo de Mortalidad",
+                    p.style = "numeric_stars") 
+
+ list(M1_Exitus,M2_VM) %>% 
+  sjPlot::plot_models(prefix.labels = "label",show.p = T,m.labels = c("Death", "Death or Invasive mechanical ventilation"))
+
+
+
+
+```
+
+## 9.Modelos de mortalidad en población Diabética y no diabética 
+
+> Análisis por subgrupos
+
+```{r resultats8, include=T, warning=F}
+
+formu<-formula.text("ajuste8","Death2",taulavariables = conductor)
+
+split(dades,dades$DG.DM) %>% 
+  map(~glm(formu,data=.x,family = "binomial")) %>%
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
+                    title = "Modelos de Mortalidad Grupo Diabético",
+                    p.style = "numeric_stars")
+
+
+split(dades,dades$DG.DM) %>% 
+  map(~glm(formu,data=.x,family = "binomial")) %>%
+  sjPlot::plot_models(prefix.labels = "label", 
+                      legend.title = "Subgroup",
+                      title = "OR de modelos de mortalidad por grupos",
+                      m.labels = c("Without diabetes", "Diabetes"))
+
+
+```
+
+
+## 10.Modelos de mortalidad o ventilación mecanica por subgrupos Diabetica y no Diabetica 
+
+> Analisis por subgrupos
+
+```{r resultats9, include=T, warning=F}
+
+formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor)
+
+split(dades,dades$DG.DM) %>% 
+  map(~glm(formu,data=.x,family = "binomial")) %>%
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
+                    title = "Modelos de Mortalidad / Ventilación mecánica por grupos Diabético",
+                    p.style = "numeric_stars")
+
+
+split(dades,dades$DG.DM) %>% 
+  map(~glm(formu,data=.x,family = "binomial")) %>%
+  sjPlot::plot_models(prefix.labels = "label", 
+                      legend.title = "Subgroup",
+                      title = "OR de modelos de Mortalidad / Ventilación mecánica por grupos",
+                      m.labels = c("Without diabetes", "Diabetes"))
+
+
+
+
+```
+
+
+
+
+```{r exemple_forestplot1, include=F}
 
 # [[Exemple d'un forest plot d'un model, elimino la fila interceptl]]
 # filter 0 fora."Parameters"
 
-c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6","ajuste7","ajuste8a","ajuste8b") %>% 
+c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6","ajuste7","ajuste8") %>% 
   map(~formula.text(x=.x,"Death2",taulavariables = conductor,dt=dades)) %>% 
   map(~glm(formula=.x,data = dades, family = "binomial")) %>% 
   map(~parameters::model_parameters(.x,exponentiate = TRUE))%>% 
@@ -722,123 +865,60 @@ c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6","ajuste7","ajuste8
                       mean="Coefficient",
                       lower="CI_low",
                       upper="CI_high",
-                      intercept=0,
-                      label_X="Diferencias modelos estandarizados (IC del 95%) [Mortalidad]"))
+                      intercept=1,
+                      label_X="ORs de mortalidad (IC del 95%) [Mortalidad]"))
+
+
+formula.text("ajuste7","Death2",taulavariables = conductor,dt=dades) %>% 
+  glm(data = dades, family = "binomial") %>% 
+  parameters::model_parameters(exponentiate = TRUE) %>% 
+  filter(Parameter!="(Intercept)") %>% 
+  forest.plot.v2(     label="Parameter",
+                      mean="Coefficient",
+                      lower="CI_low",
+                      upper="CI_high",
+                      intercept=1,
+                      label_X="ORs de mortalidad (IC del 95%) [Mortalidad]")
 
 
 
-
-```
-
-
-
-
-## 8.Modelos de mal pronóstico (ventilación mecánica o muerte)
-
-*Muerte y/o Ventilación mecánica*
-
-
-```{r resultats8, include=T}
-c("ajuste1","ajuste2","ajuste3") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Muerte y/o Ventilación mecánica",
-                    p.style = "numeric_stars")
-
-c("ajuste4","ajuste5","ajuste6","ajuste7") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6","M7"),
-                    title = "Muerte y/o Ventilación mecánica",
-                    p.style = "numeric_stars")
-
-
-c("ajuste8a") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_DIAB))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8a"),
-                    title = "Muerte y/o Ventilación mecánica Grupo de diabeticos",
-                    p.style = "numeric_stars")
-
-c("ajuste8b") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades_NO_DIAB))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M8b"),
-                    title = "Muerte y/o Ventilación mecánica Grupo de no diabeticos",
-                    p.style = "numeric_stars")
+formula.text("ajuste7","Death2",taulavariables = conductor,dt=dades) %>% 
+  glm(data = dades, family = "binomial") %>% 
+  parameters::model_parameters(exponentiate = TRUE) %>% 
+  filter(Parameter!="(Intercept)") %>% 
+  etiquetar_taula(camp="Parameter",taulavariables = conductor,camp_descripcio = "desc_model",idcamp = "camp2")  %>% 
+  forest.plot.v2(label="Parameter",
+                      mean="Coefficient",
+                      lower="CI_low",
+                      upper="CI_high",
+                      intercept=1,
+                      label_X="ORs de mortalidad (IC del 95%) [Mortalidad]")
 
 
 ```
 
-```{r exemple_forestplot2, include=T}
+
+```{r exemple_forestplot2, include=F}
 
 # Exemple d'un forest plot d'un model
 
 
-c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6","ajuste7","ajuste8a","ajuste8b") %>% 
-  map(~formula.text(x=.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades)) %>% 
-  map(~glm(formula=.x,data = dades, family = "binomial")) %>% 
-  map(~parameters::model_parameters(.x,exponentiate = TRUE))%>% 
-  map(~forest.plot.v2(dadesmodel=.x,
-                      label="Parameter",
+formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=dades) %>% 
+  glm(data = dades, family = "binomial") %>% 
+  parameters::model_parameters(exponentiate = TRUE) %>% 
+  filter(Parameter!="(Intercept)") %>% 
+  etiquetar_taula(camp="Parameter",taulavariables = conductor,camp_descripcio = "desc_model",idcamp = "camp2")  %>% 
+  forest.plot.v2(label="Parameter",
                       mean="Coefficient",
                       lower="CI_low",
                       upper="CI_high",
-                      intercept=0,
-                      label_X="Diferencias modelos estandarizados (IC del 95%) [Muerte y/o Ventilación mecánica] "))
+                      intercept=1,
+                      label_X="ORs de mortalidad (IC del 95%) [Mortalidad]")
 
-# preguntar Jordi sobre Labels!  
-
-```
-
-
-## 9.Modelos de mal pronóstico (UCI, ventilación mecánica o muerte)
-
-*Muerte y/o Ventilación mecánica y/o UCI*
-
-```{r resultats9, include=T}
-
-
-c("ajuste1","ajuste2","ajuste3") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion_Ad_UCI=='Si'",taulavariables = conductor,dt=dades))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Muerte y/o Ventilación mecánica y/o UCI",
-                    p.style = "numeric_stars")
-
-
-c("ajuste4","ajuste5","ajuste6") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion_Ad_UCI=='Si'",taulavariables = conductor,dt=dades))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
-                    title = "Muerte y/o Ventilación mecánica y/o UCI",
-                    p.style = "numeric_stars")
 
 
 ```
 
-
-```{r exemple_forestplot3, include=T}
-
-# Exemple d'un forest plot d'un model
-
-
-
-c("ajuste1","ajuste2","ajuste3","ajuste4","ajuste5","ajuste6") %>% 
-  map(~formula.text(x=.x,"Death_DG.Mechanical_ventialtion_Ad_UCI=='Si'",taulavariables = conductor,dt=dades)) %>% 
-  map(~glm(formula=.x,data = dades, family = "binomial")) %>% 
-  map(~parameters::model_parameters(.x,exponentiate = TRUE))%>% 
-  map(~forest.plot.v2(dadesmodel=.x,
-                      label="Parameter",
-                      mean="Coefficient",
-                      lower="CI_low",
-                      upper="CI_high",
-                      intercept=0,
-                      label_X="Diferencias modelos estandarizados (IC del 95%) [Muerte y/o Ventilación mecánica y/o UCI]"))
-
-
-```
 
 
 

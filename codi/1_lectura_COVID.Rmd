@@ -1302,12 +1302,7 @@ save(dt_plana_covid1_org,
      dt_plana_covid5_6_agr2,
      dt_plana_covid_INGRES_agr,
      C_DIABETICS,
-     C_NO_DIABETICS,
-     GRUP1,
-     GRUP2,
-     GRUP3,
-     GRUP4,
-     GRUP5
+     C_NO_DIABETICS
      ,file=here::here("COVID2.Rdata"))
 
 
