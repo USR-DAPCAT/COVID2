@@ -46,7 +46,7 @@ params:
 
 ```{r setup, include = FALSE}
 
-#9.9.2020#
+#14.09.2020#
 
 library("dplyr")
 library("lubridate")
@@ -83,28 +83,31 @@ conductor_codis2<-here::here("Codis_Covid_Agrupadores_juny")
 #       los datos de la urgencia previa si ha habido (2.226 registros), su estancia en UCI, 
 #       si ha habido y los registros del primer y último conjunto de constantes de la urgencia 
 dt_01<-read.csv2(here::here(directori_dades,"01.csv"),sep=";",dec=",",header = TRUE)%>% as_tibble()
+#-------------------------------------------------------------------------#
 #ii)    En la tabla de medicación, se encuentra toda la medicación administrada 
 #       a cada paciente durante su ingreso (más de 60.000 registros), 
 #       con las fechas correspondientes a la primera y última administración de cada fármaco identificaos estos,
 #       por su nombre comercial y su clasificación en la ATC5/ATC7. 
 dt_02<-read.csv2(here::here(directori_dades,"02.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
+#-------------------------------------------------------------------------#
 #iii)   En la tabla de constantes vitales, 
 #       se encuentran todos los registros de constantes (54.000 registros hasta el momento)
 #       básicas recogidos durante su ingreso con su fecha y hora de registro. 
 dt_03<-read.csv2(here::here(directori_dades,"03.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
+#-------------------------------------------------------------------------#
 #iv)    En la tabla de laboratorio se encuentran los resultados de las determinaciones (398.884 registros)
 #       de todas las peticiones realizadas a cada paciente durante su ingreso y 
 #       en la urgencia previa, si hubiera tenido. 
 dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
 # dt_04 <- readr::read_delim(here::here(directori_dades,"04.csv"), ";", escape_double = FALSE, trim_ws = TRUE) %>% as_tibble()
-
+#-------------------------------------------------------------------------#
+#v)vi) 
 #       Y por último en las tablas de codificación CIE10, 
 #       aparecen los registros de la información de diagnósticos y procedimientos
 #       codificada según la clasificación internacional CIE10 en su última versión distribuida 
 #       (no contempla COVID), tanto para los episodios de ingresados (más de 1.600) de los pacientes
 #       referidos como de las urgencias (más de 1.900) 
 #       previas a esos episodios si las hubiera habido
-#v)vi)  
 dt_05<-read.csv2(here::here(directori_dades,"05.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
 dt_06<-read.csv2(here::here(directori_dades,"06.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
 #-------------------------------------------------------------------------#  
@@ -124,7 +127,6 @@ source(here::here("codi/funcions_Covid.r"))
 ###############################################
 # dt_plana_COVID1 (TaulaPLANA1  Principal!!!) #
 ###############################################
-
 dt_plana_covid1<-dt_01
 
 #8.5.2020
@@ -227,14 +229,8 @@ dt_plana_covid1<-dt_plana_covid1%>%
 dt_plana_covid1<-dt_plana_covid1%>%
   mutate(TA_MIN_ULTIMA.LAST_URG.EMERG = ifelse(TA_MIN_ULTIMA.LAST_URG.EMERG==0,NA, TA_MIN_ULTIMA.LAST_URG.EMERG))
 
-
-
-
 dt_plana_covid1_agr<-dt_plana_covid1
 dt_plana_covid1_org<-dt_plana_covid1
-
-
-
 
 
 # A tibble: 2,307 x 29
@@ -824,7 +820,6 @@ dt_plana_covid6_gather<-dt_plana_covid6%>%gather("Problema_salud_Ingreso","CIE10
   arrange(PATIENT.ID)
 
 
-
 dt_plana_covid5_gatherb<-dt_plana_covid5_gather%>% transmute(idp=PATIENT.ID,cod=as.character(CIE10),dat="20200520") 
 dt_plana_covid6_gatherb<-dt_plana_covid6_gather%>% transmute(idp=PATIENT.ID,cod=as.character(CIE10),dat="20200520") 
 
@@ -1125,15 +1120,91 @@ C_DIABETICS<-dt_plana_DM_agr1%>%
   group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)
 
 
+
 #table(C_DIABETICS$idp)
 #-----------------------------------------------------------------------------------------------------#
 C_NO_DIABETICS<-dt_plana_covid1_agr %>% transmute(idp=PATIENT.ID)%>% anti_join(C_DIABETICS,by="idp")
 #-----------------------------------------------------------------------------------------------------#
 
 
+
+
+```
+
+```{r taulaPlana}
+#-----------------------------------------------------------------------------------------------------#
+# 14.9.2020  TAULA PLANA!!!
+#-----------------------------------------------------------------------------------------------------#
+
+
+#Taula Principal.T.PLANA!#
 #dt_plana_covid1_agr
+#(PATIENT.ID)--><dbl> 
+
+#Medicació Ingrés.T.PLANA!#
+#dt_plana_covid2_agr
+#dt_plana_covid2_agr_b
+#(idp)--><int>
+
+
+dt_plana_covid2_agr<-dt_plana_covid2_agr%>% mutate(PATIENT.ID=idp)
+dt_plana_covid2_agr$PATIENT.ID<-as.double(dt_plana_covid2_agr$PATIENT.ID)
+dt_plana_covid2_agr_b<-dt_plana_covid2_agr_b%>% mutate(PATIENT.ID=idp)
+dt_plana_covid2_agr_b$PATIENT.ID<-as.double(dt_plana_covid2_agr_b$PATIENT.ID)
+
+
+#Constants Vitals Ingrés.T.PLANA!#
+#dt_plana_covid3_agr
+#(PATIENT.ID)=--><int>
+dt_plana_covid3_agr$PATIENT.ID<-as.double(dt_plana_covid3_agr$PATIENT.ID)
+
+
+#Determinacions T.Plana!
+#dt_plana_covid4_agr3
+#(PATIENT.ID)--><dbl> 
+dt_plana_covid4_agr3$PATIENT.ID<-as.double(dt_plana_covid4_agr3$PATIENT.ID)
+
+#Problemes de salut Ingrés/Urgència.T.PLANA!#
+#dt_plana_covid5_6_agr
+#dt_plana_covid5_6_agr2
+#(PATIENT.ID)--><dbl> 
+
+
+
+dt_plana_covid5_6_agr<-dt_plana_covid5_6_agr%>% mutate(PATIENT.ID=idp)
+dt_plana_covid5_6_agr$PATIENT.ID<-as.double(dt_plana_covid5_6_agr$PATIENT.ID)
+
+dt_plana_covid5_6_agr2<-dt_plana_covid5_6_agr2%>% mutate(PATIENT.ID=idp)
+dt_plana_covid5_6_agr2$PATIENT.ID<-as.double(dt_plana_covid5_6_agr2$PATIENT.ID)
+
+
+
+#Grup de Diabètics.T.PLANA!#
 #C_DIABETICS
-#C_NO_DIABETICS
+#(PATIENT.ID)--><dbl> 
+
+C_DIABETICS<-C_DIABETICS%>%transmute(PATIENT.ID=idp,G_DIABETIC=1)
+C_DIABETICS$PATIENT.ID<-as.double(C_DIABETICS$PATIENT.ID)
+
+
+#Events que volem.T.PLANA!#
+#dt_plana_covid_INGRES_agr
+#(PATIENT.ID)--><dbl> 
+
+
+
+#-------------------------------------------------------------------------------------------------#
+TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_covid2_agr_b,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_covid3_agr,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_covid4_agr3,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_covid5_6_agr,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_covid5_6_agr2,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_covid_INGRES_agr,by="PATIENT.ID")%>%
+                                 left_join(C_DIABETICS,by="PATIENT.ID")
+
+variable.names(TAULA_PLANA)
+
 ```
 
 
