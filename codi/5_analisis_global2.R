@@ -1,5 +1,5 @@
 ################
-# 15//09//2020 #
+# 16//09//2020 #
 ################
 
 
@@ -17,7 +17,7 @@ rmarkdown::render(input="./codi/1_lectura_COVID.Rmd",
 
 #rm(list=ls())
 #dir_dades="dades/SIDIAP"
-rmarkdown::render(input="./codi/3_2_analisi_COVID.Rmd",
+rmarkdown::render(input="./codi/3_3_analisi_COVID.Rmd",
                   output_file="output/informe_exploratori3.html",
                   params = list(dir_dades="dades"))
 
