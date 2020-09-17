@@ -46,7 +46,7 @@ params:
 
 ```{r setup, include = FALSE}
 
-#15.09.2020#
+#17.09.2020#
 
 library("dplyr")
 library("lubridate")
@@ -121,7 +121,7 @@ dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(co
 #source('codi/funcions_Covid.r')
 ```
 ## 2. Agregacio de dades
-```{r agregacio}
+```{r agregacio1}
 source(here::here("codi/funcions_Covid.r"))
 
 ###############################################
@@ -836,7 +836,7 @@ dt_plana_covid5_6_agr<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
 ```
 
 
-```{r events}
+```{r events1}
 #############################################################################################
 #                   E V E N T S                                                             #
 #############################################################################################
@@ -903,69 +903,8 @@ dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3 %>%select(idp,
 ```
 
 
-```{r events2}
 
-
-#dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr %>%
-#  mutate_at(vars(starts_with("EV1.") ),funs(ifelse(is.na(.),"No","Si")))%>%
-#  mutate(PATIENT.ID=idp)%>% select(-idp)
-
-#dt_plana_covid_INGRES_agr$Neurologic_Comp <-
-#  ifelse(dt_plana_covid_INGRES_agr$EV1.COMP_NEURO=="Si" |
-#         dt_plana_covid_INGRES_agr$EV1.ENCEFALITIS=="Si" ,"Si","No")
-
-#dt_plana_covid_INGRES_agr2<-dt_plana_covid_INGRES_agr2 %>%
-#  mutate_at(vars(starts_with("EV2.") ),funs(ifelse(is.na(.),"No","Si")))%>%
-#  mutate(PATIENT.ID=idp)%>% select(-idp)
-
-#dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3 %>%
-#  mutate_at(vars(starts_with("EV3.") ),funs(ifelse(is.na(.),"No","Si")))%>%
-#  mutate(PATIENT.ID=idp)%>% select(-idp)
-
-#dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr%>%full_join(dt_plana_covid_INGRES_agr2,by = #"PATIENT.ID")%>%
-#  full_join(dt_plana_covid_INGRES_agr3,by = "PATIENT.ID")
-
-#dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr%>%
-#  mutate_at(vars(starts_with("EV") ),funs(ifelse(is.na(.),"No",.)))
-
-#view(dt_plana_covid_INGRES_agr)
-
-
-#dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr %>%
-#  mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Si")))%>%
-#  mutate(PATIENT.ID=idp)%>% select(-idp)
-
-#dt_plana_covid_INGRES_agr$Neurologic_Comp <-
-#  ifelse(dt_plana_covid_INGRES_agr$DG.COMP_NEURO=="Si" |
-#         dt_plana_covid_INGRES_agr$DG.ENCEFALITIS=="Si" ,"Si","No")
-
-#dt_plana_covid_INGRES_agr2<-dt_plana_covid_INGRES_agr2 %>%
-#  mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Si")))%>%
-#  mutate(PATIENT.ID=idp)%>% select(-idp)
-
-#dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3 %>%
-#  mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Si")))%>%
-#  mutate(PATIENT.ID=idp)%>% select(-idp)
-
-#dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr%>%full_join(dt_plana_covid_INGRES_agr2,by = #"PATIENT.ID")%>%
-#  full_join(dt_plana_covid_INGRES_agr3,by = "PATIENT.ID")
-
-#dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr%>%
-#  mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No",.)))
-
-
-#dt_plana_covid_INGRES_agr$PATIENT.ID<-as.numeric(dt_plana_covid_INGRES_agr$PATIENT.ID)
-
-
-
-#####################################################################################
-# TOTAL TAULES:[]
-# falta fer Taula2 fàrmacs !!i fer MAPS i vector ! , 
-########################################################################################
-```
-
-
-```{r diabetics}
+```{r diabetics1}
 #############################################################################################
 #                   B U S C A R     D I A B E T I C S                                              
 
@@ -1350,7 +1289,7 @@ dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3%>%mutate(PATIENT.ID=idp)%
 ```
 
 ## 3. Fusió de dades
-```{r fusio}
+```{r fusio_taulaPlana}
 
 
 #-------------------------------------------------------------------------------------------------#
@@ -1396,9 +1335,6 @@ TAULA_PLANA           <-TAULA_PLANA%>%arrange(PATIENT.ID)
 save(TAULA_PLANA
      ,file=here::here("COVID2.Rdata"))
 
-
-#names(TAULA_PLANA)
-#saveRDS(dt_plana, file=here::here(params$dir_dades,"dt_plana.rds"))
 
 ```
 
