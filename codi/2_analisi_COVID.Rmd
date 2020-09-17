@@ -42,7 +42,18 @@ params:
 
 **Últimas actualizaciones** 
 
-> Setiembre/2020
+> Septiembre/2020
+
+&check; Revisado código data manager y analisis. <br/>
+&check; Corregidos modelos <br/>
+&check; Añadida descriptiva de eventos <br/>
+
+
+
+
+**Realizado**
+
+> Septiembre/2020
 
 &check; Ampliar tablas descriptivas P25, Median , P75 etc.. <br/>
 &check; Cálculo de nuevas variable IFCC HBA1C, agrupador Comp_cardiovascular <br/>
@@ -52,8 +63,6 @@ params:
 &check; Modelos por subgrupos <br/>
 &check; Forest plot de modelos <br/>
 
-
-**Realizado**
 
 > Agosto/2020
 
@@ -274,7 +283,8 @@ TAULA_PLANA$agecat<-ifelse(TAULA_PLANA$EDAD.AGE>=40 & TAULA_PLANA$EDAD.AGE<=59
 TAULA_PLANA$agecat<-ifelse(TAULA_PLANA$EDAD.AGE>59,"3",TAULA_PLANA$agecat)
 
 TAULA_PLANA$Death2<-ifelse(TAULA_PLANA$Death=="Si",1,0)
-TAULA_PLANA$Ad_UCI<-ifelse(TAULA_PLANA$Ad_UCI=="Si",1,0)
+
+# TAULA_PLANA$Ad_UCI<-ifelse(TAULA_PLANA$Ad_UCI=="Si",1,0)
 
 
 # Canvi de categoria de referencia funció refcat()
@@ -680,14 +690,15 @@ list(M1_Exitus,M2_VM) %>%
 
 formu<-formula.text("ajuste8","Death2",taulavariables = conductor)
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+
+split(TAULA_PLANA_exc,TAULA_PLANA_exc$G_DIABETIC) %>% 
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
                     title = "Modelos de Mortalidad Grupo Diabético",
                     p.style = "numeric_stars")
 
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+split(TAULA_PLANA_exc,TAULA_PLANA_exc$G_DIABETIC) %>% 
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::plot_models(prefix.labels = "label", 
                       legend.title = "Subgroup",
@@ -706,14 +717,14 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
 
 formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor)
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+split(TAULA_PLANA_exc,TAULA_PLANA_exc$G_DIABETIC) %>% 
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
                     title = "Modelos de Mortalidad / Ventilación mecánica por grupos Diabético",
                     p.style = "numeric_stars")
 
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+split(TAULA_PLANA_exc,TAULA_PLANA_exc$G_DIABETIC) %>% 
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::plot_models(prefix.labels = "label", 
                       legend.title = "Subgroup",
