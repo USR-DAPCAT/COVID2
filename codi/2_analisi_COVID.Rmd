@@ -62,6 +62,11 @@ params:
 &check; actualizaciones nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
 &check; Modelos por subgrupos <br/>
 &check; Forest plot de modelos <br/>
+&check; calcular tabla eventos para no diabéticos por sexo <br/>
+&check; añadir la variable fallo renal agudo en la tabla de eventos <br/>
+&check; añadir la nueva variable enfermedad cardiovascularel modelo de mortalidad [ajuste2,ajuste3,ajuste5,ajuste6]
+
+
 
 
 > Agosto/2020
@@ -118,6 +123,7 @@ knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, include=F,size
 ############
 #09.09.2020
 #16.09.2020
+#18.09.2020
 ###########
 
 library("dplyr")
@@ -588,6 +594,16 @@ descrTable(formula,
   export2md(caption="**TABLA 6a. Eventos y complicaciones  en pacientes diabéticos+Sexo **")
 
 
+formula<-formula.text("Taula08",y="SEXO.SEX",taulavariables = conductor,dt = TAULA_PLANA_exc_DIAB)
+descrTable(formula,
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=TAULA_PLANA_exc_NO_DIAB,
+                         max.xlev = 100, 
+                         show.p.overall=TRUE,
+                         show.n = T,
+                         hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6b. Eventos y complicaciones  en pacientes no diabéticos+Sexo **")
 
 
 formula<-formula.text("Taula08",y="EDAD.AGE2",taulavariables = conductor,dt = TAULA_PLANA_exc_DIAB)
@@ -599,7 +615,7 @@ descrTable(formula,
                          show.p.overall=TRUE,
                          show.n = T,
                          hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 6b. Eventos y complicaciones  en pacientes diabéticos <=65 años, > 65 años **")
+  export2md(caption="**TABLA 6c. Eventos y complicaciones  en pacientes diabéticos <=65 años, > 65 años **")
 
 
 

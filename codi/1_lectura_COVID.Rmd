@@ -46,7 +46,7 @@ params:
 
 ```{r setup, include = FALSE}
 
-#17.09.2020#
+#18.09.2020#
 
 library("dplyr")
 library("lubridate")
@@ -846,6 +846,10 @@ dt_plana_covid5_6_agr<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
 
 #EVENTS!!!!  MOLT IMPORTANT!!  DIAGNOSTICS INGRES!
 
+#fallo renal agudo--> IRA(Event!)
+#20200520
+
+
 dt_diagnostics_INGRES<-dt_plana_covid6_gatherb
 dt_plana_covid_INGRES_agr<-agregar_problemes(select(dt_diagnostics_INGRES,idp,cod,dat),
                                          bd.dindex = "20000601",
@@ -887,7 +891,8 @@ dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr %>%select(idp,
                                                                EV1.COMP_NEURO ,
                                                                EV1.ENCEFALITIS  ,
                                                                EV1.Mechanical_ventialtion,
-                                                               EV1.TVP)
+                                                               EV1.TVP,
+                                                               EV1.IRA)
 
 dt_plana_covid_INGRES_agr2<-dt_plana_covid_INGRES_agr2 %>%select(idp,EV2.COMP_NEUMO)
 dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3 %>%select(idp,
