@@ -1,8 +1,14 @@
 ################
-# 17//09//2020 #
+# 18//09//2020 #
 ################
 
 rm(list=ls())
+
+  
+#i)   Falta calcular tabla eventos para no diabéticos por sexo [OK]
+#ii)  Falta añadir la variable fallo renal agudo en la tabla de eventos[OK]
+#iii) Falta añadir la nueva variable enfermedad cardiovascular en el modelo de mortalidad
+#     DG2.COMP_CARDIOVASC: [ajuste2,ajuste3,ajuste5,ajuste6][ok]
 
 
 #i)
