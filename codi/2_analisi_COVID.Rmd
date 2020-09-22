@@ -655,6 +655,18 @@ c("ajuste4","ajuste5","ajuste6") %>%
                     p.style = "numeric_stars")
 
 
+
+
+c("ajuste9","ajuste10") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M9", "M10"),
+                    title = "Modelos de Mortalidad",
+                    p.style = "numeric_stars")
+
+
+
+
 # *Muerte y/o Ventilación mecánica*
 
 c("ajuste1","ajuste2","ajuste3") %>% 
@@ -671,6 +683,12 @@ c("ajuste4","ajuste5","ajuste6") %>%
                     title = "Muerte y/o Ventilación mecánica",
                     p.style = "numeric_stars")
 
+c("ajuste9","ajuste10") %>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M9", "M10"),
+                    title = "Muerte y/o Ventilación mecánica",
+                    p.style = "numeric_stars")
 
 ```
 
@@ -690,9 +708,11 @@ list(M1_Exitus,M2_VM) %>%
                     title = "Modelo de Mortalidad",
                     p.style = "numeric_stars") 
 
- list(M1_Exitus,M2_VM) %>% 
-  sjPlot::plot_models(prefix.labels = "label",show.p = T,m.labels = c("Death", "Death or Invasive mechanical ventilation"))
 
+list(M1_Exitus,M2_VM) %>% 
+  sjPlot::plot_models(prefix.labels = "label",show.p = T,
+                      m.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                      colors = c("black","grey50")) 
 
 
 
@@ -719,7 +739,10 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$G_DIABETIC) %>%
   sjPlot::plot_models(prefix.labels = "label", 
                       legend.title = "Subgroup",
                       title = "OR de modelos de mortalidad por grupos",
-                      m.labels = c("Without diabetes", "Diabetes"))
+                      m.labels = c("Without diabetes", "Diabetes"),
+                      colors = c("black","grey50"))
+
+
 
 
 ```
@@ -745,7 +768,8 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$G_DIABETIC) %>%
   sjPlot::plot_models(prefix.labels = "label", 
                       legend.title = "Subgroup",
                       title = "OR de modelos de Mortalidad / Ventilación mecánica por grupos",
-                      m.labels = c("Without diabetes", "Diabetes"))
+                      m.labels = c("Without diabetes", "Diabetes"),
+                      colors = c("black","grey50"))
 
 
 

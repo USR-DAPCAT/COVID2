@@ -4,18 +4,24 @@
 
 rm(list=ls())
 
+#feina a fer:
+
   
 #i)   Falta calcular tabla eventos para no diabéticos por sexo [OK]
+
 #ii)  Falta añadir la variable fallo renal agudo en la tabla de eventos[OK]
+
 #iii) Falta añadir la nueva variable enfermedad cardiovascular en el modelo de mortalidad
 #     DG2.COMP_CARDIOVASC: [ajuste2,ajuste3,ajuste5,ajuste6][ok]
-#iv)  Lo de la glucemia >200 suposo que es perque per la ADA una glucemia de >200 en qualsevol moment del dia es criteri de DM
+
+#iv)  Lo de la glucemia >200 suposo que es perque per la ADA una glucemia de >200 
+#     en qualsevol moment del dia es criteri de DM
 #     Pero en algun dels models (per exemple el que fa servir DM categorica)
-#     doncs sí que s'hauria de posar la glucemia com a variable continua (Josep)
+#     doncs sí que s'hauria de posar la glucemia com a variable continua (Josep)[OK]
 
 #Bon vespre:
 
-# Respecto los foresplot,los puedes hacer en blanco y negro y poner una linia verical?
+#v) Respecto los foresplot,los puedes hacer en blanco y negro y poner una linia verical? si fet! [OK]
 
 
 ## Els 3 models són:
@@ -28,9 +34,13 @@ rm(list=ls())
 ## No sé si Dídac i Josep us fa el mateix efecte
 
 ## Una altra possibilitat d'agrupació seria:
-## M1: igual
+## vi) M1: igual  [OK]
+
 ## M2: M1 + obesitat + HTA + dislipèmia
+
 ## M3 : M2 + lesions orgàniques
+
+
 
 #  Amb els models actuals, encara que les OR de les lesions d'orga diana són altes, 
 #  la R2 canvia més del model 2 al 3 que del 1 al 2.  
