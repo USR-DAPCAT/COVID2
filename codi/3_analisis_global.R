@@ -1,5 +1,5 @@
 ################
-# 22//09//2020 #
+# 24//09//2020 #
 ################
 
 rm(list=ls())
@@ -34,13 +34,14 @@ rm(list=ls())
 ## No sé si Dídac i Josep us fa el mateix efecte
 
 ## Una altra possibilitat d'agrupació seria:
-## vi) M1: igual  [OK]
+
+## vi) 
+
+## M1: igual  [OK]
 
 ## M2: M1 + obesitat + HTA + dislipèmia
 
 ## M3 : M2 + lesions orgàniques
-
-
 
 #  Amb els models actuals, encara que les OR de les lesions d'orga diana són altes, 
 #  la R2 canvia més del model 2 al 3 que del 1 al 2.  

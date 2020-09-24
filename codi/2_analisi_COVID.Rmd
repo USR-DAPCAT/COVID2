@@ -44,6 +44,8 @@ params:
 
 > Septiembre/2020
 
+&check; Corregidos modelos pasar de Insuficiencia Renal Cronica  a Aguda (IRA) <br/>
+&check; Ajustes 7 i 8, pasar a Edad Continua al CONDUCTOR <br/>
 &check; Revisado código data manager y analisis. <br/>
 &check; Corregidos modelos <br/>
 &check; Añadida descriptiva de eventos <br/>
@@ -664,6 +666,13 @@ c("ajuste9","ajuste10") %>%
                     title = "Modelos de Mortalidad",
                     p.style = "numeric_stars")
 
+c("ajuste11","ajuste12") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M11", "M12"),
+                    title = "Modelos de Mortalidad",
+                    p.style = "numeric_stars")
+
 
 
 
@@ -687,6 +696,14 @@ c("ajuste9","ajuste10") %>%
   map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M9", "M10"),
+                    title = "Muerte y/o Ventilación mecánica",
+                    p.style = "numeric_stars")
+
+
+c("ajuste11","ajuste12") %>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M11", "M12"),
                     title = "Muerte y/o Ventilación mecánica",
                     p.style = "numeric_stars")
 
