@@ -709,7 +709,6 @@ c("ajuste11","ajuste12") %>%
 
 ```
 
-
 ## 9.Modelos finales de Mortalidad población total 
 
 ```{r resultats7.2, include=T, warning=F}
@@ -719,6 +718,18 @@ M1_Exitus<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_P
 
 M2_VM<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
   glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+###
+
+
+M3_Exitus<-glm(Death2 ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+G_DIABETIC*DG2.OB,data = TAULA_PLANA_exc, family = "binomial") 
+
+M4_VM<- glm(Death_DG.Mechanical_ventialtion=='Si' ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+ G_DIABETIC*DG2.OB,data = TAULA_PLANA_exc, family = "binomial") 
+
+summary(M3_Exitus)
+summary(M4_VM)
+
+
 
 list(M1_Exitus,M2_VM) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
@@ -730,6 +741,14 @@ list(M1_Exitus,M2_VM) %>%
   sjPlot::plot_models(prefix.labels = "label",show.p = T,
                       m.labels = c("Death", "Death or Invasive mechanical ventilation"),
                       colors = c("black","grey50")) 
+
+
+#fet!
+
+list(M3_Exitus,M4_VM) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                    title = "Modelo de Mortalidad",
+                    p.style = "numeric_stars")
 
 
 

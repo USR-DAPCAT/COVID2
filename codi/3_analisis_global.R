@@ -1,6 +1,83 @@
 ################
-# 25//09//2020 #
+# 30//09//2020 #
 ################
+
+#Bona tarda,
+
+#Gràcies per l'update!
+
+#Si no posem les dades d'HbA1c a les taules, aniran en el texte?
+  
+#  Sobre les interaccions, el que necessitem és que ens ajudin a contestar si diferents factors pronòstics tenen un pes diferent segons el grup o la variable de resultat.
+
+#A mi la pregunta se'm genera si visualment l'efecte sembla diferent. P.e.
+#- a gràfic 1, obesitat
+#- a gràfic 2, obesitat
+#- a gràfic 3, obesitat i hiperlipidèmia
+#- a gràfic 4, obesitat, hiperlipidèmia i insuficiència cardíaca congestiva
+#- a gràfic 5, obesitat, hiperlipidèmia
+#- a gràfic 6, obesitat, hiperlipidèmia i insuficiència cardíaca congestiva
+
+#Si escollim els models amb COPD només caldria analitzar els models corresponents a gràfics 1,3 i 6. Es podria testar si hi ha interacció en aquests tres models per les variables que indico a dalt i "acceptem" que no n'hi ha per les altres? Crec que mirar interaccions de primer ordre seria suficient.
+
+#Salutacions
+
+#Rosa Corcoy
+#Directora de la Unitat de Diabetis,
+#   Servei d'Endocrinologia i Nutrició,
+#Hospital de la Santa Creu i Sant Pau, Barcelona
+#Universitat Autònoma de Barcelona
+#CIBER-BBN
+
+
+
+#Hola Rosa,
+
+#Per aclarir una mica el que necessiteu
+
+#- Les interaccions de primer ordre relatiu a la Obesitat, HTA etc... x Diabetis  estan avaluades ja que es va fer un model per subgrups: diabetis, . En el Forest plot de mortalitat per grups es pot veure com canvia cada mesura d'associació per cada subgrup (Diabetis versus no Diabetes) 
+
+#- Això mateix es pot afegir en un model , com a interaccions de primer ordre, però pot representar afegir molts més paràmetres i hi ha risc de sobreajust sino concretem.  
+
+#- Entenem que les interaccions d'interès són: 1 obesitat x Diabetis , 2.   Diabetis x HTA, 3. Diabetis x Hiperlipemia, 4. Diabetis x IC ?
+  
+#- Voleu veure si "'l'efecte" de la diabetis canvia amb  sense la presència de cada un d'aquests factors o si "l'efecte" / associació de cada un d'aquests factors canvia amb la presencia o no de la diabetis? 
+
+#- A quins gràfics a que et refereixes? Forest plots , mesures d'associació  altre? 
+
+#Avui estic a Sant Pau, si vols ho parlem un moment amb els resultats, o ens respons el correu. 
+
+#Fins aviat
+
+#Jordi
+
+
+
+
+
+
+
+
+
+
+# FEINA:
+
+#De todas maneras preguntale que interacción
+#o interacciones concretas quiere evaluar y de que orden, 2 3 4? 
+
+#Hola Ray, 
+
+#Por favor mira lo que nos comenta Rosa, 
+#en algunas tablas se tiene que incluir tb COPD donde falta, gracias 
+#Muchas gracias Bogdan
+
+#Incluyo el texto con
+#algún cambio de vocabulario
+#por qué en algunas tablas no se incluye COPD?
+#
+#necesitamos testar interacción para concluir sobre la relevancia de los factores pronósticos?
+#Saludos
+
 
 rm(list=ls())
 
