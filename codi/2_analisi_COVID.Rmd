@@ -764,8 +764,8 @@ Mi_Exitus<- formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_
 Mi_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB")%>% 
   glm(data = TAULA_PLANA_exc, family = "binomial") 
 
- Mi_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB")%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial")%>%summary() 
+#kkk<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB")%>% 
+# glm(data = TAULA_PLANA_exc, family = "binomial")%>%summary() 
 
 
 #[Diabetes X hiperlipidèmia]
