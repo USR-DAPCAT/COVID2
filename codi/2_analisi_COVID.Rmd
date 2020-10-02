@@ -42,6 +42,22 @@ params:
 
 **Últimas actualizaciones** 
 
+> Octubre/2020
+
+&check; Modelos de Mortalidad con INTERACCIONES :[Diabetes X Obesidad]   <br/>
+&check; Modelos de Ventilación Mecánica y/o Mortalidad con INTERACCIONES :[Diabetes X Obesidad]   <br/>
+&check; Modelos de Mortalidad con INTERACCIONES :[Diabetes X Hiperlipidemia]   <br/>
+&check; Modelos de Ventilación Mecánica y/o Mortalidad con INTERACCIONES:[Diabetes X Hiperlipidemia]   <br/>
+&check; Modelos de Mortalidad con INTERACCIONES :[Diabetes X Insuficiencia Cardiaca]   <br/>
+&check; Modelos de Ventilación Mecánica y/o Mortalidad con INTERACCIONES:[Diabetes X Insuficiencia Cardiaca]   <br/>
+&check; Modelos de Mortalidad con INTERACCIONES :[Diabetes X Obesidad]  + [Diabetes X Hiperlipidemia]   <br/>
+&check; Modelos de Ventilación Mecánica y/o Mortalidad con INTERACCIONES:[Diabetes X Obesidad]  + [Diabetes X Hiperlipidemia]   <br/>
+&check; Modelos de Mortalidad con INTERACCIONES :[Diabetes X Insuficiencia Renal Crónica]   <br/>
+&check; Modelos de Ventilación Mecánica y/o Mortalidad con INTERACCIONES:[Diabetes X Insuficiencia Renal Crónica]   <br/>
+&check; Modelos de Mortalidad con INTERACCIONES :[Diabetes X COPD]   <br/>
+&check; Modelos de Ventilación Mecánica y/o Mortalidad con INTERACCIONES:[Diabetes X COPD]   <br/>
+
+
 > Septiembre/2020
 
 &check; Corregidos modelos pasar de Insuficiencia Renal Cronica  a Aguda (IRA) <br/>
@@ -719,15 +735,82 @@ M1_Exitus<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_P
 M2_VM<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
   glm(data = TAULA_PLANA_exc, family = "binomial") 
 
-###
+
+#A mi la pregunta se'm genera si visualment l'efecte sembla diferent. P.e.
+#- a gràfic 1, obesitat
+#- a gràfic 2, obesitat
+#- a gràfic 3, obesitat i hiperlipidèmia
+#- a gràfic 4, obesitat, hiperlipidèmia i insuficiència cardíaca congestiva
+#- a gràfic 5, obesitat, hiperlipidèmia
+#- a gràfic 6, obesitat, hiperlipidèmia i insuficiència cardíaca congestiva
 
 
-M3_Exitus<-glm(Death2 ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+G_DIABETIC*DG2.OB,data = TAULA_PLANA_exc, family = "binomial") 
+#i)   [Diabetes X Obesitat]
+#ii)  [Diabetes X hiperlipidèmia]
+#iii  [Diabetes X insuficiència cardíaca congestiva]
+#iv)  [Diabetes X Obesitat]  + [Diabetes X hiperlipidèmia]
 
-M4_VM<- glm(Death_DG.Mechanical_ventialtion=='Si' ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+ G_DIABETIC*DG2.OB,data = TAULA_PLANA_exc, family = "binomial") 
 
-summary(M3_Exitus)
-summary(M4_VM)
+
+
+#[Diabetes X Obesitat]
+
+#Mi_Exitus<-glm(Death2 ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+G_DIABETIC*DG2.OB,data #=TAULA_PLANA_exc, family = "binomial") 
+#Mi_Exitus<- paste0(formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc),"+G_DIABETIC*DG2.OB")%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
+#Mi_VM<- glm(Death_DG.Mechanical_ventialtion=='Si' ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+ #G_DIABETIC*DG2.OB,data = TAULA_PLANA_exc, family = "binomial") 
+Mi_Exitus<- formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+Mi_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+ Mi_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial")%>%summary() 
+
+
+#[Diabetes X hiperlipidèmia]
+
+#Mii_Exitus<-glm(Death2 ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+G_DIABETIC*DG2.Hyperlip,data = #TAULA_PLANA_exc, family = "binomial") 
+#Mii_VM<- glm(Death_DG.Mechanical_ventialtion=='Si' ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+ #G_DIABETIC*DG2.Hyperlip,data = TAULA_PLANA_exc, family = "binomial") 
+Mii_Exitus<- formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.Hyperlip")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+Mii_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.Hyperlip")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+#[Diabetes X insuficiència cardíaca congestiva]
+
+#Miii_Exitus<-glm(Death2 ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+G_DIABETIC*DG2.INSUF_CARD,data = #TAULA_PLANA_exc, family = "binomial") 
+#Miii_VM<- glm(Death_DG.Mechanical_ventialtion=='Si' ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+ #G_DIABETIC*DG2.INSUF_CARD,data = TAULA_PLANA_exc, family = "binomial") 
+Miii_Exitus<- formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.INSUF_CARD")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+Miii_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.INSUF_CARD")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+
+#[Diabetes X Obesitat]  + [Diabetes X hiperlipidèmia]
+
+#Miv_Exitus<-glm(Death2 ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + #DG.EPOC_ENFISEMA+G_DIABETIC*DG2.Hyperlip+G_DIABETIC*DG2.OB,data = TAULA_PLANA_exc, family = "binomial") 
+#Miv_VM<- glm(Death_DG.Mechanical_ventialtion=='Si' ~ G_DIABETIC + SEXO.SEX + EDAD.AGE + DG2.OB + DG2.HTA + DG2.Hyperlip + DG2.COMP_CARDIOVASC + DG2.INSUF_CARD + DG.IRC + DG.EPOC_ENFISEMA+#G_DIABETIC*DG2.Hyperlip+G_DIABETIC*DG2.OB,data = TAULA_PLANA_exc, family = "binomial") 
+Miv_Exitus<- formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB+G_DIABETIC*DG2.Hyperlip")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+Miv_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG2.OB+G_DIABETIC*DG2.Hyperlip")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+
+#[Diabetes X Insuficiencia Renal Crónica]
+
+Mv_Exitus<- formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG.IRC")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+Mv_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG.IRC")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+#[Diabetes X EPOC_ENFISEMA]
+
+Mvi_Exitus<- formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG.EPOC_ENFISEMA")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+Mvi_VM<- formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc, a="G_DIABETIC*DG.EPOC_ENFISEMA")%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
 
 
 
@@ -736,18 +819,40 @@ list(M1_Exitus,M2_VM) %>%
                     title = "Modelo de Mortalidad",
                     p.style = "numeric_stars") 
 
-
 list(M1_Exitus,M2_VM) %>% 
   sjPlot::plot_models(prefix.labels = "label",show.p = T,
                       m.labels = c("Death", "Death or Invasive mechanical ventilation"),
                       colors = c("black","grey50")) 
 
-
-#fet!
-
-list(M3_Exitus,M4_VM) %>%  
+list(Mi_Exitus,Mi_VM) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
-                    title = "Modelo de Mortalidad",
+                    title = "Modelo de Mortalidad con iteracciones Diabetes X Obesidad",
+                    p.style = "numeric_stars")
+
+list(Mii_Exitus,Mii_VM) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                    title = "Modelo de Mortalidad con iteracciones Diabetes X hiperlipidèmia",
+                    p.style = "numeric_stars")
+
+
+list(Miii_Exitus,Miii_VM) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                    title = "Modelo de Mortalidad con iteracciones  Diabetes X Insuficiencia Cardiaca",
+                    p.style = "numeric_stars")
+
+list(Miv_Exitus,Miv_VM) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                    title = "Modelo de Mortalidad con iteracciones Diabetes X Obesidad+Diabetes X hiperlipidèmia",
+                    p.style = "numeric_stars")
+
+list(Mv_Exitus,Mv_VM) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                    title = "Modelo de Mortalidad con iteracciones Diabetes X Insuficiencia Renal Crónica",
+                    p.style = "numeric_stars")
+
+list(Mvi_Exitus,Mvi_VM) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+                    title = "Modelo de Mortalidad con iteracciones Diabetes X COPD",
                     p.style = "numeric_stars")
 
 

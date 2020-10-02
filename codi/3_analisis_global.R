@@ -1,6 +1,9 @@
 ################
-# 30//09//2020 #
+# 02//10//2020 #
 ################
+
+#https://data-se.netlify.app/2018/04/02/visualisation-of-interaction-for-logistic-regression/
+
 
 #Bona tarda,
 
@@ -8,7 +11,8 @@
 
 #Si no posem les dades d'HbA1c a les taules, aniran en el texte?
   
-#  Sobre les interaccions, el que necessitem és que ens ajudin a contestar si diferents factors pronòstics tenen un pes diferent segons el grup o la variable de resultat.
+#Sobre les interaccions, el que necessitem és que ens ajudin a contestar si diferents factors pronòstics 
+#tenen un pes diferent segons el grup o la variable de resultat.
 
 #A mi la pregunta se'm genera si visualment l'efecte sembla diferent. P.e.
 #- a gràfic 1, obesitat
@@ -18,7 +22,10 @@
 #- a gràfic 5, obesitat, hiperlipidèmia
 #- a gràfic 6, obesitat, hiperlipidèmia i insuficiència cardíaca congestiva
 
-#Si escollim els models amb COPD només caldria analitzar els models corresponents a gràfics 1,3 i 6. Es podria testar si hi ha interacció en aquests tres models per les variables que indico a dalt i "acceptem" que no n'hi ha per les altres? Crec que mirar interaccions de primer ordre seria suficient.
+#Si escollim els models amb COPD
+#només caldria analitzar els models corresponents a gràfics 1,3 i 6. 
+#Es podria testar si hi ha interacció en aquests tres models per les variables que indico a dalt i
+#"acceptem" que no n'hi ha per les altres? Crec que mirar interaccions de primer ordre seria suficient.
 
 #Salutacions
 
@@ -35,13 +42,17 @@
 
 #Per aclarir una mica el que necessiteu
 
-#- Les interaccions de primer ordre relatiu a la Obesitat, HTA etc... x Diabetis  estan avaluades ja que es va fer un model per subgrups: diabetis, . En el Forest plot de mortalitat per grups es pot veure com canvia cada mesura d'associació per cada subgrup (Diabetis versus no Diabetes) 
+#- Les interaccions de primer ordre relatiu a la Obesitat, HTA etc... x Diabetis 
+#  estan avaluades ja que es va fer un model per subgrups: diabetis, .
+#  En el Forest plot de mortalitat per grups es pot veure com canvia cada mesura d'associació per cada subgrup (Diabetis versus no Diabetes) 
 
-#- Això mateix es pot afegir en un model , com a interaccions de primer ordre, però pot representar afegir molts més paràmetres i hi ha risc de sobreajust sino concretem.  
+#- Això mateix es pot afegir en un model , 
+#  com a interaccions de primer ordre, però pot representar afegir molts més paràmetres i hi ha risc de sobreajust sino concretem.  
 
 #- Entenem que les interaccions d'interès són: 1 obesitat x Diabetis , 2.   Diabetis x HTA, 3. Diabetis x Hiperlipemia, 4. Diabetis x IC ?
   
-#- Voleu veure si "'l'efecte" de la diabetis canvia amb  sense la presència de cada un d'aquests factors o si "l'efecte" / associació de cada un d'aquests factors canvia amb la presencia o no de la diabetis? 
+#- Voleu veure si "'l'efecte" de la diabetis canvia amb  sense la presència de cada un d'aquests factors
+#  o si "l'efecte" / associació de cada un d'aquests factors canvia amb la presencia o no de la diabetis? 
 
 #- A quins gràfics a que et refereixes? Forest plots , mesures d'associació  altre? 
 
@@ -130,6 +141,7 @@ rm(list=ls())
 #  amb la diferència de que en el forest plot l'edat és >65?? 
 #  El segon a la Taula 5? Ensenyaríem taules i forest plots?
 
+#  https://jjgibaja.wordpress.com/2007/09/24/modelos-con-interaccion-ii/
 
 
 
