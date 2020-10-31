@@ -129,7 +129,7 @@ source(here::here("codi/funcions_Covid.r"))
 ###############################################
 dt_plana_covid1<-dt_01
 
-#8.5.2020
+#9.5.2020
 #0)
 dt_plana_covid1$year_ingres<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT,7,10))
 dt_plana_covid1$year_urg<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG,7,10))

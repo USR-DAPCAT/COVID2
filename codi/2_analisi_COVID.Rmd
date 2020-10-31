@@ -42,7 +42,7 @@ params:
 
 **Últimas actualizaciones** 
 
-> Octubre/2020
+> Octubre/2020 
 
 &check; Modelos de Mortalidad con INTERACCIONES :[Diabetes X Obesidad]   <br/>
 &check; Modelos de Ventilación Mecánica y/o Mortalidad con INTERACCIONES :[Diabetes X Obesidad]   <br/>
