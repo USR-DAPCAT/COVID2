@@ -50,7 +50,7 @@ params:
 
 library("dplyr")
 library("lubridate")
-library("expss")
+#library("expss")
 library("frequency")
 library("sjPlot")
 library("sjmisc")
@@ -793,7 +793,7 @@ dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(gfr = ifelse(Ethnicity == "b
 
 
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%
-  mutate_at(vars(starts_with("CORONA") ),funs(ifelse(is.na(.),"No se detecta",.)))
+  dplyr::mutate_at(vars(starts_with("CORONA") ),funs(ifelse(is.na(.),"No se detecta",.)))
 
 
 

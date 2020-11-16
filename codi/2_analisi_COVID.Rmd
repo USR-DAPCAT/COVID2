@@ -109,6 +109,8 @@ params:
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, include=F,size="huge")
 
+#06.11.2020
+
 ############
 #09.09.2020
 #16.09.2020
@@ -124,6 +126,7 @@ library("table1")
 library("sjPlot")
 library("sjmisc")
 library("sjlabelled")
+library("mgcViz")
 
 ##########
 #6.8.2020#
@@ -139,6 +142,8 @@ directori_dades<-params$dir_dades
 conductor<-here::here("conductor_Covid.xlsx")
 conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
 
+source(here::here("codi/Flowchart_Box_Final2.r"))
+source(here::here("codi/criteris_exclusio_diagrama2.r"))
 
 
 # Llanço taula i camp que vull etiquetar i cambia nom del camp en funció d'etiqueta
@@ -245,6 +250,23 @@ criteris_exclusio_diagrama(dt=TAULA_PLANA,
                                         forma=c("ellipse","box"))
 
 
+
+criteris_exclusio_diagrama2(dt=TAULA_PLANA,
+                                        taulavariables=conductor,
+                                        criteris = "exc_pre",
+                                        ordre="exc_ordre",
+                                        grups=NA,
+                                        etiquetes="descripcio",
+                                        sequencial = T,
+                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+                                        colors=c("grey","white"),
+                                        POB=459331 ,
+                                        POB_LAB="SIDIAP:La población de pacientes con DM2 de 2017 aprox: ")
+
+
+
+
+
 criteris_exclusio_diagrama(dt=TAULA_PLANA,
                                       taulavariables=conductor,
                                         criteris = "exc_pre",
@@ -255,6 +277,25 @@ criteris_exclusio_diagrama(dt=TAULA_PLANA,
                                         pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
                                         colors=c("white","grey"),
                                         forma=c("ellipse","box"))
+
+
+criteris_exclusio_diagrama2(dt=TAULA_PLANA,
+                                        taulavariables=conductor,
+                                        criteris = "exc_pre",
+                                        ordre="exc_ordre",
+                                        grups="G_DIABETIC",
+                                        etiquetes="descripcio",
+                                        sequencial = T,
+                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+                                        colors=c("white","grey"),
+                                        POB=2306 ,
+                                        POB_LAB="Covid Data Save Lives ")
+
+
+
+
+
+
 ```
 
 
@@ -684,6 +725,11 @@ mod.gam.spline<-
 
 mod.gam.spline %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,title = "Modelo de Mortalidad con termino spline Glucose", p.style = "numeric_stars")
+
+##############################
+#? mirar-ho dema! 06.11.2020!#
+##############################
+
 
 mgcViz::getViz(mod.gam.spline) %>% 
   plot.gamViz() +
