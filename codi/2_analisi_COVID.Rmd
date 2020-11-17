@@ -226,6 +226,19 @@ TAULA_PLANA$EDAD.AGE2<- ifelse(TAULA_PLANA$EDAD.AGE<=65,"<=65 años",">65 años"
 TAULA_PLANA$EDAD.AGE3<- ifelse(TAULA_PLANA$EDAD.AGE<=55,"<=55 años",">55 años")
 TAULA_PLANA$Death<- ifelse(TAULA_PLANA$MOTIVO_ALTA.DESTINY_DISCHARGE_ING=="Fallecimiento","Si","No")
 
+#PROVA!!
+
+TAULA_PLANA$agecat2<-9999
+TAULA_PLANA$agecat2<-ifelse(TAULA_PLANA$EDAD.AGE<40,"0",TAULA_PLANA$agecat2)
+TAULA_PLANA$agecat2<-ifelse(TAULA_PLANA$EDAD.AGE>=40 & TAULA_PLANA$EDAD.AGE<=60,"1",TAULA_PLANA$agecat2)
+TAULA_PLANA$agecat2<-ifelse(TAULA_PLANA$EDAD.AGE>=61,"2",TAULA_PLANA$agecat2)
+#
+
+
+
+table(TAULA_PLANA$agecat2)
+
+
 
 ```
 
@@ -279,6 +292,7 @@ criteris_exclusio_diagrama(dt=TAULA_PLANA,
                                         forma=c("ellipse","box"))
 
 
+
 criteris_exclusio_diagrama2(dt=TAULA_PLANA,
                                         taulavariables=conductor,
                                         criteris = "exc_pre",
@@ -291,7 +305,19 @@ criteris_exclusio_diagrama2(dt=TAULA_PLANA,
                                         POB=2306 ,
                                         POB_LAB="Covid Data Save Lives ")
 
+# prova!
 
+criteris_exclusio_diagrama2(dt=TAULA_PLANA,
+                                        taulavariables=conductor,
+                                        criteris = "exc_pre",
+                                        ordre="exc_ordre",
+                                        grups="agecat2",
+                                        etiquetes="descripcio",
+                                        sequencial = T,
+                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+                                        colors=c("white","grey"),
+                                        POB=2306 ,
+                                        POB_LAB="Covid Data Save Lives ")
 
 
 
@@ -338,6 +364,9 @@ TAULA_PLANA_exc$agecat<-ifelse(TAULA_PLANA_exc$EDAD.AGE>59,"3",TAULA_PLANA_exc$a
 
 TAULA_PLANA_exc$Death2<-ifelse(TAULA_PLANA_exc$Death=="Si",1,0)
 TAULA_PLANA_exc$Ad_UCI<-ifelse(TAULA_PLANA_exc$Ad_UCI=="Si",1,0)
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------------------------------#
-#16.11.2020#
+#17.11.2020#
 #----------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------#
 #                       FLOW-CHART FINAL
@@ -85,19 +85,13 @@ Flowchart_Box_Final2<-function(
     #exc_lab1=c('Edat>90 anys : ','Problemes Digestius : ')
     #pob_lab1=c("Pob inicial","Pob final"))
     #---------------------------------------------------------------------------------------------------------------# 
-    
-    grid.newpage()
-    # set some parameters to use repeatedly
-    leftx <- .25
-    midx <- .5
-    rightx <- .75
-    width <- .4
-    gp <- gpar(fill =colors)
     #
-    #################################################################
+    grid.newpage()
+    gp <- gpar(fill =colors)
+    
     
     # create boxes TOTAL:
-    TOTAL <- boxGrob(glue(pob_lab,"N = {pop}",pop = txtInt(pob),.sep = "\n"),x=midx, y=.9, box_gp = gp[2], width = 0.7)
+    TOTAL <- boxGrob(glue(pob_lab,"N = {pop}",pop = txtInt(pob),.sep = "\n"),x=.5, y=.9, box_gp = gp[2], width = 0.7)
     
     # create boxes GRUP1:
     
@@ -109,9 +103,9 @@ Flowchart_Box_Final2<-function(
       paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.7, y=.5, just = "left", box_gp = gp[1])}else
       {print("ERROR!, Les Exlusions han de ser iguals o inferiors a 10 al grup!")}
     
-    GRUP1 <- boxGrob( glue(pob_lab1[1],"N = {pop}",pop = txtInt(pob1[1]),.sep = "\n"),x=midx, y=.7, box_gp = gp[2], width = 0.50)
+    GRUP1 <- boxGrob( glue(pob_lab1[1],"N = {pop}",pop = txtInt(pob1[1]),.sep = "\n"),x=.5, y=.7, box_gp = gp[2], width = 0.50)
     
-    GRUP1_F <- boxGrob(glue(pob_lab1[2],"N = {pop}",pop = txtInt(pob1[2]),.sep = "\n"), x=midx, y=.3, box_gp = gp[2], width = 0.50)
+    GRUP1_F <- boxGrob(glue(pob_lab1[2],"N = {pop}",pop = txtInt(pob1[2]),.sep = "\n"), x=.5, y=.3, box_gp = gp[2], width = 0.50)
     
     KK1<-connectGrob(TOTAL, GRUP1, "N")
     KK2<-connectGrob(GRUP1,GRUP1_F, "N")
@@ -172,24 +166,11 @@ Flowchart_Box_Final2<-function(
     #pob_lab1=c("DIABETICS a CATALUNYA","DIABETICS a CATALUNYA FINAL")
     #pob_lab2=c("No DIABETICS a CATALUNYA","No DIABETICS a CATALUNYA FINAL")
     #---------------------------------------------------------------------------------------------------------------# 
-    
-    
     grid.newpage()
-    #---------------------------------------------------------------------------------------------------------------# 
-    #
-    # set some parameters to use repeatedly
-    
-    leftx <- .25
-    midx <- .5
-    rightx <- .75
-    width <- .4
     gp <- gpar(fill =colors)
     
-    #
-    #---------------------------------------------------------------------------------------------------------------#
-    
     # create boxes TOTAL:
-    TOTAL <- boxGrob(glue(pob_lab,"N = {pop}",pop = txtInt(pob),.sep = "\n"),x=midx, y=.9, box_gp = gp[2], width = 0.5,txt_gp = gpar(cex = 0.8))
+    TOTAL <- boxGrob(glue(pob_lab,"N = {pop}",pop = txtInt(pob),.sep = "\n"),x=.5, y=.9, box_gp = gp[2], width = 0.5,txt_gp = gpar(cex = 0.8))
     
     
     # create boxes GRUP1:
@@ -210,8 +191,7 @@ Flowchart_Box_Final2<-function(
     {print("Error, posa els GRUPS, si us plau! al Flowchart!")}else if(length(exc2)>=1 & length(exc2)<=10)
       
     {exclude2<-paste0("Exclusions : ") %>%c(paste0(exc_lab2," ",exc2) %>% paste0()) %>%
-      paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.9, y=.5, just = "left", box_gp = gp[1], width = 0.18,
-                                                txt_gp = gpar(cex = 0.6))}else
+      paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.9, y=.5, just = "left", box_gp = gp[1], width = 0.18,txt_gp = gpar(cex = 0.6))}else
       {print("ERROR!, Les Exlusions han de ser iguals o inferiors a 10 al grup2!")}
     
     GRUP2 <- boxGrob( glue(pob_lab2[1],"N = {pop}",pop = txtInt(pob2[1]),.sep = "\n"),x=0.8, y=.7, just = "centre", box_gp = gp[2], width = 0.40
@@ -232,8 +212,7 @@ Flowchart_Box_Final2<-function(
     ###KK5<-connectGrob(GRUP1,exclude1, "N")
     ###KK6<-connectGrob(GRUP2,exclude2, "N")
     
-    ###KK5,
-    ###KK6
+    
     
     flow<- list( TOTAL,
                  GRUP1,
@@ -303,59 +282,77 @@ Flowchart_Box_Final2<-function(
     #pob_lab1=c("DIABETICS a CATALUNYA","DIABETICS a CATALUNYA FINAL")
     #pob_lab2=c("No DIABETICS a CATALUNYA","No DIABETICS a CATALUNYA FINAL")
     #pob_lab3=c("Capullos a CATALUNYA","Capullos a CATALUNYA FINAL")
-    
-    
-    grid.newpage()
-    #---------------------------------------------------------------------------------------------------------------# 
-    #
-    # set some parameters to use repeatedly
-    leftx <- .25
-    midx <- .5
-    rightx <- .75
-    width <- .4
-    gp <- gpar(fill =colors)
-    #
     #---------------------------------------------------------------------------------------------------------------#
-    
-    
+    grid.newpage()
+    gp <- gpar(fill =colors)
+   
     # create boxes TOTAL:
-    TOTAL <- boxGrob(glue(pob_lab,"N = {pop}",pop = txtInt(pob),.sep = "\n"),x=midx, y=.9, box_gp = gp[2], width = width)
+    TOTAL <- boxGrob(glue(pob_lab,"N = {pop}",pop = txtInt(pob),.sep = "\n"),x=.5, y=.9, box_gp = gp[2], width = 0.5,txt_gp = gpar(cex = 0.8))
+    
+    
     
     # create boxes GRUP1:
     
     if  (length(exc1)<1)
     {print("Error, posa els GRUPS, si us plau! al Flowchart!")}else if(length(exc1)>=1 & length(exc1)<=10)
-    {exclude1<-paste0("Exclusions :") %>%c(paste0(exc_lab1,":  ",exc1) %>% paste0()) %>%
-      paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.35, y=.5, just = "left")}else
+   
+     {exclude1<-paste0("Exclusions : ") %>%c(paste0(exc_lab1,":  ",exc1) %>% paste0()) %>%
+      paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.35, y=.5, just = "left", box_gp = gp[1], width = 0.18,txt_gp = gpar(cex = 0.6) )}else
       {print("ERROR!, Les Exlusions han de ser iguals o inferiors a 10 al grup1!")}
     
-    GRUP1 <- boxGrob( glue(pob_lab1[1],"N = {pop}",pop = txtInt(pob1[1]),.sep = "\n"), x=leftx, y=.7, just = "centre", box_gp = gp, width = 0.22)
+      
+     
+    
+    
+      GRUP1 <- boxGrob( glue(pob_lab1[1],"N = {pop}",pop = txtInt(pob1[1]),.sep = "\n"),x=0.25, y=.7, just = "centre", box_gp = gp[2], width = 0.22
+                      ,txt_gp = gpar(cex = 0.65))
+    
     
     # create boxes GRUP2:
     
     if  (length(exc2)<1)
     {print("Error, posa els GRUPS, si us plau! al Flowchart!")}else if(length(exc2)>=1 & length(exc2)<=10)
-    {exclude2<-paste0("Exclusions :") %>%c(paste0(exc_lab2," ",exc2) %>% paste0()) %>%
-      paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.6, y=.5, just = "left")}else
-      {print("ERROR!, Les Exlusions han de ser iguals o inferiors a 10 al grup2!")}
     
-    GRUP2 <- boxGrob( glue(pob_lab2[1],"N = {pop}",pop = txtInt(pob2[1]),.sep = "\n"),x=0.5, y=.7, just = "centre", box_gp = gp, width = 0.22)
+    {exclude2<-paste0("Exclusions : ") %>%c(paste0(exc_lab2," ",exc2) %>% paste0()) %>%
+          paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.6, y=.5, just = "left", box_gp = gp[1], width = 0.18,txt_gp = gpar(cex = 0.6))}else
+          {print("ERROR!, Les Exlusions han de ser iguals o inferiors a 10 al grup2!")}
+      
+      
+    
+    GRUP2 <- boxGrob( glue(pob_lab1[1],"N = {pop}",pop = txtInt(pob1[1]),.sep = "\n"),x=0.5, y=.7, just = "centre", box_gp = gp[2], width = 0.22
+                      ,txt_gp = gpar(cex = 0.65))
+    
+    
     
     # create boxes GRUP3
     
     if  (length(exc3)<1)
     {print("Error, posa els GRUPS, si us plau! al Flowchart!")}else if(length(exc3)>=1 & length(exc3)<=10)
-    {exclude3<-paste0("Exclusions :") %>%c(paste0(exc_lab3," ",exc3) %>% paste0()) %>%
-      paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.85, y=.5, just = "left")}else
-      {print("ERROR!, Les Exlusions han de ser iguals o inferiors a 10 al grup2!")}
     
-    GRUP3 <- boxGrob( glue(pob_lab3[1],"N = {pop}",pop = txtInt(pob3[1]),.sep = "\n"), x=rightx, y=.7, just = "centre", box_gp = gp, width = 0.22)
+      
+    {exclude3<-paste0("Exclusions : ") %>%c(paste0(exc_lab3," ",exc3) %>% paste0()) %>%
+        paste0(collapse = "\n") %>%Gmisc::boxGrob(x=0.85, y=.5, just = "left", box_gp = gp[1], width = 0.18,txt_gp = gpar(cex = 0.6))}else
+        {print("ERROR!, Les Exlusions han de ser iguals o inferiors a 10 al grup3!")}
     
     
     
-    GRUP1_F <- boxGrob(glue(pob_lab1[2],"N = {pop}",pop = txtInt(pob1[2]),.sep = "\n"), x=leftx, y=.3, box_gp = gp[2], width = 0.22)
-    GRUP2_F <- boxGrob(glue(pob_lab2[2],"N = {pop}",pop = txtInt(pob2[2]),.sep = "\n"), x=0.5, y=.3, box_gp = gp[2], width = 0.22)
-    GRUP3_F <- boxGrob(glue(pob_lab3[2],"N = {pop}",pop = txtInt(pob3[2]),.sep = "\n"),  x=rightx, y=.3, box_gp = gp[2], width = 0.22)
+     GRUP3 <- boxGrob( glue(pob_lab3[1],"N = {pop}",pop = txtInt(pob3[1]),.sep = "\n"),x=0.75, y=.7, just = "centre", box_gp = gp[2], width = 0.22
+                      ,txt_gp = gpar(cex = 0.65))
+    
+    
+     
+     
+     GRUP1_F <- boxGrob(glue(pob_lab1[2],"N = {pop}",pop = txtInt(pob1[2]),.sep = "\n"), x=0.25, y=.3, box_gp = gp[2], width = 0.22
+                       ,txt_gp = gpar(cex = 0.65))
+    
+    
+     GRUP2_F <- boxGrob(glue(pob_lab2[2],"N = {pop}",pop = txtInt(pob2[2]),.sep = "\n"), x=0.5, y=.3, box_gp = gp[2], width = 0.22
+                       ,txt_gp = gpar(cex = 0.65))
+    
+    
+     GRUP3_F <- boxGrob(glue(pob_lab3[2],"N = {pop}",pop = txtInt(pob3[2]),.sep = "\n"), x=0.75, y=.3, box_gp = gp[2], width = 0.22
+                       ,txt_gp = gpar(cex = 0.65))
+    
     
     KK1<-connectGrob(TOTAL, GRUP1, "v")
     KK2<-connectGrob(TOTAL, GRUP2, "v")
@@ -364,9 +361,12 @@ Flowchart_Box_Final2<-function(
     KK5<-connectGrob(GRUP2,GRUP2_F, "N")
     KK6<-connectGrob(GRUP3,GRUP3_F, "N")
     
-    KK7<-connectGrob(GRUP1,exclude1, "L")
-    KK8<-connectGrob(GRUP2,exclude2, "L")
-    KK9<-connectGrob(GRUP3,exclude3, "L")
+    #KK7<-connectGrob(GRUP1,exclude1, "L")
+    #KK8<-connectGrob(GRUP2,exclude2, "L")
+    #KK9<-connectGrob(GRUP3,exclude3, "L")
+    
+    
+    
     
     flow<- list( TOTAL,
                  GRUP1,
@@ -383,14 +383,7 @@ Flowchart_Box_Final2<-function(
                  KK3,
                  KK4,
                  KK5,
-                 KK6,
-                 KK7,
-                 KK8,
-                 KK9
-                 
-                 
-                 
-    )
+                 KK6)
     
     flow
     
