@@ -78,28 +78,37 @@ conductor_codis2<-here::here("Codis_Covid_Agrupadores_juny")
 
 # 1 Lectura -----------
 
+# hem posat stringsAsFactors=F; dia 19.11.2020
 #-------------------------------------------------------------------------#
 #i)     En la tabla principal, están los datos propios del ingreso y del paciente (edad y sexo),
 #       los datos de la urgencia previa si ha habido (2.226 registros), su estancia en UCI, 
 #       si ha habido y los registros del primer y último conjunto de constantes de la urgencia 
-dt_01<-read.csv2(here::here(directori_dades,"01.csv"),sep=";",dec=",",header = TRUE)%>% as_tibble()
+dt_01<-read.csv2(here::here(directori_dades,"01.csv"),sep=";",dec=",",header = TRUE,
+                 stringsAsFactors=F)%>% as_tibble()
 #-------------------------------------------------------------------------#
 #ii)    En la tabla de medicación, se encuentra toda la medicación administrada 
 #       a cada paciente durante su ingreso (más de 60.000 registros), 
 #       con las fechas correspondientes a la primera y última administración de cada fármaco identificaos estos,
 #       por su nombre comercial y su clasificación en la ATC5/ATC7. 
-dt_02<-read.csv2(here::here(directori_dades,"02.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
+dt_02<-read.csv2(here::here(directori_dades,"02.csv"),sep=";",dec=",",header = TRUE,
+                 stringsAsFactors=F) %>% as_tibble()
 #-------------------------------------------------------------------------#
 #iii)   En la tabla de constantes vitales, 
 #       se encuentran todos los registros de constantes (54.000 registros hasta el momento)
 #       básicas recogidos durante su ingreso con su fecha y hora de registro. 
-dt_03<-read.csv2(here::here(directori_dades,"03.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
+dt_03<-read.csv2(here::here(directori_dades,"03.csv"),sep=";",dec=",",header = TRUE,
+                 stringsAsFactors=F) %>% as_tibble()
 #-------------------------------------------------------------------------#
 #iv)    En la tabla de laboratorio se encuentran los resultados de las determinaciones (398.884 registros)
 #       de todas las peticiones realizadas a cada paciente durante su ingreso y 
 #       en la urgencia previa, si hubiera tenido. 
-dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
-# dt_04 <- readr::read_delim(here::here(directori_dades,"04.csv"), ";", escape_double = FALSE, trim_ws = TRUE) %>% as_tibble()
+dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE,
+                 stringsAsFactors=F) %>% as_tibble()
+
+
+#dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
+
+
 #-------------------------------------------------------------------------#
 #v)vi) 
 #       Y por último en las tablas de codificación CIE10, 
@@ -108,8 +117,8 @@ dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = T
 #       (no contempla COVID), tanto para los episodios de ingresados (más de 1.600) de los pacientes
 #       referidos como de las urgencias (más de 1.900) 
 #       previas a esos episodios si las hubiera habido
-dt_05<-read.csv2(here::here(directori_dades,"05.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
-dt_06<-read.csv2(here::here(directori_dades,"06.csv"),sep=";",dec=",",header = TRUE) %>% as_tibble()
+dt_05<-read.csv2(here::here(directori_dades,"05.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
+dt_06<-read.csv2(here::here(directori_dades,"06.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
 #-------------------------------------------------------------------------#  
 
 conductor<-"conductor_Covid.xlsx"
@@ -238,7 +247,7 @@ dt_plana_covid1_org<-dt_plana_covid1
 
 ```{r agregacio3}
 ###############################################
-##[T2]##.Farmacs.Mètode:Aggregador.
+##[T2]##.Farmacs.Mètode:Aggregador.[#agregar_problemes::(minim data)]
 ###############################################
 
 #dt_plana_covid2
@@ -279,6 +288,12 @@ dt_plana_covid2_agr_b<-agregar_problemes(select(dt_plana_covid2B,idp,cod,dat),
 
 
 dt_plana_covid3<-dt_03
+
+# Eps?
+# he camviat arrange(PATIENT.ID,CONSTANTS_ING.INPAT_FECHA.DATE)[18.11.2020]
+
+dt_plana_covid3<-dt_03%>%arrange(PATIENT.ID,CONSTANTS_ING.INPAT_FECHA.DATE)
+
 
 #i)
 dt_plana_covid3_FC<-dt_plana_covid3%>%
@@ -335,6 +350,10 @@ dt_spread<-function(dt=dt_plana_covid3_B,codi="FC.HR_ING.INPAT")
   }
 
 
+ordre<-dt_plana_covid3_B%>%filter(PATIENT.ID==2316 & cod=="FC.HR_ING.INPAT")%>%
+  arrange(dat)
+ordre2<-dt_plana_covid3_B%>%filter(PATIENT.ID==2316)%>%
+  arrange(dat)
 
 #### EXEMPLE D'APLICAR LA FUNCIÓ MAP I REDUCE PER APLICAR UNA FUNCIÓ PER APLANAR
 #llista_vars<-dt_plana_covid3_B %>% distinct(cod) %>% as_vector()
@@ -344,6 +363,9 @@ dt_plana_covid3_agr <-
   llista_vars %>% 
   map(~dt_spread(dt_plana_covid3_B,.x)) %>% 
   reduce(full_join,by="PATIENT.ID")
+
+
+
 
 analitiques.agr<-agregar_vars_covid(dt =dt_plana_covid3_B)
 
@@ -404,52 +426,68 @@ dt_plana_covid3_agr<-dt_plana_covid3_agr %>%
 #
 #-----------------------------------------------------------------------------------------------#
 dt_plana_covid4<-dt_04
+# Fallen 120! , que ha passat..
+
+#variable.names(dt_plana_covid4)
+
+# Eps?
+# he camviat arrange(PATIENT.ID,PETICION_LABORATORIO.LAB_NUMBER)[18.11.2020]
+
+dt_plana_covid4<-dt_plana_covid4%>%arrange(PATIENT.ID,PETICION_LABORATORIO.LAB_NUMBER)
+
 #-----------------------------------------------------------------------------------#
+
 dt_plana_covid4B<-dt_plana_covid4%>%select(PATIENT.ID,FECHA_PETICION.LAB_DATE,DETERMINACION.ITEM_LAB,RESULTADO.VAL_RESULT)%>%
   transmute(PATIENT.ID=PATIENT.ID,dat=FECHA_PETICION.LAB_DATE,valor=RESULTADO.VAL_RESULT,cod=DETERMINACION.ITEM_LAB)
-
-
-
-
-
 
 ```
 
 
 ```{r agregacio6}
+
 #-----------------------------------------------------------------------------------------------#
 KK<-str_split_fixed(dt_plana_covid4B$cod, "--",2)
 dt_plana_covid4B<-cbind(dt_plana_covid4B,cod2=KK[,1])
 #-----------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------------------------#
 dt_plana_covid4B$valor             <-as.character(dt_plana_covid4B$valor)
-
 PATIENT.ID<- dt_plana_covid4B$PATIENT.ID
+dat<-dt_plana_covid4B$dat
 valor<- dt_plana_covid4B$valor
 cod<-KK[,1]
-dat<-dt_plana_covid4B$dat
 cod2<-dt_plana_covid4B$cod
-
 #-----------------------------------------------------------------------------------------------#
 dt_cataleg_analitica4C<-cbind(PATIENT.ID,dat,valor,domini="variables_analitiques",cod,cod2)
-variable.names(dt_cataleg_analitica4C)
-#dt_cataleg_analitica4C
-variable.names(dt_cataleg_analitica4C)
-#"PATIENT.ID" "dat"        "valor"      "domini"     "cod"    
 dt_cataleg_analitica4C<-dt_cataleg_analitica4C%>%as_tibble()%>%select(-domini)
+#-----------------------------------------------------------------------------------------------#
 
-dt_plana_covid4_agr<-dt_cataleg_analitica4C
+# comprovació!
+dt_plana_covid4B$valor             <-as.character(dt_plana_covid4B$valor)
 
+dt_plana_covid4_agr_k              <-dt_plana_covid4B
+dt_plana_covid4_agr_k$cod2         <-as.character(dt_plana_covid4_agr_k$cod2)
+dt_plana_covid4_agr_k$cod          <-dt_plana_covid4_agr_k$cod2
+dt_plana_covid4_agr_k              <-dt_plana_covid4_agr_k%>%select(-cod2)
 
+dt_plana_covid4_agr_k$PATIENT.ID   <-as.character(dt_plana_covid4_agr_k$PATIENT.ID)
+dt_plana_covid4_agr_k              <-dt_plana_covid4_agr_k%>%as_tibble()
 
-
+#-----------------------------------------------------------------------------------------------#
+dt_plana_covid4_agr<-dt_plana_covid4_agr_k
+#-----------------------------------------------------------------------------------------------#
+#dt_plana_covid4_agr<-dt_cataleg_analitica4C
+#-----------------------------------------------------------------------------------------------#
+#View(dt_cataleg_analitica4C)
+#View(dt_plana_covid4_agr_k)
+#-----------------------------------------------------------------------------------------------#
 
 ```
 
 
 ```{r agregacio7}
+
 #1)   Determinación|TROPO -- TROPONINA
 dt_plana_covid4_agr$cod<-ifelse(dt_plana_covid4_agr$cod=="TROPO ","US_troponina_",dt_plana_covid4_agr$cod)
-
 #2)   Determinación|TP -- TIEMPO DE PROTROMBINA
 dt_plana_covid4_agr$cod<-ifelse(dt_plana_covid4_agr$cod=="TP ","TP_",dt_plana_covid4_agr$cod)
 #3)   Determinación|TCO2V -- tCO2 (B)
@@ -527,16 +565,23 @@ dt_plana_covid4_agr$cod<-ifelse(dt_plana_covid4_agr$cod=="COL ","COL_",dt_plana_
 
 
 dt_plana_covid4_agr_CORONA<-dt_plana_covid4_agr%>%filter(cod=="G_CORONAV_")%>%select(PATIENT.ID,valor,cod)
+
 dt_plana_covid4_agr_CORONA<-dt_plana_covid4_agr_CORONA%>%filter(valor=="Se detecta")%>%
   group_by(PATIENT.ID) %>% dplyr::slice(1) %>% ungroup()  
+
 dt_plana_covid4_agr_CORONA<-dt_plana_covid4_agr_CORONA%>%transmute( PATIENT.ID,CORONA=valor)
 
 #table(dt_plana_covid4_agr_CORONA$PATIENT.ID)
+
+
 ```
 
 
 ```{r agregacio8}
 #i)
+
+K<-dt_plana_covid4_agr
+
 dt_plana_covid4_agr_B<-dt_plana_covid4_agr%>%
   transmute(PATIENT.ID,dat=dat,valor=valor,cod=cod)%>%filter(cod=="US_troponina_" |
                                                              cod=="TP_"           |
@@ -591,6 +636,8 @@ dt_plana_covid4_agr_B$valor             <-as.double(dt_plana_covid4_agr_B$valor)
 #COVID19_PCR_GRUP_LCR                                         
 # miirar demà 04.06.2020
 
+
+
 vect2<- c(
   "US_troponina_",
   "TP_",
@@ -638,6 +685,10 @@ dt_plana_covid4_agr2 <-
   vect2%>% 
   map(~dt_spread(dt_plana_covid4_agr,.x)) %>% 
   reduce(full_join,by="PATIENT.ID")
+
+
+
+
 
 ```
 
@@ -735,7 +786,7 @@ dt_plana_covid4_agr2$COL_1          <-as.double(dt_plana_covid4_agr2$COL_1)
 # Càlcul de Variable nueva IFCC HbA1c (nmmol/mol) = (10.93*HB1AC)-23.50
 
 dt_plana_covid4_agr2<-dt_plana_covid4_agr2%>%mutate(HA1C_MMOLS1 =((10.93*HBA1C_1) - 23.50))
-
+dt_plana_covid4_agr2$HBA1C_1
 
 
 ```
@@ -748,6 +799,7 @@ analitiques.agr2<-agregar_vars_covid2(dt =dt_plana_covid4_agr_B)
 AgeSex<-dt_plana_covid1_agr%>%select(PATIENT.ID,EDAD.AGE,SEXO.SEX)
 AgeSex$PATIENT.ID<-as.character(AgeSex$PATIENT.ID)
 AgeSex<-AgeSex%>%transmute(PATIENT.ID,EDAD.AGE,SEXO.SEX,Ethnicity="non-black")
+
 
 
 
@@ -1087,12 +1139,19 @@ C_DIABETICS<-dt_plana_DM_agr1%>%
 
 
 
+
 #table(C_DIABETICS$idp)
 #-----------------------------------------------------------------------------------------------------#
 C_NO_DIABETICS<-dt_plana_covid1_agr %>% transmute(idp=PATIENT.ID)%>% anti_join(C_DIABETICS,by="idp")
 #-----------------------------------------------------------------------------------------------------#
 
 
+dt_plana_DM_agr1
+dt_plana_DM_agr2
+dt_plana_DM_agr3
+dt_plana_DM_agr4
+dt_plana_DM_agr5
+C_DIABETICS
 
 
 ```
