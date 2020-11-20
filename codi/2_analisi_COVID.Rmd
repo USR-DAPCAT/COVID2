@@ -236,7 +236,7 @@ TAULA_PLANA$agecat2<-ifelse(TAULA_PLANA$EDAD.AGE>=61,"2",TAULA_PLANA$agecat2)
 
 
 
-table(TAULA_PLANA$agecat2)
+#table(TAULA_PLANA$agecat2)
 
 
 
@@ -307,17 +307,17 @@ criteris_exclusio_diagrama2(dt=TAULA_PLANA,
 
 # prova!
 
-criteris_exclusio_diagrama2(dt=TAULA_PLANA,
-                                        taulavariables=conductor,
-                                        criteris = "exc_pre",
-                                        ordre="exc_ordre",
-                                        grups="agecat2",
-                                        etiquetes="descripcio",
-                                        sequencial = T,
-                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
-                                        colors=c("white","grey"),
-                                        POB=2306 ,
-                                        POB_LAB="Covid Data Save Lives ")
+#criteris_exclusio_diagrama2(dt=TAULA_PLANA,
+#                                        taulavariables=conductor,
+#                                        criteris = "exc_pre",
+#                                        ordre="exc_ordre",
+#                                        grups="agecat2",
+#                                        etiquetes="descripcio",
+#                                        sequencial = T,
+#                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+#                                        colors=c("white","grey"),
+#                                        POB=2306 ,
+#                                        POB_LAB="Covid Data Save Lives ")
 
 
 
@@ -363,7 +363,9 @@ TAULA_PLANA_exc$agecat<-ifelse(TAULA_PLANA_exc$EDAD.AGE>=40 & TAULA_PLANA_exc$ED
 TAULA_PLANA_exc$agecat<-ifelse(TAULA_PLANA_exc$EDAD.AGE>59,"3",TAULA_PLANA_exc$agecat)
 
 TAULA_PLANA_exc$Death2<-ifelse(TAULA_PLANA_exc$Death=="Si",1,0)
-TAULA_PLANA_exc$Ad_UCI<-ifelse(TAULA_PLANA_exc$Ad_UCI=="Si",1,0)
+
+#18.11.2020 HO HE CANVIAT
+#TAULA_PLANA_exc$Ad_UCI<-ifelse(TAULA_PLANA_exc$Ad_UCI=="Si",1,0)
 
 
 
@@ -410,6 +412,9 @@ descrTable(formula,method =2,
            simplify=F) %>% 
   export2md(caption="**TABLA 1a. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso,  si ha habido, datos del paso por UCI, si ha habido.Todos los pacientes.**")
 
+#############################################
+#formula,method =2 (No Paramètric/No normal)#
+#############################################
 
 
 # formula<-formula_table1("Taula01",y="DIAB",taulavariables = conductor,dt=dt_plana_covid1_agr_exc_lab) 
@@ -760,17 +765,17 @@ mod.gam.spline %>%
 ##############################
 
 
-mgcViz::getViz(mod.gam.spline) %>% 
-  plot.gamViz() +
-  labs(title = "Association of Glucose versus mortality")+
-  l_fitLine(linetype = 1)  +
-  l_ciLine(linetype = 3) +
-  l_rug() +
-  theme_grey() +
-  scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
-  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
+#mgcViz::getViz(mod.gam.spline) %>% 
+#  plot.gamViz() +
+#  labs(title = "Association of Glucose versus mortality")+
+#  l_fitLine(linetype = 1)  +
+#  l_ciLine(linetype = 3) +
+#  l_rug() +
+#  theme_grey() +
+#  scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
+#  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
 
-sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_","DG2.OB"))
+#sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_","DG2.OB"))
 
 
 ```
@@ -788,15 +793,15 @@ mod.gam.spline<-
 mod.gam.spline %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,title = "Modelo de Mortalidad /VM con termino spline Glucose", p.style = "numeric_stars")
 
-mgcViz::getViz(mod.gam.spline) %>% 
-  plot.gamViz() +
-  labs(title = "Association of Glucose versus mortality or VM")+
-  l_fitLine(linetype = 1)  +
-  l_ciLine(linetype = 3) +
-  l_rug() +
-  theme_grey() +
-  scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
-  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
+#mgcViz::getViz(mod.gam.spline) %>% 
+#  plot.gamViz() +
+#  labs(title = "Association of Glucose versus mortality or VM")+
+#  l_fitLine(linetype = 1)  +
+#  l_ciLine(linetype = 3) +
+#  l_rug() +
+#  theme_grey() +
+#  scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
+#  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
 
 
 
