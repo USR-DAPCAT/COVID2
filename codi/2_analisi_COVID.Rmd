@@ -264,18 +264,18 @@ criteris_exclusio_diagrama(dt=TAULA_PLANA,
 
 
 
-criteris_exclusio_diagrama2(dt=TAULA_PLANA,
-                                        taulavariables=conductor,
-                                        criteris = "exc_pre",
-                                        ordre="exc_ordre",
-                                        grups=NA,
-                                        etiquetes="descripcio",
-                                        sequencial = T,
-                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
-                                        colors=c("grey","white"),
-                                        POB=459331 ,
-                                        POB_LAB="SIDIAP:La población de pacientes con DM2 de 2017 aprox: ")
-
+#criteris_exclusio_diagrama2(dt=TAULA_PLANA,
+#                                        taulavariables=conductor,
+#                                        criteris = "exc_pre",
+#                                        ordre="exc_ordre",
+#                                        grups=NA,
+#                                        etiquetes="descripcio",
+#                                        sequencial = T,
+#                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+#                                        colors=c("grey","white"),
+#                                        POB=459331 ,
+#                                        POB_LAB="SIDIAP:La población de pacientes con DM2 de 2017 aprox: ")
+##################################3
 
 
 
@@ -589,6 +589,22 @@ descrTable(formula,
                          show.n = T,
                          hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 6a. Eventos y complicaciones  en pacientes diabéticos+Sexo **")
+
+
+
+formula<-formula.text("Taula08",y="SEXO.SEX",taulavariables = conductor,dt = TAULA_PLANA_exc_NO_DIAB)
+descrTable(formula,
+                         method =2,
+                         Q1 = 0, Q3 = 1,
+                         data=TAULA_PLANA_exc_NO_DIAB,
+                         max.xlev = 100, 
+                         show.p.overall=TRUE,
+                         show.n = T,
+                         hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6b. Eventos y complicaciones  en pacientes No diabéticos+Sexo **")
+
+
+
 
 
 

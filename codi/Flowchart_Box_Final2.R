@@ -1,5 +1,5 @@
 #----------------------------------------------------------------------------------------------#
-#17.11.2020#
+#23.11.2020#
 #----------------------------------------------------------------------------------------------#
 #----------------------------------------------------------------------------------------------#
 #                       FLOW-CHART FINAL
@@ -11,10 +11,6 @@
 #https://rstudio-pubs-static.s3.amazonaws.com/213412_88e4454d1ab44cb2afed68fa832ad8c5.html#/11
 #############
 #rm(list=ls())
-#############
-# 12.11.2020 #
-#############
-#
 
 
 
@@ -47,8 +43,6 @@ Flowchart_Box_Final2<-function(
   
 {
   
-  
-  
   library(Rcpp)
   library(Gmisc)
   library(glue)
@@ -76,16 +70,7 @@ Flowchart_Box_Final2<-function(
   
   
   {
-    #---------------------------------------------------------------------------------------------------------------# 
-    #colors=c('white','grey')
-    #N=10000
-    #N_LABEL="POBLACIO a CATALUNYA"
-    #pob1=c(1000,50)
-    #exc1=c(18,12)
-    #exc_lab1=c('Edat>90 anys : ','Problemes Digestius : ')
-    #pob_lab1=c("Pob inicial","Pob final"))
-    #---------------------------------------------------------------------------------------------------------------# 
-    #
+    
     grid.newpage()
     gp <- gpar(fill =colors)
     
@@ -153,19 +138,7 @@ Flowchart_Box_Final2<-function(
   {
     
     
-    #---------------------------------------------------------------------------------------------------------------# 
-    #colors=c("white","grey")
-    #N=10000
-    #N_LABEL="POBLACIO a CATALUNYA"
-    #pob1=c(100,50)
-    #pob2=c(200,60)
-    #exc1=c(18,12)
-    #exc2=c(56,90)
-    #exc_lab1=c("Si votes Vox :","<18 anys :")
-    #exc_lab2=c("Si votes Colau :","<18 anys :")
-    #pob_lab1=c("DIABETICS a CATALUNYA","DIABETICS a CATALUNYA FINAL")
-    #pob_lab2=c("No DIABETICS a CATALUNYA","No DIABETICS a CATALUNYA FINAL")
-    #---------------------------------------------------------------------------------------------------------------# 
+    
     grid.newpage()
     gp <- gpar(fill =colors)
     
@@ -209,8 +182,6 @@ Flowchart_Box_Final2<-function(
     KK3<-connectGrob(GRUP1,GRUP1_F, "N")
     KK4<-connectGrob(GRUP2,GRUP2_F, "N")
     
-    ###KK5<-connectGrob(GRUP1,exclude1, "N")
-    ###KK6<-connectGrob(GRUP2,exclude2, "N")
     
     
     
@@ -263,26 +234,7 @@ Flowchart_Box_Final2<-function(
   {
     
     
-    #colors=c("white","grey")
-    #N=10000
-    #N_LABEL="POBLACIO a CATALUNYA"
     
-    #pob1=c(100,50)
-    #pob2=c(200,60)
-    #pob3=c(300,40)
-    
-    #exc1=c(18,12)
-    #exc2=c(56,90)
-    #3=c(exc13,31)
-    
-    #exc_lab1=c("Si votes Vox :","<18 anys :")
-    #exc_lab2=c("Si votes Colau :","<200 anys :")
-    #exc_lab3=c("Si votes Valls :","<32 anys :")
-    
-    #pob_lab1=c("DIABETICS a CATALUNYA","DIABETICS a CATALUNYA FINAL")
-    #pob_lab2=c("No DIABETICS a CATALUNYA","No DIABETICS a CATALUNYA FINAL")
-    #pob_lab3=c("Capullos a CATALUNYA","Capullos a CATALUNYA FINAL")
-    #---------------------------------------------------------------------------------------------------------------#
     grid.newpage()
     gp <- gpar(fill =colors)
    
@@ -360,12 +312,7 @@ Flowchart_Box_Final2<-function(
     KK4<-connectGrob(GRUP1,GRUP1_F, "N")
     KK5<-connectGrob(GRUP2,GRUP2_F, "N")
     KK6<-connectGrob(GRUP3,GRUP3_F, "N")
-    
-    #KK7<-connectGrob(GRUP1,exclude1, "L")
-    #KK8<-connectGrob(GRUP2,exclude2, "L")
-    #KK9<-connectGrob(GRUP3,exclude3, "L")
-    
-    
+     
     
     
     flow<- list( TOTAL,
@@ -395,6 +342,7 @@ Flowchart_Box_Final2<-function(
   
   
   
+  
   if  (grups<1)
   {print("Error, posa els GRUPS, si us plau! al Flowchart!")  }
   else if  (grups==1)
@@ -408,16 +356,7 @@ Flowchart_Box_Final2<-function(
     exc_lab1=exc_lab1,
     pob_lab1=pob_lab1)
     
-    #colors=c('white','grey'),
-    #N=10000,
-    #N_LABEL="POBLACIO a CATALUNYA",
-    #pob1=c(1000,50),
-    #pob_lab1=c("Pob inicial","Pob final"),
-    #exc1=c(18,12),
-    #exc_lab1=c('Edat>90 anys : ','Problemes Digestius : '
     
-    
-     
     }
   
   else if (grups==2)
@@ -474,5 +413,37 @@ Flowchart_Box_Final2<-function(
 }
 
 
+
+
+
+
+rai<-Flowchart_Box_Final2(
+  
+  grups=1,
+  
+  colors=c("white","green"),
+  pob=10,
+  pob_lab="Poblacio Total",
+  
+  pob1=c(2,1),
+  pob2=c(3,1),
+  pob3=c(5,3),
+  
+  exc1=c(1,0),
+  exc2=c(1,1),
+  exc3=c(1,1),
+  
+  exc_lab1=c("A :","B :"),
+  exc_lab2=c("A :","B :"),
+  exc_lab3=c("A :","B :"),
+  
+  pob_lab1=c("POB1_INICIAL","POB1_FINAL"),
+  pob_lab2=c("POB2_INICIAL","POB2_FINAL"),
+  pob_lab3=c("POB3:INICIAL","POB3_FINAL")
+  
+)
+
+
+rai
 
 

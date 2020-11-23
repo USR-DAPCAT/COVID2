@@ -45,7 +45,7 @@ params:
 
 
 ```{r setup, include = FALSE}
-
+#23.11.2020#
 #18.09.2020#
 
 library("dplyr")
@@ -119,7 +119,206 @@ dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = T
 #       previas a esos episodios si las hubiera habido
 dt_05<-read.csv2(here::here(directori_dades,"05.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
 dt_06<-read.csv2(here::here(directori_dades,"06.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
+
 #-------------------------------------------------------------------------#  
+#-------------------------------------------------------------------------#  
+# Comprovació:[]!!!
+#
+#
+#variable.names(dt_05)
+#[01] "PATIENT.ID" "DIA_PPAL"   "DIA_02"     "DIA_03"     "DIA_04"     "DIA_05"     "DIA_06"     "DIA_07"    
+#[09] "DIA_08"     "DIA_09"     "DIA_10"     "DIA_11"     "DIA_12"     "PROC_01"    "PROC_02"    "PROC_03"   
+#[17] "PROC_04"    "PROC_05"   
+
+#variable.names(dt_06)
+#[1] "PATIENT.ID" "DIA_PPAL"   "DIA_02"     "DIA_03"     "DIA_04"     "DIA_05"     "DIA_06"     "DIA_08"    
+#[09] "DIA_07"     "DIA_09"     "DIA_10"     "DIA_11"     "DIA_12"     "DIA_13"     "DIA_14"     "DIA_15"    
+#[17] "DIA_16"     "DIA_17"     "DIA_18"     "DIA_19"     "NEO_01"     "NEO_02"     "NEO_03"     "NEO_04"    
+#[25] "NEO_05"     "NEO_06"     "POAD_02"    "POAD_03"    "POAD_04"    "POAD_05"    "POAD_06"    "POAD_07"   
+#[33] "POAD_08"    "POAD_09"    "POAD_10"    "POAD_11"    "POAD_12"    "POAD_13"    "POAD_14"    "POAD_15"   
+#[41] "POAD_16"    "POAD_17"    "POAD_18"    "POAD_19"    "POAD_PPAL"  "PROC_01"    "PROC_02"    "PROC_03"   
+#[49] "PROC_04"    "PROC_05"    "PROC_06"    "PROC_07"    "PROC_08"    "PROC_09"    "PROC_10"    "PROC_11"   
+#[57] "PROC_12"    "PROC_13"    "PROC_14"    "PROC_15"    "PROC_16"    "PROC_17"    "PROC_18"    "PROC_19"   
+#[65] "PROC_20"   
+#---------------------------------------------------------#
+CODIS_P1<-dt_05 %>%select(DIA_PPAL)%>%rename(COD=DIA_PPAL)
+CODIS_P2<-dt_05 %>%select(DIA_02)%>%rename(COD=DIA_02)
+CODIS_P3<-dt_05 %>%select(DIA_03)%>%rename(COD=DIA_03)
+CODIS_P4<-dt_05 %>%select(DIA_04)%>%rename(COD=DIA_04)
+CODIS_P5<-dt_05 %>%select(DIA_05)%>%rename(COD=DIA_05)
+CODIS_P6<-dt_05 %>%select(DIA_06)%>%rename(COD=DIA_06)
+CODIS_P7<-dt_05 %>%select(DIA_07)%>%rename(COD=DIA_07)
+CODIS_P8<-dt_05 %>%select(DIA_08)%>%rename(COD=DIA_08)
+CODIS_P9<-dt_05 %>%select(DIA_09)%>%rename(COD=DIA_09)
+CODIS_P10<-dt_05 %>%select(DIA_10)%>%rename(COD=DIA_10)
+CODIS_P11<-dt_05 %>%select(DIA_11)%>%rename(COD=DIA_11)
+CODIS_P12<-dt_05 %>%select(DIA_12)%>%rename(COD=DIA_12)
+CODIS_P13<-dt_05 %>%select(PROC_01)%>%rename(COD=PROC_01)
+CODIS_P14<-dt_05 %>%select(PROC_02)%>%rename(COD=PROC_02)
+CODIS_P15<-dt_05 %>%select(PROC_03)%>%rename(COD=PROC_03)
+CODIS_P16<-dt_05 %>%select(PROC_04)%>%rename(COD=PROC_04)
+CODIS_P17<-dt_05 %>%select(PROC_05)%>%rename(COD=PROC_05)
+CODIS_P18<-dt_06 %>%select(DIA_PPAL)%>%rename(COD=DIA_PPAL)
+CODIS_P19<-dt_06 %>%select(DIA_02)%>%rename(COD=DIA_02)
+CODIS_P20<-dt_06 %>%select(DIA_03)%>%rename(COD=DIA_03)
+CODIS_P21<-dt_06 %>%select(DIA_04)%>%rename(COD=DIA_04)
+CODIS_P22<-dt_06 %>%select(DIA_05)%>%rename(COD=DIA_05)
+CODIS_P23<-dt_06 %>%select(DIA_06)%>%rename(COD=DIA_06)
+CODIS_P24<-dt_06 %>%select(DIA_07)%>%rename(COD=DIA_07)
+CODIS_P25<-dt_06 %>%select(DIA_08)%>%rename(COD=DIA_08)
+CODIS_P26<-dt_06 %>%select(DIA_09)%>%rename(COD=DIA_09)
+CODIS_P27<-dt_06 %>%select(DIA_10)%>%rename(COD=DIA_10)
+CODIS_P28<-dt_06 %>%select(DIA_11)%>%rename(COD=DIA_11)
+CODIS_P29<-dt_06 %>%select(DIA_12)%>%rename(COD=DIA_12)
+CODIS_P30<-dt_06 %>%select(DIA_13)%>%rename(COD=DIA_13)
+CODIS_P31<-dt_06 %>%select(DIA_14)%>%rename(COD=DIA_14)
+CODIS_P32<-dt_06 %>%select(DIA_15)%>%rename(COD=DIA_15)
+CODIS_P33<-dt_06 %>%select(DIA_16)%>%rename(COD=DIA_16)
+CODIS_P34<-dt_06 %>%select(DIA_17)%>%rename(COD=DIA_17)
+CODIS_P35<-dt_06 %>%select(DIA_18)%>%rename(COD=DIA_18)
+CODIS_P36<-dt_06 %>%select(DIA_19)%>%rename(COD=DIA_19)
+CODIS_P37<-dt_06 %>%select(NEO_01)%>%rename(COD=NEO_01)
+CODIS_P38<-dt_06 %>%select(NEO_02)%>%rename(COD=NEO_02)
+CODIS_P39<-dt_06 %>%select(NEO_03)%>%rename(COD=NEO_03)
+CODIS_P40<-dt_06 %>%select(NEO_04)%>%rename(COD=NEO_04)
+CODIS_P41<-dt_06 %>%select(NEO_05)%>%rename(COD=NEO_05)
+CODIS_P42<-dt_06 %>%select(NEO_06)%>%rename(COD=NEO_06)
+CODIS_P43<-dt_06 %>%select(POAD_02)%>%rename(COD=POAD_02)
+CODIS_P44<-dt_06 %>%select(POAD_03)%>%rename(COD=POAD_03)
+CODIS_P45<-dt_06 %>%select(POAD_04)%>%rename(COD=POAD_04)
+CODIS_P46<-dt_06 %>%select(POAD_05)%>%rename(COD=POAD_05)
+CODIS_P47<-dt_06 %>%select(POAD_06)%>%rename(COD=POAD_06)
+CODIS_P48<-dt_06 %>%select(POAD_07)%>%rename(COD=POAD_07)
+CODIS_P49<-dt_06 %>%select(POAD_08)%>%rename(COD=POAD_08)
+CODIS_P50<-dt_06 %>%select(POAD_09)%>%rename(COD=POAD_09)
+CODIS_P51<-dt_06 %>%select(POAD_10)%>%rename(COD=POAD_10)
+CODIS_P52<-dt_06 %>%select(POAD_11)%>%rename(COD=POAD_11)
+CODIS_P53<-dt_06 %>%select(POAD_12)%>%rename(COD=POAD_12)
+CODIS_P54<-dt_06 %>%select(POAD_13)%>%rename(COD=POAD_13)
+CODIS_P55<-dt_06 %>%select(POAD_14)%>%rename(COD=POAD_14)
+CODIS_P56<-dt_06 %>%select(POAD_15)%>%rename(COD=POAD_15)
+CODIS_P57<-dt_06 %>%select(POAD_16)%>%rename(COD=POAD_16)
+CODIS_P58<-dt_06 %>%select(POAD_17)%>%rename(COD=POAD_17)
+CODIS_P59<-dt_06 %>%select(POAD_18)%>%rename(COD=POAD_18)
+CODIS_P60<-dt_06 %>%select(POAD_19)%>%rename(COD=POAD_19)
+CODIS_P61<-dt_06 %>%select(POAD_PPAL)%>%rename(COD=POAD_PPAL)
+CODIS_P62<-dt_06 %>%select(PROC_01)%>%rename(COD=PROC_01)
+CODIS_P63<-dt_06 %>%select(PROC_02)%>%rename(COD=PROC_02)
+CODIS_P64<-dt_06 %>%select(PROC_03)%>%rename(COD=PROC_03)
+CODIS_P65<-dt_06 %>%select(PROC_04)%>%rename(COD=PROC_04)
+CODIS_P66<-dt_06 %>%select(PROC_05)%>%rename(COD=PROC_05)
+CODIS_P67<-dt_06 %>%select(PROC_06)%>%rename(COD=PROC_06)
+CODIS_P68<-dt_06 %>%select(PROC_07)%>%rename(COD=PROC_07)
+CODIS_P69<-dt_06 %>%select(PROC_08)%>%rename(COD=PROC_08)
+CODIS_P70<-dt_06 %>%select(PROC_09)%>%rename(COD=PROC_09)
+CODIS_P71<-dt_06 %>%select(PROC_10)%>%rename(COD=PROC_10)
+CODIS_P72<-dt_06 %>%select(PROC_11)%>%rename(COD=PROC_11)
+CODIS_P73<-dt_06 %>%select(PROC_12)%>%rename(COD=PROC_12)
+CODIS_P74<-dt_06 %>%select(PROC_13)%>%rename(COD=PROC_13)
+CODIS_P75<-dt_06 %>%select(PROC_14)%>%rename(COD=PROC_14)
+CODIS_P76<-dt_06 %>%select(PROC_15)%>%rename(COD=PROC_15)
+CODIS_P77<-dt_06 %>%select(PROC_16)%>%rename(COD=PROC_16)
+CODIS_P78<-dt_06 %>%select(PROC_17)%>%rename(COD=PROC_17)
+CODIS_P79<-dt_06 %>%select(PROC_18)%>%rename(COD=PROC_18)
+CODIS_P80<-dt_06 %>%select(PROC_19)%>%rename(COD=PROC_19)
+CODIS_P81<-dt_06 %>%select(PROC_20)%>%rename(COD=PROC_20)
+#---------------------------------------------------------#
+CODIS<-CODIS_P1%>%
+  bind_rows(CODIS_P2)%>%
+  bind_rows(CODIS_P3)%>%
+  bind_rows(CODIS_P4)%>%
+  bind_rows(CODIS_P5)%>%
+  bind_rows(CODIS_P6)%>%
+  bind_rows(CODIS_P7)%>%
+  bind_rows(CODIS_P8)%>%
+  bind_rows(CODIS_P9)%>%
+  bind_rows(CODIS_P10)%>%
+  bind_rows(CODIS_P11)%>%
+  bind_rows(CODIS_P12)%>%
+  bind_rows(CODIS_P13)%>%
+  bind_rows(CODIS_P14)%>%
+  bind_rows(CODIS_P15)%>%
+  bind_rows(CODIS_P16)%>%
+  bind_rows(CODIS_P17)%>%
+  bind_rows(CODIS_P18)%>%
+  bind_rows(CODIS_P19)%>%
+  bind_rows(CODIS_P20)%>%
+  bind_rows(CODIS_P21)%>%
+  bind_rows(CODIS_P22)%>%
+  bind_rows(CODIS_P23)%>%
+  bind_rows(CODIS_P24)%>%
+  bind_rows(CODIS_P25)%>%
+  bind_rows(CODIS_P26)%>%
+  bind_rows(CODIS_P27)%>%
+  bind_rows(CODIS_P28)%>%
+  bind_rows(CODIS_P29)%>%
+  bind_rows(CODIS_P30)%>%
+  bind_rows(CODIS_P31)%>%
+  bind_rows(CODIS_P32)%>%
+  bind_rows(CODIS_P33)%>%
+  bind_rows(CODIS_P34)%>%
+  bind_rows(CODIS_P35)%>%
+  bind_rows(CODIS_P36)%>%
+  bind_rows(CODIS_P37)%>%
+  bind_rows(CODIS_P38)%>%
+  bind_rows(CODIS_P39)%>%
+  bind_rows(CODIS_P40)%>%
+  bind_rows(CODIS_P41)%>%
+  bind_rows(CODIS_P42)%>%
+  bind_rows(CODIS_P43)%>%
+  bind_rows(CODIS_P44)%>%
+  bind_rows(CODIS_P45)%>%
+  bind_rows(CODIS_P46)%>%
+  bind_rows(CODIS_P47)%>%
+  bind_rows(CODIS_P48)%>%
+  bind_rows(CODIS_P49)%>%
+  bind_rows(CODIS_P50)%>%
+  bind_rows(CODIS_P51)%>%
+  bind_rows(CODIS_P52)%>%
+  bind_rows(CODIS_P53)%>%
+  bind_rows(CODIS_P54)%>%
+  bind_rows(CODIS_P55)%>%
+  bind_rows(CODIS_P56)%>%
+  bind_rows(CODIS_P57)%>%
+  bind_rows(CODIS_P58)%>%
+  bind_rows(CODIS_P59)%>%
+  bind_rows(CODIS_P60)%>%
+  bind_rows(CODIS_P61)%>%
+  bind_rows(CODIS_P62)%>%
+  bind_rows(CODIS_P63)%>%
+  bind_rows(CODIS_P64)%>%
+  bind_rows(CODIS_P65)%>%
+  bind_rows(CODIS_P66)%>%
+  bind_rows(CODIS_P67)%>%
+  bind_rows(CODIS_P68)%>%
+  bind_rows(CODIS_P69)%>%
+  bind_rows(CODIS_P70)%>%
+  bind_rows(CODIS_P71)%>%
+  bind_rows(CODIS_P72)%>%
+  bind_rows(CODIS_P73)%>%
+  bind_rows(CODIS_P74)%>%
+  bind_rows(CODIS_P75)%>%
+  bind_rows(CODIS_P76)%>%
+  bind_rows(CODIS_P77)%>%
+  bind_rows(CODIS_P78)%>%
+  bind_rows(CODIS_P79)%>%
+  bind_rows(CODIS_P80)%>%
+  bind_rows(CODIS_P81)%>%
+  arrange(COD)%>%
+    group_by(COD)%>%
+        slice(1)%>% 
+          ungroup()%>%
+              select(COD)
+
+
+#variable.names(CODIS)
+
+  
+#-------------------------------------------------------------------------#  
+#-------------------------------------------------------------------------#  
+
+
+
 
 conductor<-"conductor_Covid.xlsx"
 conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
@@ -801,8 +1000,6 @@ AgeSex$PATIENT.ID<-as.character(AgeSex$PATIENT.ID)
 AgeSex<-AgeSex%>%transmute(PATIENT.ID,EDAD.AGE,SEXO.SEX,Ethnicity="non-black")
 
 
-
-
 dt_plana_covid4_agr3<-dt_plana_covid4_agr2 %>%
   left_join(analitiques.agr2  ,by="PATIENT.ID") %>%
      left_join(AgeSex  ,by="PATIENT.ID")%>%
@@ -945,6 +1142,8 @@ dt_plana_covid_INGRES_agr<-dt_plana_covid_INGRES_agr %>%select(idp,
                                                                EV1.Mechanical_ventialtion,
                                                                EV1.TVP,
                                                                EV1.IRA)
+
+#table(dt_plana_covid_INGRES_agr$EV1.COMP_NEURO)
 
 dt_plana_covid_INGRES_agr2<-dt_plana_covid_INGRES_agr2 %>%select(idp,EV2.COMP_NEUMO)
 dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3 %>%select(idp,
