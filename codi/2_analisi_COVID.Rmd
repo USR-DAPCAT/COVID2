@@ -781,17 +781,17 @@ mod.gam.spline %>%
 ##############################
 
 
-#mgcViz::getViz(mod.gam.spline) %>% 
-#  plot.gamViz() +
-#  labs(title = "Association of Glucose versus mortality")+
-#  l_fitLine(linetype = 1)  +
-#  l_ciLine(linetype = 3) +
-#  l_rug() +
-#  theme_grey() +
-#  scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
-#  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
+mgcViz::getViz(mod.gam.spline) %>% 
+  plot.gamViz() +
+  labs(title = "Association of Glucose versus mortality")+
+  l_fitLine(linetype = 1)  +
+  l_ciLine(linetype = 3) +
+  l_rug() +
+  theme_grey() +
+  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
+  #scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
 
-#sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_","DG2.OB"))
+  sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_","DG2.OB"))
 
 
 ```
@@ -809,17 +809,15 @@ mod.gam.spline<-
 mod.gam.spline %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,title = "Modelo de Mortalidad /VM con termino spline Glucose", p.style = "numeric_stars")
 
-#mgcViz::getViz(mod.gam.spline) %>% 
-#  plot.gamViz() +
-#  labs(title = "Association of Glucose versus mortality or VM")+
-#  l_fitLine(linetype = 1)  +
-#  l_ciLine(linetype = 3) +
-#  l_rug() +
-#  theme_grey() +
-#  scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
-#  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
+mgcViz::getViz(mod.gam.spline) %>% 
+  plot.gamViz() +
+  labs(title = "Association of Glucose versus mortality or VM")+
+  l_fitLine(linetype = 1)  +
+  l_ciLine(linetype = 3) +
+  l_rug() +
+  theme_grey() +ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
 
-
+#scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
 
 
 ```
