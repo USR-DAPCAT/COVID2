@@ -317,6 +317,7 @@ CODIS<-CODIS_P1%>%
 #-------------------------------------------------------------------------#  
 #-------------------------------------------------------------------------#  
 
+write.csv(CODIS, file="CODIS.csv")
 
 
 
@@ -549,22 +550,20 @@ dt_spread<-function(dt=dt_plana_covid3_B,codi="FC.HR_ING.INPAT")
   }
 
 
-ordre<-dt_plana_covid3_B%>%filter(PATIENT.ID==2316 & cod=="FC.HR_ING.INPAT")%>%
-  arrange(dat)
-ordre2<-dt_plana_covid3_B%>%filter(PATIENT.ID==2316)%>%
-  arrange(dat)
+#ordre<-dt_plana_covid3_B%>%filter(PATIENT.ID==2316 & cod=="FC.HR_ING.INPAT")%>%
+#  arrange(dat)
+#ordre2<-dt_plana_covid3_B%>%filter(PATIENT.ID==2316)%>%
+#  arrange(dat)
 
 #### EXEMPLE D'APLICAR LA FUNCIÓ MAP I REDUCE PER APLICAR UNA FUNCIÓ PER APLANAR
 #llista_vars<-dt_plana_covid3_B %>% distinct(cod) %>% as_vector()
 
 llista_vars<-c("FC.HR_ING.INPAT","TA_MAX_ING.INPAT","TA_MIN_ING.INPAT","TEMP_ING.INPAT")
+
 dt_plana_covid3_agr <-
   llista_vars %>% 
   map(~dt_spread(dt_plana_covid3_B,.x)) %>% 
   reduce(full_join,by="PATIENT.ID")
-
-
-
 
 analitiques.agr<-agregar_vars_covid(dt =dt_plana_covid3_B)
 
@@ -649,15 +648,15 @@ KK<-str_split_fixed(dt_plana_covid4B$cod, "--",2)
 dt_plana_covid4B<-cbind(dt_plana_covid4B,cod2=KK[,1])
 #-----------------------------------------------------------------------------------------------#
 #-----------------------------------------------------------------------------------------------#
-dt_plana_covid4B$valor             <-as.character(dt_plana_covid4B$valor)
-PATIENT.ID<- dt_plana_covid4B$PATIENT.ID
-dat<-dt_plana_covid4B$dat
-valor<- dt_plana_covid4B$valor
-cod<-KK[,1]
-cod2<-dt_plana_covid4B$cod
+#dt_plana_covid4B$valor             <-as.character(dt_plana_covid4B$valor)
+#PATIENT.ID<- dt_plana_covid4B$PATIENT.ID
+#dat<-dt_plana_covid4B$dat
+#valor<- dt_plana_covid4B$valor
+#cod<-KK[,1]
+#cod2<-dt_plana_covid4B$cod
 #-----------------------------------------------------------------------------------------------#
-dt_cataleg_analitica4C<-cbind(PATIENT.ID,dat,valor,domini="variables_analitiques",cod,cod2)
-dt_cataleg_analitica4C<-dt_cataleg_analitica4C%>%as_tibble()%>%select(-domini)
+#dt_cataleg_analitica4C<-cbind(PATIENT.ID,dat,valor,domini="variables_analitiques",cod,cod2)
+#dt_cataleg_analitica4C<-dt_cataleg_analitica4C%>%as_tibble()%>%select(-domini)
 #-----------------------------------------------------------------------------------------------#
 
 # comprovació!
@@ -779,7 +778,7 @@ dt_plana_covid4_agr_CORONA<-dt_plana_covid4_agr_CORONA%>%transmute( PATIENT.ID,C
 ```{r agregacio8}
 #i)
 
-K<-dt_plana_covid4_agr
+#K<-dt_plana_covid4_agr
 
 dt_plana_covid4_agr_B<-dt_plana_covid4_agr%>%
   transmute(PATIENT.ID,dat=dat,valor=valor,cod=cod)%>%filter(cod=="US_troponina_" |
@@ -985,7 +984,7 @@ dt_plana_covid4_agr2$COL_1          <-as.double(dt_plana_covid4_agr2$COL_1)
 # Càlcul de Variable nueva IFCC HbA1c (nmmol/mol) = (10.93*HB1AC)-23.50
 
 dt_plana_covid4_agr2<-dt_plana_covid4_agr2%>%mutate(HA1C_MMOLS1 =((10.93*HBA1C_1) - 23.50))
-dt_plana_covid4_agr2$HBA1C_1
+#dt_plana_covid4_agr2$HBA1C_1
 
 
 ```
