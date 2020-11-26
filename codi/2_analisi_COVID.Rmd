@@ -578,6 +578,19 @@ descrTable(formula,
 ```{r resultats6, include=T}
 
 
+#i)   Death, n (%)
+#ii)  Death and/or invasive mechanical ventilation, n (%),
+#iii) Invasive mechanical ventilation, n (%),
+#iv)  Pulmonary embolism 
+#v)   ARDS, n (%),
+#vi)  Thrombotic complications n (%),
+#vii) Neurologic complications, n (%)
+#viii)Admission to ICU, n (%),
+#ix)  Days in ICU, (min,max), 
+
+
+
+
 #TAULA_PLANA_exc_DIAB
 #TAULA_PLANA_exc_NO_DIAB
 
@@ -660,6 +673,32 @@ descrTable(formula,
 
 ### 3.1 Modelos de Mortalidad y de mal pronostico (VM o muerte) población total
 ```{r resultats7, include=T, warning=F}
+
+#M1.M2.M3.  [Diabetes (yes)]
+#M1.M2.M3.  [Age (years)]
+#M1.M2.M3.  [Sex (male)]
+#M2.M3.     [Obesity (yes)]
+#M2.M3.     [Hypertension (yes)]
+#M2.M3.     [Hyperlipidaemia (yes)]
+#M3.        [COPD (yes)]
+#M3.        [Heart failure (yes)] 
+#M3.        [Chronic renal insufficiency (yes)]
+#M3.        [Cardiovascular diseases (yes)]
+
+
+#M4.M5.M6.  [Serum glucose]  
+#M4.M5.M6.  [Age (years)]
+#M4.M5.M6.  [Sex (male)]
+#M5.M6.     [Obesity (yes)]
+#M5.M6.     [Hypertension (yes)]
+#M5.M6.     [Hyperlipidaemia (yes)]
+#M6.        [COPD (yes)]
+#M6.        [Heart failure (yes)] 
+#M6.        [Chronic renal insufficiency (yes)]
+#M6.        [Cardiovascular diseases (yes)]
+
+
+
 c("ajuste1","ajuste2","ajuste3") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
@@ -703,6 +742,18 @@ c("ajuste4","ajuste5","ajuste6") %>%
 
 ```{r resultats7.2, include=T, warning=F}
 
+
+#Diabetes (yes)
+#Sex (male)
+#Age (years)
+#Obesity (yes)
+#Hypertension (yes)
+#Hyperlipidaemia (yes)
+#Cardiovascular diseases (yes)
+#Heart failure (yes)
+#Chronic renal insufficiency (yes)
+#COPD (yes)
+
 M1_Exitus<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
   glm(data = TAULA_PLANA_exc, family = "binomial") 
 
@@ -718,7 +769,247 @@ list(M1_Exitus,M2_VM) %>%
   sjPlot::plot_models(prefix.labels = "label",show.p = T,m.labels = c("Death", "Death or Invasive mechanical ventilation"))
 
 
+# I N T E R E C C I O N E S:[]
+ 
+#Supplementary table 3. 4 Mortality Model evaluating Diabetes and Obesity interactions
+# 
+#Diabetes (yes)
+#Obesity (yes)
+#Sex (male)
+#Age (years)
+#Hypertension (yes)
+#Hyperlipidaemia (yes)
+#Cardiovascular diseases (yes)
+#Heart failure (yes)
+#Chronic renal insufficiency (yes)
+#COPD (yes)
+#Diabetes (yes): Obesity (yes)
 
+ 
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#fer-ho!!!!!:[]
+#formula.text("ajuste8","Death2",a="G_DIABETIC*DG.IRC")
+ 
+ 
+################################################################################################ 
+# M1_Exitus_INTERECCIONS1<-glm(Death2 ~ G_DIABETIC +
+#          DG2.OB+ 
+#          SEXO.SEX + 
+#          EDAD.AGE  + 
+#          DG2.HTA + 
+#          DG2.Hyperlip + 
+#          DG2.COMP_CARDIOVASC + 
+#          DG2.INSUF_CARD + 
+#          DG.IRC + 
+#          DG.EPOC_ENFISEMA+G_DIABETIC*DG2.OB,family = "binomial", data = TAULA_PLANA_exc)
+################################################################################################  
+ 
+ 
+ M1_Exitus_INTERECCIONS1<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.OB",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+list(M1_Exitus_INTERECCIONS1) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+                    title = "Modelo de Mortalidad con interacciones DM*Obesidad",
+                    p.style = "numeric_stars") 
+ 
+ 
+ 
+#Supplementary table 3. 5 Mortality Model evaluating Diabetes and Hyperlipidemia interactions
+#
+#Diabetes (yes)
+#Hyperlipidaemia (yes)
+#Sex (male)
+#Age (years)
+#Obesity (yes)
+#Hypertension (yes)
+#Cardiovascular diseases (yes)
+#Heart failure (yes)
+#Chronic renal insufficiency (yes)
+#COPD (yes)
+#Diabetes (yes): Hyperlipidaemia (yes)
+
+
+
+# M1_Exitus_INTERECCIONS2<-glm(Death2 ~ G_DIABETIC +
+#          DG2.OB+ 
+#          SEXO.SEX + 
+#          EDAD.AGE  + 
+#          DG2.HTA + 
+#          DG2.Hyperlip + 
+#          DG2.COMP_CARDIOVASC + 
+#          DG2.INSUF_CARD + 
+#          DG.IRC + 
+#          DG.EPOC_ENFISEMA+G_DIABETIC*DG2.Hyperlip,family = "binomial", data = #TAULA_PLANA_exc)
+
+M1_Exitus_INTERECCIONS2<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.Hyperlip",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+list(M1_Exitus_INTERECCIONS2) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+                    title = "Modelo de Mortalidad con interacciones DM*Hiperlipidemia",
+                    p.style = "numeric_stars") 
+
+
+
+
+ 
+#Supplementary table 3. 6 Mortality Model evaluating Diabetes and Heart failure interactions 
+#
+#Predictors
+#Diabetes (yes)
+#Heart failure (yes)
+#Sex (male)
+#Age (years)
+#Obesity (yes)
+#Hypertension (yes)
+#Hyperlipidaemia (yes)
+#Cardiovascular diseases (yes)
+#Chronic renal insufficiency (yes)
+#COPD (yes)
+#Diabetes (yes): Heart failure (yes)
+
+
+#M1_Exitus_INTERECCIONS3<-glm(Death2 ~ G_DIABETIC +
+#          DG2.OB+ 
+#          SEXO.SEX + 
+#          EDAD.AGE  + 
+#          DG2.HTA + 
+#          DG2.Hyperlip + 
+#          DG2.COMP_CARDIOVASC + 
+#          DG2.INSUF_CARD + 
+#          DG.IRC + 
+#          DG.EPOC_ENFISEMA+G_DIABETIC*DG2.INSUF_CARD,family = "binomial", data = #TAULA_PLANA_exc)
+
+M1_Exitus_INTERECCIONS3<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.INSUF_CARD",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+ 
+list(M1_Exitus_INTERECCIONS3) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+                    title = "Modelo de Mortalidad con interacciones DM*Insuficiencia cardiaca",
+                    p.style = "numeric_stars") 
+
+
+
+
+#Supplementary table 3. 7 Mortality Model evaluating Diabetes, obesity and hyperlipidemia interactions
+#   
+#Diabetes (yes)
+#Obesity (yes)
+#Hyperlipidaemia (yes)
+#Sex (male)
+#Age (years)
+#Hypertension (yes)
+#Cardiovascular diseases (yes)
+#Heart failure (yes)
+#Chronic renal insufficiency (yes)
+#COPD (yes)
+#Diabetes (yes): Obesity (yes)
+#Diabetes (yes): Hyperlipidaemia (yes)
+
+
+M1_Exitus_INTERECCIONS4<-glm(Death2 ~ G_DIABETIC +
+          DG2.OB+ 
+          SEXO.SEX + 
+          EDAD.AGE  + 
+          DG2.HTA + 
+          DG2.Hyperlip + 
+          DG2.COMP_CARDIOVASC + 
+          DG2.INSUF_CARD + 
+          DG.IRC + 
+          DG.EPOC_ENFISEMA+
+          G_DIABETIC*DG2.OB+
+          G_DIABETIC*DG2.Hyperlip,
+          family = "binomial", data = TAULA_PLANA_exc)
+ 
+
+list(M1_Exitus_INTERECCIONS4) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+                    title = "Modelo de Mortalidad con interacciones Obesidad y Hiperlipidemia con DM",
+                    p.style = "numeric_stars") 
+
+
+
+
+
+
+# Supplementary table 3. 8 Mortality Model evaluating Diabetes, and chronic renal insufficiency
+#
+#Diabetes (yes)
+#Chronic renal insufficiency (yes)
+#Sex (male)
+#Age (years)
+#Obesity (yes)
+#Hypertension (yes)
+#Hyperlipidaemia (yes)
+#Cardiovascular diseases (yes)
+#Heart failure (yes)
+#COPD (yes)
+#Diabetes (yes): Chronic renal insufficiency (yes)
+
+
+
+
+
+
+#M1_Exitus_INTERECCIONS5<-glm(Death2 ~ G_DIABETIC +
+#          DG2.OB+ 
+#          SEXO.SEX + 
+#          EDAD.AGE  + 
+#          DG2.HTA + 
+#          DG2.Hyperlip + 
+#          DG2.COMP_CARDIOVASC + 
+#          DG2.INSUF_CARD + 
+#          DG.IRC + 
+#          DG.EPOC_ENFISEMA+G_DIABETIC*DG.IRC,family = "binomial", data = TAULA_PLANA_exc)
+######################################
+
+M1_Exitus_INTERECCIONS5<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.IRC",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+list(M1_Exitus_INTERECCIONS5) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+                    title = "Modelo de Mortalidad con interacciones DM*Insuficiencia renal cronica",
+                    p.style = "numeric_stars") 
+
+ 
+#Supplementary table 3. 9 Mortality Model evaluating Diabetes, and COPD
+#
+#Diabetes (yes)
+#COPD (yes)
+#Sex (male)
+#Age (years)
+#Obesity (yes)
+#Hypertension (yes)
+#Hyperlipidaemia (yes)
+#Cardiovascular diseases (yes)
+#Heart failure (yes)
+#Chronic renal insufficiency (yes)
+#Diabetes (yes): COPD (yes)
+ 
+
+#M1_Exitus_INTERECCIONS6<-glm(Death2 ~ G_DIABETIC +
+#          DG2.OB+ 
+#          SEXO.SEX + 
+#          EDAD.AGE  + 
+#          DG2.HTA + 
+#          DG2.Hyperlip + 
+#          DG2.COMP_CARDIOVASC + 
+#          DG2.INSUF_CARD + 
+#          DG.IRC + 
+#          DG.EPOC_ENFISEMA+G_DIABETIC*DG.EPOC_ENFISEMA,family = "binomial", data = TAULA_PLANA_exc)
+
+M1_Exitus_INTERECCIONS6<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.EPOC_ENFISEMA",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+ 
+list(M1_Exitus_INTERECCIONS6) %>%  
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+                    title = "Modelo de Mortalidad con interacciones DM*COPD",
+                    p.style = "numeric_stars") 
+
+    
 
 ```
 
@@ -730,6 +1021,21 @@ list(M1_Exitus,M2_VM) %>%
 > Análisis por subgrupos
 
 ```{r resultats9, include=T, warning=F}
+
+#Supplementary table 5.1 
+#Clinical characteristics at baseline associated to in-hospital death stratified for diabetes status
+
+#Sex (male)
+#Age 
+#Obesity (yes)
+#Hypertension (yes)
+#Hyperlipidaemia (yes)
+#Cardiovascular diseases (yes)
+#Heart failure (yes)
+#Chronic renal insufficiency (yes)
+#COPD (yes)
+
+
 
 formu<-formula.text("ajuste8","Death2",taulavariables = conductor)
 
@@ -792,9 +1098,10 @@ mod.gam.spline<-
 mod.gam.spline %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,title = "Modelo de Mortalidad con termino spline Glucose", p.style = "numeric_stars")
 
-##############################
-#? mirar-ho dema! 06.11.2020!#
-##############################
+############################## ############################## ##############################
+#https://www.cienciadedatos.net/documentos/32_metodos_de_regresion_no_lineal_polinomica_splines_gams
+#https://github.com/tidyverse/ggplot2/issues/2907
+############################## ############################## ##############################
 
 
 mgcViz::getViz(mod.gam.spline) %>% 
@@ -804,11 +1111,14 @@ mgcViz::getViz(mod.gam.spline) %>%
   l_ciLine(linetype = 3) +
   l_rug() +
   theme_grey() +
-  ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
+  ylab("Logit")+xlab("Glucose") # Canvi d'escala
+sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_","DG2.OB"))
+  
+
   #scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
+  #In self$trans$inverse(limits) : NaNs produced
 
-  sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_","DG2.OB"))
-
+  
 
 ```
 
@@ -831,7 +1141,7 @@ mgcViz::getViz(mod.gam.spline) %>%
   l_fitLine(linetype = 1)  +
   l_ciLine(linetype = 3) +
   l_rug() +
-  theme_grey() +ylab("Odds Ratio")+xlab("Glucose") # Canvi d'escala
+  theme_grey() +ylab("Logit")+xlab("Glucose") # Canvi d'escala
 
 #scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
 

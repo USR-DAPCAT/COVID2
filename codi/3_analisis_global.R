@@ -1,12 +1,11 @@
 #########################
-# 25//11//2020          #
-# Dimecres  :17:00      #
-#########################
-
-
-rm(list=ls())
+# 26//11//2020          #
+# Dimecres  :16:30      #
+########################
+#                                                                                                                                                                                                                                                  
+#                                                                                                                                                                                                                         
 # dir_dades="dades/mostra"
-
+#
 library("dplyr")
 library("lubridate")
 #library("expss")
