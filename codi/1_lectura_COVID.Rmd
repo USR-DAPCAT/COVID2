@@ -324,7 +324,7 @@ write.csv(CODIS, file="CODIS.csv")
 conductor<-"conductor_Covid.xlsx"
 conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
 
-dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod,agr,agr2,agr3,agr4,agr5,agr6,agr7)
+dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod,agr,agr2,agr3,agr4,agr5,agr6,agr7,agrCVD)
 
 
 #source('codi/funcions_Covid.r')
@@ -359,7 +359,9 @@ dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG<-lubridate::dmy(dt_plana_covi
 #
 #
 dt_plana_covid1<-dt_plana_covid1%>% mutate(URG=ifelse(is.na(F_INGRESO.ADMISSION_DATE_URG.EMERG ),0,1))
-dt_plana_covid1<-dt_plana_covid1%>% mutate(URG=ifelse(URG==0,"No","Si")) 
+
+#dt_plana_covid1<-dt_plana_covid1%>% mutate(URG=ifelse(URG==0,"No","Si"))
+dt_plana_covid1<-dt_plana_covid1%>% mutate(URG=ifelse(URG==0,"No","Yes")) 
 #
 
 pacient19<-dt_plana_covid1%>%filter(year_ingres==2019)%>%select(PATIENT.ID)
@@ -1081,6 +1083,24 @@ dt_plana_covid5_6_agr<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
                                           bd.dindex = "20000601",
                                           dt.agregadors=select(dt_cataleg2,cod,agr=agr),
                                           finestra.dies=c(-Inf,Inf),prefix = "DG.")
+
+                    
+                    #[[Fet el 3.12.2020]]#
+                   
+
+dt_plana_covid5_6_agr3<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
+                                          bd.dindex = "20000601",
+                                          dt.agregadors=select(dt_cataleg2,cod,agr=agrCVD),
+                                          finestra.dies=c(-Inf,Inf),prefix = "CVD.")
+
+
+CVD<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
+                                          bd.dindex = "20000601",
+                                          dt.agregadors=select(dt_cataleg2,cod,agr=agrCVD),
+                                          finestra.dies=c(-Inf,Inf),prefix = "CVD.",keep.code=T)
+
+
+
 ```
 
 
@@ -1401,6 +1421,13 @@ dt_plana_covid5_6_agr$PATIENT.ID<-as.double(dt_plana_covid5_6_agr$PATIENT.ID)
 dt_plana_covid5_6_agr2<-dt_plana_covid5_6_agr2%>% mutate(PATIENT.ID=idp)
 dt_plana_covid5_6_agr2$PATIENT.ID<-as.double(dt_plana_covid5_6_agr2$PATIENT.ID)
 
+############
+#03.12.2020#
+############
+
+
+dt_plana_covid5_6_agr3<-dt_plana_covid5_6_agr3%>% mutate(PATIENT.ID=idp)
+dt_plana_covid5_6_agr3$PATIENT.ID<-as.double(dt_plana_covid5_6_agr3$PATIENT.ID)
 
 
 #Grup de Diabètics.T.PLANA!#
@@ -1525,6 +1552,7 @@ dt_plana_covid5_6_agr<-dt_plana_covid5_6_agr%>%select(-idp,-dtindex)
 #[25] "DG.Neoplasia"              "DG.OB"                     "DG.OTROS"                 
 #[28] "DG.TRAST_MENTAL"           "DG.TRAST_METABOL"          "PATIENT.ID"               
 dt_plana_covid5_6_agr2<-dt_plana_covid5_6_agr2%>%select(-idp,-dtindex)
+dt_plana_covid5_6_agr3<-dt_plana_covid5_6_agr3%>%select(-idp,-dtindex)
 
 
 
@@ -1553,6 +1581,7 @@ dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3%>%mutate(PATIENT.ID=idp)%
 ## 3. Fusió de dades
 ```{r fusio_taulaPlana}
 
+# left_join(dt_plana_covid5_6_agr3,by="PATIENT.ID")%>%
 
 #-------------------------------------------------------------------------------------------------#
 TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID")%>%
@@ -1564,7 +1593,8 @@ TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID
                                  left_join(dt_plana_covid_INGRES_agr,by="PATIENT.ID")%>%
                                  left_join(dt_plana_covid_INGRES_agr2,by="PATIENT.ID")%>%
                                  left_join(dt_plana_covid_INGRES_agr3,by="PATIENT.ID")%>%
-                                 left_join(C_DIABETICS,by="PATIENT.ID")
+                                 left_join(C_DIABETICS,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_covid5_6_agr3,by="PATIENT.ID")
 
 
 
@@ -1573,6 +1603,7 @@ TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID
 TAULA_PLANA<-TAULA_PLANA%>%filter(PATIENT.ID!="577")
 TAULA_PLANA           <-TAULA_PLANA%>%arrange(PATIENT.ID)
 
+#variable.names(TAULA_PLANA)
 
 ```
 
