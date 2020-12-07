@@ -40,12 +40,21 @@ params:
 
 # 0. Estado:
 
+> Des / 2020
+
+
+Eventos:
+
+&check; Traducir al inglés los gáficos para el artículo a través del Conductor <br/>
+
+
+
 > Nov / 2020
 
 
 Eventos:
 
-&check; Hacer Modelos con ineteracciones y recalcular modelos con orden de variables <br/>
+&check; Hacer Modelos con interacciones y recalcular modelos con orden de variables <br/>
 &check; Añadir complicaciones neurológicas <br/>
 &check; Tabla estratificado por sexo para pacientes no diabéticos <br/>
 &check; Quitar los fármacos de los modelos <br/>
@@ -165,7 +174,7 @@ source(here::here("codi/criteris_exclusio_diagrama2.r"))
 
 # Llanço taula i camp que vull etiquetar i cambia nom del camp en funció d'etiqueta
 
-etiquetar_taula<-function(taula=resumtotal,camp="variable",taulavariables="variables_R.xls",camp_descripcio="descripcio",idcamp="camp") {
+etiquetar_taula<-function(taula=resumtotal,camp="variable",taulavariables="variables_R.xls",camp_descripcio="descripcio2",idcamp="camp") {
   
   # taula=porca
   # taulavariables=conductor
@@ -212,22 +221,26 @@ load(here::here("COVID2.Rdata"))
 
 #TAULA_PLANA
 
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Si")))
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DG2.") ),funs(ifelse(is.na(.),"No","Si")))
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("FX.") ),funs(ifelse(is.na(.),"No","Si")))
+#Hem canviat el Yes!
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Yes")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DG2.") ),funs(ifelse(is.na(.),"No","Yes")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("FX.") ),funs(ifelse(is.na(.),"No","Yes")))
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("CVD.") ),funs(ifelse(is.na(.),"No","Yes")))
+
 
 ```
 
 
 ```{r recodes2}
 
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV1.") ),funs(ifelse(is.na(.),"No","Si")))
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV2.") ),funs(ifelse(is.na(.),"No","Si")))
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV3.") ),funs(ifelse(is.na(.),"No","Si")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV1.") ),funs(ifelse(is.na(.),"No","Yes")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV2.") ),funs(ifelse(is.na(.),"No","Yes")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV3.") ),funs(ifelse(is.na(.),"No","Yes")))
 
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("G_DIABETIC") ),funs(ifelse(is.na(.),"No","Si")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("G_DIABETIC") ),funs(ifelse(is.na(.),"No","Yes")))
 
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("Neurologic_Comp") ),funs(ifelse(is.na(.),"No","Si")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("Neurologic_Comp") ),funs(ifelse(is.na(.),"No","Yes")))
 
 
 ```
@@ -238,10 +251,10 @@ TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("Neurologic_Comp") ),funs(
 TAULA_PLANA<-TAULA_PLANA%>%mutate(exclusio1=ifelse(DIAG.ING.INPAT=="COVID19 - POSITIVO",0,1))
 TAULA_PLANA<-TAULA_PLANA%>%mutate(exclusio2=ifelse(EDAD.AGE>18,0,1)) 
 
-TAULA_PLANA$Ad_UCI<-ifelse(is.na(TAULA_PLANA$F_ENTRADA_UC.ICU_DATE_IN),"No","Si" )
+TAULA_PLANA$Ad_UCI<-ifelse(is.na(TAULA_PLANA$F_ENTRADA_UC.ICU_DATE_IN),"No","Yes" )
 TAULA_PLANA$EDAD.AGE2<- ifelse(TAULA_PLANA$EDAD.AGE<=65,"<=65 años",">65 años")
 TAULA_PLANA$EDAD.AGE3<- ifelse(TAULA_PLANA$EDAD.AGE<=55,"<=55 años",">55 años")
-TAULA_PLANA$Death<- ifelse(TAULA_PLANA$MOTIVO_ALTA.DESTINY_DISCHARGE_ING=="Fallecimiento","Si","No")
+TAULA_PLANA$Death<- ifelse(TAULA_PLANA$MOTIVO_ALTA.DESTINY_DISCHARGE_ING=="Fallecimiento","Yes","No")
 
 #PROVA!!
 
@@ -273,7 +286,7 @@ criteris_exclusio_diagrama(dt=TAULA_PLANA,
                                         criteris = "exc_pre",
                                         ordre="exc_ordre",
                                         grups=NA,
-                                        etiquetes="descripcio",
+                                        etiquetes="descripcio2",
                                         sequencial = T,
                                         pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
                                         colors=c("white","grey"),
@@ -302,7 +315,7 @@ criteris_exclusio_diagrama(dt=TAULA_PLANA,
                                         criteris = "exc_pre",
                                         ordre="exc_ordre",
                                         grups="G_DIABETIC",
-                                        etiquetes="descripcio",
+                                        etiquetes="descripcio2",
                                         sequencial = T,
                                         pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
                                         colors=c("white","grey"),
@@ -315,7 +328,7 @@ criteris_exclusio_diagrama2(dt=TAULA_PLANA,
                                         criteris = "exc_pre",
                                         ordre="exc_ordre",
                                         grups="G_DIABETIC",
-                                        etiquetes="descripcio",
+                                        etiquetes="descripcio2",
                                         sequencial = T,
                                         pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
                                         colors=c("white","grey"),
@@ -346,6 +359,9 @@ criteris_exclusio_diagrama2(dt=TAULA_PLANA,
 
 TAULA_PLANA_exc<-criteris_exclusio(TAULA_PLANA,taulavariables=conductor,criteris="exc_pre")
 
+
+
+
 ```
 
 
@@ -353,13 +369,13 @@ TAULA_PLANA_exc<-criteris_exclusio(TAULA_PLANA,taulavariables=conductor,criteris
 
 
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>%
-  mutate(Death_DG.Mechanical_ventialtion = ifelse(Death == "Si"| EV1.Mechanical_ventialtion=="Si" , "Si", "No"))
+  mutate(Death_DG.Mechanical_ventialtion = ifelse(Death == "Yes"| EV1.Mechanical_ventialtion=="Yes" , "Yes", "No"))
 
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>%
-  mutate(Death_DG.Mechanical_ventialtion_Ad_UCI = ifelse(Death == "Si"| EV1.Mechanical_ventialtion=="Si" | Ad_UCI=="Si", "Si", "No"))
+  mutate(Death_DG.Mechanical_ventialtion_Ad_UCI = ifelse(Death == "Yes"| EV1.Mechanical_ventialtion=="Yes" | Ad_UCI=="Yes", "Yes", "No"))
 
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>%
-  mutate(DG.Mechanical_ventialtion_Ad_UCI = ifelse(EV1.Mechanical_ventialtion=="Si" | Ad_UCI=="Si", "Si", "No"))
+  mutate(DG.Mechanical_ventialtion_Ad_UCI = ifelse(EV1.Mechanical_ventialtion=="Yes" | Ad_UCI=="Yes", "Yes", "No"))
 
 
 
@@ -379,7 +395,7 @@ TAULA_PLANA_exc$agecat<-ifelse(TAULA_PLANA_exc$EDAD.AGE>=40 & TAULA_PLANA_exc$ED
 
 TAULA_PLANA_exc$agecat<-ifelse(TAULA_PLANA_exc$EDAD.AGE>59,"3",TAULA_PLANA_exc$agecat)
 
-TAULA_PLANA_exc$Death2<-ifelse(TAULA_PLANA_exc$Death=="Si",1,0)
+TAULA_PLANA_exc$Death2<-ifelse(TAULA_PLANA_exc$Death=="Yes",1,0)
 
 #18.11.2020 HO HE CANVIAT
 #TAULA_PLANA_exc$Ad_UCI<-ifelse(TAULA_PLANA_exc$Ad_UCI=="Si",1,0)
@@ -399,11 +415,14 @@ TAULA_PLANA_exc$Death2<-ifelse(TAULA_PLANA_exc$Death=="Si",1,0)
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>% mutate_at(extreure.variables("factor",conductor,dt=TAULA_PLANA_exc),as.factor)
 
 ## Reetiquetar
-TAULA_PLANA_exc<-etiquetar(TAULA_PLANA_exc,taulavariables=conductor, camp_descripcio = "descripcio")
+TAULA_PLANA_exc<-etiquetar(TAULA_PLANA_exc,taulavariables=conductor, camp_descripcio = "descripcio2")
+
+#07.12.2020
+#TAULA_PLANA_exc<-etiquetar_valors(dt=TAULA_PLANA_exc,variables_factors=conductor,fulla="etiquetes",camp_etiqueta="etiqueta1")
 
 
 
-TAULA_PLANA_exc_DIAB<-TAULA_PLANA_exc%>%filter(G_DIABETIC=="Si")
+TAULA_PLANA_exc_DIAB<-TAULA_PLANA_exc%>%filter(G_DIABETIC=="Yes")
 TAULA_PLANA_exc_NO_DIAB<-TAULA_PLANA_exc%>%filter(G_DIABETIC=="No")
 
 
@@ -416,6 +435,28 @@ TAULA_PLANA_exc_NO_DIAB<-TAULA_PLANA_exc%>%filter(G_DIABETIC=="No")
 
 ```{r resultats1, include=T}
 
+
+#CVD#
+
+formula<-formula.text("CVD",y="G_DIABETIC",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+descrTable(formula,method =2,
+           Q1 = 0.25, Q3 = 0.75,
+           data=TAULA_PLANA_exc,
+           max.xlev = 100, 
+           show.p.overall=TRUE,
+           show.n = T,
+           hide.no="No",
+           simplify=F) %>% 
+  export2md(caption="**TABLA CVD.**")
+
+#---------------------------------------#
+CVD<-CVD%>% mutate(PATIENT.ID=idp)
+CVD$PATIENT.ID<-as.double(CVD$PATIENT.ID)
+CVD2<-TAULA_PLANA_exc%>%select(PATIENT.ID)
+CVD2<- CVD2%>%left_join(CVD,by="PATIENT.ID")
+#---------------------------------------#
+#frq(CVD2$cod_CVD)
+#---------------------------------------#
 
 formula<-formula.text("Taula01",y="G_DIABETIC",taulavariables = conductor,dt=TAULA_PLANA_exc) 
 
@@ -440,7 +481,7 @@ table1::table1(~EDAD.AGE|G_DIABETIC,
                render.continuous=c(.="Mean (SD)", .="Median [Q1, Q3]"))
 
 # Genero filtre dades solament urgencies
-TAULA_PLANA_exc2<-TAULA_PLANA_exc%>%filter(URG=="Si")
+TAULA_PLANA_exc2<-TAULA_PLANA_exc%>%filter(URG=="Yes")
 
 formula<-formula.text("Taula01B",y="G_DIABETIC",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
 
@@ -704,7 +745,7 @@ c("ajuste1","ajuste2","ajuste3") %>%
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Modelos de Mortalidad",
+                    title = "Mortality models",
                     p.style = "numeric_stars")
 
 
@@ -712,7 +753,7 @@ c("ajuste4","ajuste5","ajuste6") %>%
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
-                    title = "Modelos de Mortalidad",
+                    title = "Mortality models",
                     p.style = "numeric_stars")
 ```
 
@@ -722,17 +763,17 @@ c("ajuste4","ajuste5","ajuste6") %>%
 # *Muerte y/o Ventilación mecánica*
 
 c("ajuste1","ajuste2","ajuste3") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Muerte y/o Ventilación mecánica",
+                    title = "Death or Invasive mechanical ventilation models",
                     p.style = "numeric_stars")
 
 c("ajuste4","ajuste5","ajuste6") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
-                    title = "Muerte y/o Ventilación mecánica",
+                    title = "Death or Invasive mechanical ventilation models",
                     p.style = "numeric_stars")
 
 
@@ -758,12 +799,12 @@ c("ajuste4","ajuste5","ajuste6") %>%
 M1_Exitus<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
   glm(data = TAULA_PLANA_exc, family = "binomial") 
 
-M2_VM<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+M2_VM<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
   glm(data = TAULA_PLANA_exc, family = "binomial") 
 
 list(M1_Exitus,M2_VM) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
-                    title = "Modelo de Mortalidad",
+                    title = "Mortality models",
                     p.style = "numeric_stars") 
 
  list(M1_Exitus,M2_VM) %>% 
@@ -811,7 +852,7 @@ list(M1_Exitus,M2_VM) %>%
 
 list(M1_Exitus_INTERECCIONS1) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Modelo de Mortalidad con interacciones DM*Obesidad",
+                    title = "Mortality model evaluating diabetes and Obesity interactions",
                     p.style = "numeric_stars") 
  
  
@@ -848,7 +889,7 @@ M1_Exitus_INTERECCIONS2<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.Hyper
 
 list(M1_Exitus_INTERECCIONS2) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Modelo de Mortalidad con interacciones DM*Hiperlipidemia",
+                    title = "Mortality model evaluating diabetes and Hyperlipidemia interactions",
                     p.style = "numeric_stars") 
 
 
@@ -888,7 +929,7 @@ M1_Exitus_INTERECCIONS3<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.INSUF
  
 list(M1_Exitus_INTERECCIONS3) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Modelo de Mortalidad con interacciones DM*Insuficiencia cardiaca",
+                    title = "Mortality model evaluating diabetes and Heart failure interactions",
                     p.style = "numeric_stars") 
 
 
@@ -927,7 +968,7 @@ M1_Exitus_INTERECCIONS4<-glm(Death2 ~ G_DIABETIC +
 
 list(M1_Exitus_INTERECCIONS4) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Modelo de Mortalidad con interacciones Obesidad y Hiperlipidemia con DM",
+                    title = "Mortality model evaluating diabetes, obesity and hyperlipidemia interactions",
                     p.style = "numeric_stars") 
 
 
@@ -951,9 +992,6 @@ list(M1_Exitus_INTERECCIONS4) %>%
 
 
 
-
-
-
 #M1_Exitus_INTERECCIONS5<-glm(Death2 ~ G_DIABETIC +
 #          DG2.OB+ 
 #          SEXO.SEX + 
@@ -971,7 +1009,7 @@ M1_Exitus_INTERECCIONS5<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.IRC",t
 
 list(M1_Exitus_INTERECCIONS5) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Modelo de Mortalidad con interacciones DM*Insuficiencia renal cronica",
+                    title = "Mortality model evaluating diabetes, and chronic renal insufficiency",
                     p.style = "numeric_stars") 
 
  
@@ -1007,7 +1045,7 @@ M1_Exitus_INTERECCIONS6<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.EPOC_E
  
 list(M1_Exitus_INTERECCIONS6) %>%  
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Modelo de Mortalidad con interacciones DM*COPD",
+                    title = "Mortality model evaluating diabetes, and COPD",
                     p.style = "numeric_stars") 
 
     
@@ -1036,6 +1074,7 @@ list(M1_Exitus_INTERECCIONS6) %>%
 #Chronic renal insufficiency (yes)
 #COPD (yes)
 
+#Mortality Model evaluating Diabetes and Obesity interactions
 
 
 formu<-formula.text("ajuste8","Death2",taulavariables = conductor)
@@ -1043,7 +1082,7 @@ formu<-formula.text("ajuste8","Death2",taulavariables = conductor)
 split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
-                    title = "Modelos de Mortalidad Grupo Diabético",
+                    title = "Mortality odds ratio model evaluating  with diabetes and without diabetes",
                     p.style = "numeric_stars")
 
 
@@ -1051,7 +1090,7 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::plot_models(prefix.labels = "label", 
                       legend.title = "Subgroup",
-                      title = "OR de modelos de mortalidad por grupos",
+                      title = "Mortality odds ratio model evaluating  with diabetes and without diabetes",
                       m.labels = c("Without diabetes", "Diabetes"))
 
 
@@ -1064,12 +1103,14 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
 
 ```{r resultats10, include=T, warning=F}
 
-formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Si'",taulavariables = conductor)
+formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor)
+
+#Death or Invasive mechanical ventilation Mortality Model evaluating Diabetes
 
 split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
-                    title = "Modelos de Mortalidad / Ventilación mecánica por grupos Diabético",
+                    title = "Mortality  or Invasive mechanical ventilation  odds ratio model evaluating  with diabetes and without diabetes",
                     p.style = "numeric_stars")
 
 
@@ -1077,7 +1118,7 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
   map(~glm(formu,data=.x,family = "binomial")) %>%
   sjPlot::plot_models(prefix.labels = "label", 
                       legend.title = "Subgroup",
-                      title = "OR de modelos de Mortalidad / Ventilación mecánica por grupos",
+                      title = "Mortality  or Invasive mechanical ventilation  odds ratio model evaluating  with diabetes and without diabetes",
                       m.labels = c("Without diabetes", "Diabetes"))
 
 
@@ -1097,7 +1138,7 @@ mod.gam.spline<-
   mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
 mod.gam.spline %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,title = "Modelo de Mortalidad con termino spline Glucose", p.style = "numeric_stars")
+  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality model with glucose spline term", p.style = "numeric_stars")
 
 ############################## ############################## ##############################
 #https://www.cienciadedatos.net/documentos/32_metodos_de_regresion_no_lineal_polinomica_splines_gams
@@ -1107,7 +1148,7 @@ mod.gam.spline %>%
 
 mgcViz::getViz(mod.gam.spline) %>% 
   plot.gamViz() +
-  labs(title = "Association of Glucose versus mortality")+
+  labs(title = "Association of glucose versus mortality")+
   l_fitLine(linetype = 1)  +
   l_ciLine(linetype = 3) +
   l_rug() +
@@ -1128,13 +1169,16 @@ sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"
 ```{r resultats12, include=T, warning=F}
 # Modelos no parametricos
 formu<-
-  formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Si'",a="s(max_pacient_valor_GLU_)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
+  formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Yes'",a="s(max_pacient_valor_GLU_)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
 
 mod.gam.spline<-
   mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
+#Mortality model with Glucose spline term
+
+
 mod.gam.spline %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,title = "Modelo de Mortalidad /VM con termino spline Glucose", p.style = "numeric_stars")
+  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
 
 mgcViz::getViz(mod.gam.spline) %>% 
   plot.gamViz() +
