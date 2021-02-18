@@ -1122,17 +1122,15 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
                       m.labels = c("Without diabetes", "Diabetes"))
 
 
-
-
 ```
 
+# Modelos no parametricos
 
 ### 3.6 Modelo no paramétricos con término spline(Glucosa) de mortalidad población total 
 
 ```{r resultats11, include=T, warning=F}
-# Modelos no parametricos
 formu<-
-  formula.text("ajuste8","Death2",a="s(max_pacient_valor_GLU_)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
+  formula.text("ajuste8","Death2",a="s(max_pacient_valor_GLU_,k=5)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
 
 mod.gam.spline<-
   mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
@@ -1154,29 +1152,35 @@ mgcViz::getViz(mod.gam.spline) %>%
   l_rug() +
   theme_grey() +
   ylab("Logit")+xlab("Glucose") # Canvi d'escala
-sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_","DG2.OB"))
+
+sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"))+
+  xlab("Glucose (mg/dL)")
+  
   
 
-  #scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
-  #In self$trans$inverse(limits) : NaNs produced
+#scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
+#In self$trans$inverse(limits) : NaNs produced
 
-  
 
 ```
+
+
+
 
 ### 3.8  Modelo no paramétrico con término spline (Glucosa) de mortalidad y/o ventilación mecánica población total 
 
 ```{r resultats12, include=T, warning=F}
+
+TAULA_PLANA_exc <- TAULA_PLANA_exc %>%  mutate(Death_DG.Mechanical_ventialtion.2=as.numeric(Death_DG.Mechanical_ventialtion=="Yes"))
+
 # Modelos no parametricos
-formu<-
-  formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Yes'",a="s(max_pacient_valor_GLU_)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
+formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion.2",a="s(max_pacient_valor_GLU_,k=5)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
+
 
 mod.gam.spline<-
   mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
 #Mortality model with Glucose spline term
-
-
 mod.gam.spline %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
 
@@ -1186,9 +1190,16 @@ mgcViz::getViz(mod.gam.spline) %>%
   l_fitLine(linetype = 1)  +
   l_ciLine(linetype = 3) +
   l_rug() +
-  theme_grey() +ylab("Logit")+xlab("Glucose") # Canvi d'escala
+  theme_grey() +ylab("Logit")+xlab("Glucose (mg/dL)") # Canvi d'escala
 
 #scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
+
+sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"))+
+  ggplot2::ggtitle("Predicted values of Death or mechanical ventilation")+
+  ylab("Death or mechanical ventilation")+
+  xlab("Glucose (mg/dL)")
+  
+
 
 
 ```

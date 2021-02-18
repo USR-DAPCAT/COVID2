@@ -17,7 +17,7 @@ output:
   word_document: default
 
 params:
-  dir_dades: "dades/mostra"
+  dir_dades: "dades"
   
 ---
 
@@ -47,6 +47,9 @@ params:
 ```{r setup, include = FALSE}
 #27.11.2020#
 #18.09.2020#
+
+
+#rm(list=ls())
 
 library("dplyr")
 library("lubridate")
@@ -1040,7 +1043,12 @@ dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(gfr = 141 * ifelse(CREA_1/ka
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%mutate(gfr = ifelse(Ethnicity == "black", gfr * 1.159, gfr))
 
 
+#install.packages("tidyverse")
 
+
+
+#install.packages("expss")
+#library(expss)
 
 dt_plana_covid4_agr3<-dt_plana_covid4_agr3%>%
   dplyr::mutate_at(vars(starts_with("CORONA") ),funs(ifelse(is.na(.),"No se detecta",.)))
@@ -1625,7 +1633,7 @@ TAULA_PLANA           <-TAULA_PLANA%>%arrange(PATIENT.ID)
 ##     C_NO_DIABETICS
 ##     ,file=here::here("COVID2.Rdata"))
 
-save(TAULA_PLANA
+save(TAULA_PLANA,CVD
      ,file=here::here("COVID2.Rdata"))
 
 
