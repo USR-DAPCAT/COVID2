@@ -1,5 +1,5 @@
 ##########################
-# 18//02//2021  00:30    #
+# 18//02//2021  18:30    #
 ##########################
 #
 #feina:
@@ -93,8 +93,11 @@ rmarkdown::render(input="./codi/1_lectura_COVID.Rmd",
 
 #rm(list=ls())
 #dir_dades="dades/SIDIAP"
+
+
 rmarkdown::render(input="./codi/2_analisi_COVID.Rmd",
-                  output_file="output/informe_exploratori_2021.html",
+                  output_dir = "output",
+                  output_file=paste0("informe_exploratori",Sys.Date()),
                   params = list(dir_dades="dades"))
 
 #####################################################################

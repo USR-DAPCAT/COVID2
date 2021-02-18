@@ -69,6 +69,10 @@ Eventos:
 
 **Realizado**
 
+> Febrero/2021
+
+&check; Mejora de los modelos no paramétricos con término spline(Glucosa)  <br/>
+
 > Setiembre/2020
 
 &check; Ampliar tablas descriptivas P25, Median , P75 etc.. <br/>
