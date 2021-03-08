@@ -1,8 +1,19 @@
 ##########################
-# 18//02//2021  18:30    #
+# 05//03//2021  22:30    #
 ##########################
 #
 #feina:
+
+#Me puedes confirmar si la glucemia es la del ingreso, 
+#antes de iniciar el tratamiento de  en el estudio con covid hospitales?
+#
+#Esta variable s(max_pacient_valor_GLU_), que nombre le puedo poner mas corto?
+#Y es normal que no tenga intervalos de confianza?
+
+#s(glucosa), no pongas ningún coeficiente, 
+#pues no tiene interpretación entendible para un clínico. 
+#Solamente se puede interpretar viendo la curva
+
 ##########################
 #Hola Ray , 
 #He parlat avuí amb la Mònica, 
