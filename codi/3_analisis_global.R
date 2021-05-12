@@ -1,5 +1,30 @@
+############
+#12.05.2021#
+############
+rm(list=ls())
+#https://www.pauloldham.net/importing-csv-files-into-r/
+
+#[23.4.2021]
+
+#ultims dubtes:  01.04.2021--> 20:00
+#Hola Ray
+
+#Cuando puedas por favor de la base de datos de covidHM 
+#si puedes sacar la N y % 
+#de pacientes con códigos E10 (DM1) ,y pacientes con códigos E11 (Dm2)?
+
+#Gracias
+
+#B
+
+# s'ha de fer 3 grups (DM1)+(DM2)+(DM->Glicada/Farmacs)
+
+
+
+
+
 ##########################
-# 05//03//2021  22:30    #
+# 08//03//2021  22:30    #
 ##########################
 #
 #feina:
@@ -94,25 +119,80 @@ library("sjmisc")
 library("sjlabelled")
 library("mgcViz")
 
+######################
+#vers1:: [24_04_2020]#
+######################
+######################################################################
 
-#rm(list=ls())
 #dir_dades="dades/SIDIAP"
+dir_dades_origen="../../DADES/COVID_19/dades/24_04_2020"
+
 rmarkdown::render(input="./codi/1_lectura_COVID.Rmd",
-                  output_file="output/informe_lectura_2021.html",
-                  params = list(dir_dades="dades"))
-
-
-#rm(list=ls())
-#dir_dades="dades/SIDIAP"
-
-
+                  output_file=paste0(here::here("output/informe_lectura_1_"),Sys.Date()),
+                  params = list(dir_dades=dir_dades_origen))
+######################################################################
 rmarkdown::render(input="./codi/2_analisi_COVID.Rmd",
-                  output_dir = "output",
-                  output_file=paste0("informe_exploratori",Sys.Date()),
-                  params = list(dir_dades="dades"))
+                  output_file=paste0(here::here("output/informe_exploratori_1_"),Sys.Date()),
+                  params = list(dir_dades=dir_dades_origen))
 
 #####################################################################
 #Error:[`starts_with()` must be used within a *selecting* function.]#
 #####################################################################
 
+# Falta arreglar dates, i actualitazr el catàleg! 
 
+######################
+#vers2:: [20_07_2020]#
+######################
+######################################################################
+rm(list=ls())
+#dir_dades="dades/SIDIAP"
+library("dplyr")
+library("lubridate")
+#library("expss")
+library("frequency")
+library("sjPlot")
+library("sjmisc")
+library("sjlabelled")
+library("base")
+library("table1")
+# load package
+library("sjPlot")
+library("sjmisc")
+library("sjlabelled")
+library("mgcViz")
+
+dir_dades_origen="../../DADES/COVID_19/dades/20_07_2020"
+
+rmarkdown::render(input="./codi/1_lectura_COVID2.Rmd",
+                  output_file=paste0(here::here("output/informe_lectura_2_"),Sys.Date()),
+                  params = list(dir_dades=dir_dades_origen))
+######################################################################
+rmarkdown::render(input="./codi/2_analisi_COVID2.Rmd",
+                  output_file=paste0(here::here("output/informe_exploratori_2_"),Sys.Date()),
+                  params = list(dir_dades=dir_dades_origen))
+#####################################################################
+#Error:[`starts_with()` must be used within a *selecting* function.]#
+#####################################################################
+
+
+######################
+#vers3:: [19_04_2021]#
+######################
+######################################################################
+rm(list=ls())
+#dir_dades="dades/SIDIAP"
+
+dir_dades_origen="../../DADES/COVID_19/dades/19_04_2021"
+#
+rmarkdown::render(input="./codi/1_lectura_COVID3.Rmd",
+                  output_file=paste0(here::here("output/informe_lectura_3_"),Sys.Date()),
+                  params = list(dir_dades=dir_dades_origen))
+######################################################################
+rmarkdown::render(input="./codi/2_analisi_COVID3.Rmd",
+                  output_file=paste0(here::here("output/informe_exploratori_3_"),Sys.Date()),
+                  params = list(dir_dades=dir_dades_origen))
+
+#####################################################################
+#Error:[`starts_with()` must be used within a *selecting* function.]#
+#####################################################################

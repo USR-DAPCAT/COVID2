@@ -18,7 +18,7 @@ output:
 
 params:
   dir_dades: "dades" 
-  dir_dades_origen: "../../DADES/COVID_19/24_04_2020"
+  dir_dades_origen: "../../DADES/COVID_19/19_04_2021"
 ---
 
 &nbsp;
@@ -215,7 +215,9 @@ etiquetar_taula<-function(taula=resumtotal,camp="variable",taulavariables="varia
 
 ```{r lectura, include = FALSE}
 
-load(here::here("COVID1.Rdata"))
+#canviat 10.V.2021!
+
+load(here::here("COVID3.Rdata"))
 
 ```
 
@@ -224,6 +226,8 @@ load(here::here("COVID1.Rdata"))
 ```{r recodes1}
 
 #TAULA_PLANA
+
+
 
 #Hem canviat el Yes!
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Yes")))
@@ -240,9 +244,20 @@ TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM2") ),funs(ifelse(is.na
 #table(TAULA_PLANA$DM1.E10)
 #table(TAULA_PLANA$DM2.E11)
 
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GR1") ),funs(ifelse(is.na(.),"No","Yes")))
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GR2") ),funs(ifelse(is.na(.),"No","Yes")))
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GR3") ),funs(ifelse(is.na(.),"No","Yes")))
+#11.5.2021
+
+
+#TAULA_PLANA<-TAULA_PLANA%>%mutate(RESPIRADOR_MECH_VENT=ifelse(RESPIRADOR_MECH_VENT=="SI","Yes","No")) 
+
+#ull mirar-ho!
+
+#dt_temp<-TAULA_PLANA
+#names(dt_temp)
+#vector_bo<-c("PATIENT.ID","EDAD.AGE","SEXO.SEX")
+#vector_noms<-c("IDINGRESO","EDAD","SEX")
+#colnames(dt_temp)[1:3]<-vector_noms
+
+
 
 
 
@@ -265,7 +280,12 @@ TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("Neurologic_Comp") ),funs(
 
 ```{r preparacio1, include = FALSE}
 
-TAULA_PLANA<-TAULA_PLANA%>%mutate(exclusio1=ifelse(DIAG.ING.INPAT=="COVID19 - POSITIVO",0,1))
+#COVID CONFIRMADO
+
+#TAULA_PLANA<-TAULA_PLANA%>%mutate(exclusio1=ifelse(DIAG.ING.INPAT=="COVID19 - POSITIVO",0,1))
+
+#CANVIAT : 10.5.2021
+TAULA_PLANA<-TAULA_PLANA%>%mutate(exclusio1=ifelse(DIAG.ING.INPAT=="COVID CONFIRMADO",0,1))
 TAULA_PLANA<-TAULA_PLANA%>%mutate(exclusio2=ifelse(EDAD.AGE>18,0,1)) 
 
 TAULA_PLANA$Ad_UCI<-ifelse(is.na(TAULA_PLANA$F_ENTRADA_UC.ICU_DATE_IN),"No","Yes" )
@@ -539,47 +559,6 @@ descrTable(formula,
 table1::table1(~EDAD.AGE|G_DIABETIC, 
                data = TAULA_PLANA_exc2,caption="Taula 1b",
                render.continuous=c(.="Mean (SD)", .="Median [Q1, Q3]"))
-
-
-# Fer-ho!  12.05.2021
-
-formula1<-formula.text("Taula01B",y="GR1",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
-formula2<-formula.text("Taula01B",y="GR2",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
-formula3<-formula.text("Taula01B",y="GR3",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
-
-
-descrTable(formula1,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 1c.DM Problemas de salut+Fármacos DM: Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
-
-
-descrTable(formula2,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 1d.DM tengan Hemoglobina Glicosilada >=6.5 : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
-
-
-descrTable(formula3,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 1d.DM administrados Insulina +Glucosa Màxima>=200 : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
-
 
 ```
 ### 2.1 Descriptiva  Problemas de salud

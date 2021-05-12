@@ -18,7 +18,7 @@ output:
 
 params:
   dir_dades: "dades"
-  dir_dades_origen: "../../DADES/COVID_19/24_04_2020"
+  dir_dades_origen: "../../DADES/COVID_19/20_07_2020"
 ---
 
 &nbsp;
@@ -42,7 +42,7 @@ params:
 
 ```{r setup, include = FALSE}
 
-# Per defecte:   12.maig.2021
+# Per defecte:   8.maig.2021
 
 # s'ha de fer igual que EpiPeuCat de'n Manel Estructura!
 
@@ -104,6 +104,9 @@ conductor_codis2<-here::here("Codis_Covid_Agrupadores_juny")
 #dt_01<-data.table::fread(here::here(directori_dades,"01.txt"))%>%as_tibble()
 dt_01<-read.csv2(here::here(directori_dades,"01.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F)%>% as_tibble()
 
+#11.05.2021#
+dt_01<-dt_01 %>%rename(RESPIRADOR_MECH_VENT=RESPIRADOR.MECH.VENT.)
+
 kk_01<-as.data.frame(variable.names(dt_01))
 
 #-------------------------------------------------------------------------#
@@ -117,8 +120,37 @@ kk_01<-as.data.frame(variable.names(dt_01))
 
 #dt_02<-data.table::fread(here::here(directori_dades,"02.txt"))%>%as_tibble()
 dt_02<-read.csv2(here::here(directori_dades,"02.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
+
+
+#
+
+
                  
 kk_02<-as.data.frame(variable.names(dt_02))
+
+#IDINGRESO              <-PATIENT.ID
+#DRUG_COMERCIAL_NAME    <-FARMACO.DRUG_NOMBRE_COMERCIAL.COMERCIAL_NAME
+#DAILY_AVRG_DOSE        <-DOSIS_MEDIA_DIARIA.DAILY_AVRG_DOSE
+#DRUG_START_DATE        <-INICIO_TRAT.DRUG_START_DATE
+#DRUG_END_DATE        <-FIN_TRAT.DRUG_END_DATE
+#ATC5_NAME              <-ATC5_NOMBRE.NAME
+#ID_ATC5                <-ID_ATC5
+#ATC7_NAME              <-ATC7_NOMBRE.NAME
+#ID_ATC7                <-ID_ATC7
+
+dt_02<-dt_02 %>%rename(PATIENT.ID=IDINGRESO)
+dt_02<-dt_02 %>%rename(FARMACO.DRUG_NOMBRE_COMERCIAL.COMERCIAL_NAME=DRUG_COMERCIAL_NAME)
+dt_02<-dt_02 %>%rename(DOSIS_MEDIA_DIARIA.DAILY_AVRG_DOSE=DAILY_AVRG_DOSE)
+dt_02<-dt_02 %>%rename(INICIO_TRAT.DRUG_START_DATE=DRUG_START_DATE)
+dt_02<-dt_02 %>%rename(FIN_TRAT.DRUG_END_DATE=DRUG_END_DATE)
+dt_02<-dt_02 %>%rename(ATC5_NOMBRE.NAME=ATC5_NAME)
+dt_02<-dt_02 %>%rename(ID_ATC5=ID_ATC5)
+dt_02<-dt_02 %>%rename(ATC7_NOMBRE.NAME=ATC7_NAME)
+dt_02<-dt_02 %>%rename(ID_ATC7=ID_ATC7)
+
+
+
+
 
 
 #prova_pacient1<-dt_02%>%arrange(PATIENT.ID,INICIO_TRAT.DRUG_START_DATE)
@@ -135,6 +167,16 @@ dt_03<-read.csv2(here::here(directori_dades,"03.csv"),sep=";",dec=",",header = T
                  
 kk_03<-as.data.frame(variable.names(dt_03))
 
+
+dt_03<-dt_03 %>%rename(PATIENT.ID=IDINGRESO)
+dt_03<-dt_03 %>%rename(CONSTANTS_ING.INPAT_FECHA.DATE=CONSTANTS_ING_DATE)
+dt_03<-dt_03 %>%rename(CONSTANTS_ING.INPAT_HORA.TIME=CONSTANTS_ING_TIME)
+dt_03<-dt_03 %>%rename(FC.HR_ING.INPAT=FC_HR_ING)
+dt_03<-dt_03 %>%rename(GLU.GLY_ING.INPAT=GLU_GLY_ING)
+dt_03<-dt_03 %>%rename(SAT_02_ING.INPAT=SAT_02_ING)
+dt_03<-dt_03 %>%rename(TA_MAX_ING.INPAT=TA_MAX_ING)
+dt_03<-dt_03 %>%rename(TA_MIN_ING.INPAT=TA_MIN_ING)
+dt_03<-dt_03 %>%rename(TEMP_ING.INPAT=TEMP_ING)
 
 #prova_pacient1_B<-dt_03%>%arrange(PATIENT.ID,CONSTANTS_ING.INPAT_FECHA.DATE)
 
@@ -153,7 +195,17 @@ kk_03<-as.data.frame(variable.names(dt_03))
 dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
                  
 kk_04<-as.data.frame(variable.names(dt_04))
-
+#
+#-------------------------------------------------------------------------#
+#
+dt_04<-dt_04 %>%rename(PATIENT.ID=IDINGRESO)
+dt_04<-dt_04 %>%rename(PETICION_LABORATORIO.LAB_NUMBER=LAB_NUMBER)
+dt_04<-dt_04 %>%rename(FECHA_PETICION.LAB_DATE=LAB_DATE)
+dt_04<-dt_04 %>%rename(HORA_PETICION.TIME_LAB=TIME_LAB)
+dt_04<-dt_04 %>%rename(DETERMINACION.ITEM_LAB=ITEM_LAB)
+dt_04<-dt_04 %>%rename(RESULTADO.VAL_RESULT=VAL_RESULT)
+dt_04<-dt_04 %>%rename(UNIDADES.UD_RESULT=UD_RESULT)
+dt_04<-dt_04 %>%rename(VALORES_REFERENCIA.REF_VALUES=REF_VALUES)
 
 #-------------------------------------------------------------------------#
 #v)vi) 
@@ -377,18 +429,12 @@ CODIS<-CODIS_P1%>%
 #-------------------------------------------------------------------------#  
 #-------------------------------------------------------------------------#  
 
-write.csv(CODIS, file="CODIS.csv")
-
-
+#write.csv(CODIS, file="CODIS.csv")
 
 conductor<-"conductor_Covid.xlsx"
 conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
 
 dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod,agr,agr2,agr3,agr4,agr5,agr6,agr7,agrCVD,agrE09,agrE10,agrE11)
-
-
-
-
 
 #source('codi/funcions_Covid.r')
 ```
@@ -403,10 +449,14 @@ dt_plana_covid1<-dt_01
 
 
 
-#9.5.2020
+#CANVIAT!!!!!  10.5.2020
 #0)
-dt_plana_covid1$year_ingres<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT,7,10))
-dt_plana_covid1$year_urg<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG,7,10))
+#dt_plana_covid1$year_ingres<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT,7,10))
+#dt_plana_covid1$year_urg<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG,7,10))
+
+
+dt_plana_covid1$year_ingres<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT,1,4))
+dt_plana_covid1$year_urg<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG,1,4))
 
 #########################################################################################################
 #[1] "PATIENT ID"                                 "EDAD/AGE"                                  
@@ -426,23 +476,41 @@ dt_plana_covid1$year_urg<-as.numeric(substr(dt_plana_covid1$F_INGRESO.ADMISSION_
 #[29] "TA_MIN_ULTIMA/LAST_URG/EMERG"              
 #########################################################################################################
 
+#########################
+#CANVIAT!!!!!  11.5.2020#
+#########################
+
+
+
+#navidad=as.Date("2013-12-25")
+
 #i)
-dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT<-lubridate::dmy(dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT)
+#dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT<-lubridate::dmy(dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT)
+dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT<-as.Date(dt_plana_covid1$F_INGRESO.ADMISSION_D_ING.INPAT)
 #ii)
 dt_plana_covid1$F_ENTRADA_UC.ICU_DATE_IN<-substr(dt_plana_covid1$F_ENTRADA_UC.ICU_DATE_IN,1,10)
-dt_plana_covid1$F_ENTRADA_UC.ICU_DATE_IN<-as.Date(dt_plana_covid1$F_ENTRADA_UC.ICU_DATE_IN,"%d/%m/%Y")
+dt_plana_covid1$F_ENTRADA_UC.ICU_DATE_IN<-as.Date(dt_plana_covid1$F_ENTRADA_UC.ICU_DATE_IN,"%Y-%m-%d")
+#
+
 #iii)
 dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT<-substr(dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT,1,10)
-dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT<-as.Date(dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT,"%d/%m/%Y")
+dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT<-as.Date(dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT,"%Y-%m-%d")
+#dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT<-as.Date(dt_plana_covid1$F_SALIDA_UCI.ICU_DATE_OUT,"%d/%m/%Y")
+
 #iv)
-dt_plana_covid1$F_ALTA.DISCHARGE_DATE_ING<-lubridate::dmy(dt_plana_covid1$F_ALTA.DISCHARGE_DATE_ING)
+dt_plana_covid1$F_ALTA.DISCHARGE_DATE_ING<-as.Date(dt_plana_covid1$F_ALTA.DISCHARGE_DATE_ING)
+#dt_plana_covid1$F_ALTA.DISCHARGE_DATE_ING<-lubridate::dmy(dt_plana_covid1$F_ALTA.DISCHARGE_DATE_ING)
+
+
+# CANVIAT: 10.5.2020
 #v)
-dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG<-lubridate::dmy(dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG)  
+#dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG<-lubridate::dmy(dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG) 
+dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG<-as.Date(dt_plana_covid1$F_INGRESO.ADMISSION_DATE_URG.EMERG)
+
+
 #
 #
 dt_plana_covid1<-dt_plana_covid1%>% mutate(URG=ifelse(is.na(F_INGRESO.ADMISSION_DATE_URG.EMERG ),0,1))
-
-#dt_plana_covid1<-dt_plana_covid1%>% mutate(URG=ifelse(URG==0,"No","Si"))
 dt_plana_covid1<-dt_plana_covid1%>% mutate(URG=ifelse(URG==0,"No","Yes")) 
 #
 
@@ -481,6 +549,11 @@ pacient19<-dt_plana_covid1%>%filter(year_ingres==2019)%>%select(PATIENT.ID)
 # 5.8.2020 !
 # Los que tienen 0.00 se tienen que contar como missings,TEMP_PRIMERA.FIRST_URG.EMERG.......ETC
 
+#TEMP_PRIMERA.FIRST_URG.EMERG
+
+#Canviat : 11.5.2021
+dt_plana_covid1$TEMP_PRIMERA.FIRST_URG.EMERG<-as.numeric(dt_plana_covid1$TEMP_PRIMERA.FIRST_URG.EMERG)
+dt_plana_covid1$TEMP_ULTIMA.LAST_URG.EMERG<-as.numeric(dt_plana_covid1$TEMP_ULTIMA.LAST_URG.EMERG)
 
 dt_plana_covid1<-dt_plana_covid1%>%
   mutate(TEMP_PRIMERA.FIRST_URG.EMERG = ifelse(TEMP_PRIMERA.FIRST_URG.EMERG==0,NA, TEMP_PRIMERA.FIRST_URG.EMERG))
@@ -525,6 +598,22 @@ dt_plana_covid1_agr<-dt_plana_covid1
 dt_plana_covid1_org<-dt_plana_covid1
 
 
+
+
+#[11.05,2021]#--> [RESPIRADOR.MECH.VENT]
+
+#5A09357	Assistance with Respiratory Ventilation, Less than 24 Consecutive Hours.Continuous Positive Airway Pressure.Mechanical ventialtion
+#5A0935Z	Assistance with Respiratory Ventilation, Less than 24 Consecutive Hours.Mechanical ventialtion
+#5A09457	Assistance with Respiratory Ventilation, 24-96 Consecutive Hours.Continuous Positive Airway Pressure.Mechanical ventialtion
+#5A0945Z	Assistance with Respiratory Ventilation, 24-96 Consecutive Hours.Mechanical ventialtion
+#5A09557	Assistance with Respiratory Ventilation, Greater than 96 Consecutive Hours.Mechanical ventialtion
+#5A19054	Respiratory Ventilation, Single, Nonmechanical.Mechanical ventialtion
+#5A1935Z	Respiratory Ventilation, Less than 24 Consecutive Hours.Mechanical ventialtion
+#5A1945Z	Respiratory Ventilation, 24-96 Consecutive Hours.Mechanical ventialtion
+#5A1955Z	Respiratory Ventilation, Greater than 96 Consecutive Hours.Mechanical ventialtion
+
+
+
 # A tibble: 2,307 x 29
 ```
 
@@ -538,6 +627,8 @@ dt_plana_covid1_org<-dt_plana_covid1
 dt_plana_covid2<-dt_02
 
 dt_plana_covid2B<-dt_plana_covid2%>% transmute(idp=PATIENT.ID,cod=as.character(ID_ATC7),dat="20200520") 
+
+
 
 dt_plana_covid2_agr<-agregar_problemes(select(dt_plana_covid2B,idp,cod,dat),
                                        bd.dindex = "20000601",
@@ -1166,6 +1257,9 @@ dt_diagnostics<-dt_plana_covid5_gatherb%>%bind_rows(dt_plana_covid6_gatherb)
 
 
 
+
+
+
 # AGREGACIÓ:!!!
 dt_plana_covid5_6_agr2<-agregar_problemes(select(dt_diagnostics,idp,cod,dat),
                                        bd.dindex = "20000601",
@@ -1451,10 +1545,20 @@ dt_plana_DM_agr3$idp<-as.numeric(dt_plana_DM_agr3$idp)
 DIA_INDEX<-dt_01%>%transmute(idp=PATIENT.ID,DIA.INDEX=F_INGRESO.ADMISSION_D_ING.INPAT)
 DIA_INDEX$DIA.INDEX<-as.character(DIA_INDEX$DIA.INDEX)
 #DIA_INDEX
+
+# AQUI HO HEM CANVIAT 10.5.2021!!!!!!
+
 #----------------------------------------------------------------------------#
-DIA_INDEX$DIA<-substr(DIA_INDEX$DIA.INDEX,1,2)
-DIA_INDEX$MES<-substr(DIA_INDEX$DIA.INDEX,4,5)
-DIA_INDEX$ANY<-substr(DIA_INDEX$DIA.INDEX,7,10)
+#DIA_INDEX$DIA<-substr(DIA_INDEX$DIA.INDEX,1,2)
+#DIA_INDEX$MES<-substr(DIA_INDEX$DIA.INDEX,4,5)
+#DIA_INDEX$ANY<-substr(DIA_INDEX$DIA.INDEX,7,10)
+#----------------------------------------------------------------------------#
+
+
+DIA_INDEX$DIA<-substr(DIA_INDEX$DIA.INDEX,9,10)
+DIA_INDEX$MES<-substr(DIA_INDEX$DIA.INDEX,6,7)
+DIA_INDEX$ANY<-substr(DIA_INDEX$DIA.INDEX,1,4)
+
 #----------------------------------------------------------------------------#
 DIA_INDEX$DIA.INDEX2<-paste0(DIA_INDEX$ANY,DIA_INDEX$MES,DIA_INDEX$DIA)
 #----------------------------------------------------------------------------#
@@ -1467,15 +1571,29 @@ DIA_INDEX<-DIA_INDEX%>%select(idp,DIA.INDEX2)
 #----------------------------------------------------------------------------#
 DIA_INDEX2<-dt_02
 
-DIA_INDEX2$INICIO_TRAT.DRUG_START_DATE<-as.Date(DIA_INDEX2$INICIO_TRAT.DRUG_START_DATE,"%d/%m/%Y")
+
+#DIA_INDEX2$INICIO_TRAT.DRUG_START_DATE<-as.Date(DIA_INDEX2$INICIO_TRAT.DRUG_START_DATE,"%d/%m/%Y")
 DIA_INDEX2<-DIA_INDEX2%>% transmute(idp=PATIENT.ID,cod=as.character(ID_ATC7),dat=INICIO_TRAT.DRUG_START_DATE) 
 #----------------------------------------------------------------------------#
-DIA_INDEX2$ANY<-substr(DIA_INDEX2$dat,1,4)
-DIA_INDEX2$MES<-substr(DIA_INDEX2$dat,6,7)
+#DIA_INDEX2$ANY<-substr(DIA_INDEX2$dat,1,4)
+#DIA_INDEX2$MES<-substr(DIA_INDEX2$dat,6,7)
+#DIA_INDEX2$DIA<-substr(DIA_INDEX2$dat,9,10)
+
+#Canviat els di 10.maig del 2021!
+
+
 DIA_INDEX2$DIA<-substr(DIA_INDEX2$dat,9,10)
+DIA_INDEX2$MES<-substr(DIA_INDEX2$dat,6,7)
+DIA_INDEX2$ANY<-substr(DIA_INDEX2$dat,1,4)
+
 #----------------------------------------------------------------------------#
 DIA_INDEX2$dat2<-paste0(DIA_INDEX2$ANY,DIA_INDEX2$MES,DIA_INDEX2$DIA)
 DIA_INDEX2<-DIA_INDEX2%>%transmute(idp,cod,dat=dat2)
+
+#?????
+#DIA_INDEX2$dat <-as.numeric(DIA_INDEX2$dat)
+
+
 #----------------------------------------------------------------------------#
 dt_plana_DM_agr4<-agregar_problemes(select(DIA_INDEX2,idp,cod,dat),
                                     bd.dindex =DIA_INDEX,
@@ -1523,34 +1641,6 @@ C_DIABETICS<-dt_plana_DM_agr1%>%
   bind_rows(dt_plana_DM_agr5)%>%
   arrange(idp)%>%
   group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)
-
-
-
-# Fer-ho ara: PREGUNTAR AL BOGDAN!
-
-# GRUP1:dt_plana_DM_agr1+dt_plana_DM_agr2
-# GRUP2:dt_plana_DM_agr3
-# GRUP3:dt_plana_DM_agr4+dt_plana_DM_agr5
-
-GR1<-dt_plana_DM_agr1%>%
-  bind_rows(dt_plana_DM_agr2)%>%
-  arrange(idp)%>%
-  group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GR1=1)
-
-GR2<-dt_plana_DM_agr3%>%
-  arrange(idp)%>%
-  group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GR2=1)
-
-GR3<-dt_plana_DM_agr4%>%
-  bind_rows(dt_plana_DM_agr5)%>%
-  arrange(idp)%>%
-  group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GR3=1)
-
-
-GR1 <-GR1%>%mutate(PATIENT.ID=idp)%>% select(-idp)
-GR2 <-GR2%>%mutate(PATIENT.ID=idp)%>% select(-idp)
-GR3 <-GR3%>%mutate(PATIENT.ID=idp)%>% select(-idp)
-
 
 #31.3.2021
 # MIRAR AQUI ,NO ESTAN REPETITS, OI?
@@ -1826,11 +1916,7 @@ TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID
                                  left_join(C_DIABETICS,by="PATIENT.ID")%>%
                                  left_join(dt_plana_covid5_6_agr3,by="PATIENT.ID")%>%
                                  left_join(C_DIABETICS_E10,by="PATIENT.ID")%>%
-                                 left_join(C_DIABETICS_E11,by="PATIENT.ID")%>%
-                                 left_join(GR1,by="PATIENT.ID")%>%
-                                 left_join(GR2,by="PATIENT.ID")%>%
-                                 left_join(GR3,by="PATIENT.ID")
-  
+                                 left_join(C_DIABETICS_E11,by="PATIENT.ID")
  
 
 
@@ -1860,6 +1946,21 @@ TAULA_PLANA<-TAULA_PLANA %>% mutate(
 
 ################################################################
 
+# mirar tots els problemes de Salut :[[20_07_2020]]########################################
+#i)
+problemas_salut1<-dt_diagnostics%>%select(cod)%>%group_by(cod)%>%dplyr::slice(1)%>%ungroup()
+############################################################################################
+#ii)
+problemas_salut2<-dt_plana_covid2%>%select(ID_ATC5)%>%group_by(ID_ATC5)%>%dplyr::slice(1)%>%ungroup()
+############################################################################################
+#iii)
+problemas_salut3<-dt_plana_covid2%>%select(ID_ATC7)%>%group_by(ID_ATC7)%>%dplyr::slice(1)%>%ungroup()
+############################################################################################
+
+write.csv(problemas_salut1, file="Problemas_salut_2020.csv")
+write.csv(problemas_salut2, file="FARMACS_ATC5_2020.csv")
+write.csv(problemas_salut3, file="FARMACS_ATC7_2020.csv")
+
 
 ```
 
@@ -1874,10 +1975,10 @@ TAULA_PLANA<-TAULA_PLANA %>% mutate(
 #5.2.2020/25.4.2020
 
 
-
+#canviat : 10.v.2021
 
 save(TAULA_PLANA,CVD
-     ,file=here::here("COVID1.Rdata"))
+     ,file=here::here("COVID2.Rdata"))
 
 
 ```
