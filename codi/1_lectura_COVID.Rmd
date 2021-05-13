@@ -74,7 +74,12 @@ directori_dades<-params$dir_dades_origen
 #] "../../DADES/EPIPEU_CAT3/dades/mostra"
 #directori_dades<-dir_dades
 
-conductor_codis2<-here::here("Codis_Covid_Agrupadores_juny")
+
+conductor<-"conductor_Covid.xlsx"
+conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
+
+dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod,agr,agr2,agr3,agr4,agr5,agr6,agr7,agrCVD,agrE09,agrE10,agrE11)
+
 
 
 #   template: template.html
@@ -104,7 +109,7 @@ conductor_codis2<-here::here("Codis_Covid_Agrupadores_juny")
 #dt_01<-data.table::fread(here::here(directori_dades,"01.txt"))%>%as_tibble()
 dt_01<-read.csv2(here::here(directori_dades,"01.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F)%>% as_tibble()
 
-kk_01<-as.data.frame(variable.names(dt_01))
+#kk_01<-as.data.frame(variable.names(dt_01))
 
 #-------------------------------------------------------------------------#
 #ii)    En la tabla de medicación, se encuentra toda la medicación administrada 
@@ -118,7 +123,7 @@ kk_01<-as.data.frame(variable.names(dt_01))
 #dt_02<-data.table::fread(here::here(directori_dades,"02.txt"))%>%as_tibble()
 dt_02<-read.csv2(here::here(directori_dades,"02.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
                  
-kk_02<-as.data.frame(variable.names(dt_02))
+#kk_02<-as.data.frame(variable.names(dt_02))
 
 
 #prova_pacient1<-dt_02%>%arrange(PATIENT.ID,INICIO_TRAT.DRUG_START_DATE)
@@ -133,7 +138,7 @@ kk_02<-as.data.frame(variable.names(dt_02))
 #dt_03<-data.table::fread(here::here(directori_dades,"03.txt"))%>%as_tibble()
 dt_03<-read.csv2(here::here(directori_dades,"03.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
                  
-kk_03<-as.data.frame(variable.names(dt_03))
+#kk_03<-as.data.frame(variable.names(dt_03))
 
 
 #prova_pacient1_B<-dt_03%>%arrange(PATIENT.ID,CONSTANTS_ING.INPAT_FECHA.DATE)
@@ -152,7 +157,7 @@ kk_03<-as.data.frame(variable.names(dt_03))
 #dt_04<-data.table::fread(here::here(directori_dades,"04.txt"))%>%as_tibble()
 dt_04<-read.csv2(here::here(directori_dades,"04.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
                  
-kk_04<-as.data.frame(variable.names(dt_04))
+#kk_04<-as.data.frame(variable.names(dt_04))
 
 
 #-------------------------------------------------------------------------#
@@ -168,7 +173,7 @@ kk_04<-as.data.frame(variable.names(dt_04))
 dt_05<-data.table::fread(here::here(directori_dades,"05.txt"))%>%as_tibble()
 #dt_05<-read.csv2(here::here(directori_dades,"05.csv"),sep=";",dec=",",header=TRUE,stringsAsFactors=F)%>%as_tibble()
 
-kk_05<-as.data.frame(variable.names(dt_05))
+#kk_05<-as.data.frame(variable.names(dt_05))
 
 
 #dt_06B<-read.csv2(here::here(directori_dades,"06.csv"),sep=";",dec=",",header = #TRUE,stringsAsFactors=F) %>% as_tibble()
@@ -177,7 +182,7 @@ kk_05<-as.data.frame(variable.names(dt_05))
 dt_06<-data.table::fread(here::here(directori_dades,"06.txt"))%>%as_tibble()
 #dt_06<-read.csv2(here::here(directori_dades,"06.csv"),sep=";",dec=",",header = TRUE,stringsAsFactors=F) %>% as_tibble()
 
-kk_06<-as.data.frame(variable.names(dt_06))
+#kk_06<-as.data.frame(variable.names(dt_06))
 
 
 #-------------------------------------------------------------------------#  
@@ -377,14 +382,10 @@ CODIS<-CODIS_P1%>%
 #-------------------------------------------------------------------------#  
 #-------------------------------------------------------------------------#  
 
-write.csv(CODIS, file="CODIS.csv")
+write.csv(CODIS, file="././output/CODIS.csv")
 
 
 
-conductor<-"conductor_Covid.xlsx"
-conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
-
-dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod,agr,agr2,agr3,agr4,agr5,agr6,agr7,agrCVD,agrE09,agrE10,agrE11)
 
 
 

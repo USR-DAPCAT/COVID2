@@ -74,7 +74,11 @@ directori_dades<-params$dir_dades_origen
 #] "../../DADES/EPIPEU_CAT3/dades/mostra"
 #directori_dades<-dir_dades
 
-conductor_codis2<-here::here("Codis_Covid_Agrupadores_juny")
+
+conductor<-"conductor_Covid.xlsx"
+conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
+
+dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod,agr,agr2,agr3,agr4,agr5,agr6,agr7,agrCVD,agrE09,agrE10,agrE11)
 
 
 #   template: template.html
@@ -431,14 +435,9 @@ CODIS<-CODIS_P1%>%
 #-------------------------------------------------------------------------#  
 #-------------------------------------------------------------------------#  
 
-#write.csv(CODIS, file="CODIS.csv")
+write.csv(CODIS, file="././output/CODIS_2021.csv")
 
 
-
-conductor<-"conductor_Covid.xlsx"
-conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
-
-dt_cataleg2<-readxl::read_excel(conductor_codis2,col_types = "text")%>%select(cod,agr,agr2,agr3,agr4,agr5,agr6,agr7,agrCVD,agrE09,agrE10,agrE11)
 
 
 
@@ -1939,15 +1938,15 @@ TAULA_PLANA<-TAULA_PLANA %>% mutate(
 problemas_salut1<-dt_diagnostics%>%select(cod)%>%group_by(cod)%>%dplyr::slice(1)%>%ungroup()
 ############################################################################################
 #ii)
-problemas_salut2<-dt_plana_covid2%>%select(ID_ATC5)%>%group_by(ID_ATC5)%>%dplyr::slice(1)%>%ungroup()
+problemas_salut2<-dt_plana_covid2%>%select(ID_ATC5,ATC5_NOMBRE.NAME)%>%group_by(ID_ATC5)%>%dplyr::slice(1)%>%ungroup()
 ############################################################################################
 #iii)
-problemas_salut3<-dt_plana_covid2%>%select(ID_ATC7)%>%group_by(ID_ATC7)%>%dplyr::slice(1)%>%ungroup()
+problemas_salut3<-dt_plana_covid2%>%select(ID_ATC7,ATC7_NOMBRE.NAME)%>%group_by(ID_ATC7)%>%dplyr::slice(1)%>%ungroup()
 ############################################################################################
 
-write.csv(problemas_salut1, file="Problemas_salut_2021.csv")
-write.csv(problemas_salut2, file="FARMACS_ATC5_2021.csv")
-write.csv(problemas_salut3, file="FARMACS_ATC7_2021.csv")
+write.csv(problemas_salut1, file="././output/Problemas_salut_2021.csv")
+write.csv(problemas_salut2, file="././output/FARMACS_ATC5_2021.csv")
+write.csv(problemas_salut3, file="././output/FARMACS_ATC7_2021.csv")
 
 
 ```
