@@ -16,9 +16,6 @@ output:
   pdf_document: default
   word_document: default
 
-params:
-  dir_dades: "dades" 
-  dir_dades_origen: "../../DADES/COVID_19/20_07_2020"
 ---
 
 &nbsp;
@@ -167,7 +164,7 @@ link_source<-paste0("https://github.com/jrealgatius/Stat_codis/blob/master/funci
 devtools::source_url(link_source)
 
 # directori_dades<-params$dir_dades
-directori_dades<-params$dir_dades
+#directori_dades<-params$dir_dades
 
 conductor<-here::here("conductor_Covid.xlsx")
 conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
@@ -817,20 +814,24 @@ descrTable(formula,
 #table(TAULA_PLANA_exc$DG2.Hyperlip)
 
 
-c("ajuste1","ajuste2","ajuste3") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
-  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars")
+
+# ARA NO!
+
+#c("ajuste1","ajuste2","ajuste3") %>% 
+#  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+#  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
+#                    title = "Mortality models",
+#                    p.style = "numeric_stars")
 
 
-c("ajuste4","ajuste5","ajuste6") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
-  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars")
+#c("ajuste4","ajuste5","ajuste6") %>% 
+#  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+#  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
+#                    title = "Mortality models",
+#                    p.style = "numeric_stars")
+
 ```
 
 
@@ -838,19 +839,19 @@ c("ajuste4","ajuste5","ajuste6") %>%
 ```{r resultats7.1, include=T, warning=F}
 # *Muerte y/o Ventilación mecánica*
 
-c("ajuste1","ajuste2","ajuste3") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
-  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
-                    title = "Death or Invasive mechanical ventilation models",
-                    p.style = "numeric_stars")
-
-c("ajuste4","ajuste5","ajuste6") %>% 
-  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
-  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
-                    title = "Death or Invasive mechanical ventilation models",
-                    p.style = "numeric_stars")
+#c("ajuste1","ajuste2","ajuste3") %>% 
+#  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+#  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
+#                    title = "Death or Invasive mechanical ventilation models",
+#                    p.style = "numeric_stars")
+#
+#c("ajuste4","ajuste5","ajuste6") %>% 
+#  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+#  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
+#                    title = "Death or Invasive mechanical ventilation models",
+#                    p.style = "numeric_stars")
 
 
 ```
@@ -872,45 +873,60 @@ c("ajuste4","ajuste5","ajuste6") %>%
 #Chronic renal insufficiency (yes)
 #COPD (yes)
 
-M1_Exitus<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial") 
+#M1_Exitus<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
 
-M2_VM<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial") 
+#M2_VM<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
 
-list(M1_Exitus,M2_VM) %>%  
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars") 
+#list(M1_Exitus,M2_VM) %>%  
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death", "Death or Invasive mechanical ventilation"),
+#                    title = "Mortality models",
+#                    p.style = "numeric_stars") 
 
- list(M1_Exitus,M2_VM) %>% 
-  sjPlot::plot_models(prefix.labels = "label",show.p = T,m.labels = c("Death", "Death or Invasive mechanical ventilation"))
+# list(M1_Exitus,M2_VM) %>% 
+#  sjPlot::plot_models(prefix.labels = "label",show.p = T,m.labels = c("Death", "Death or Invasive mechanical ventilation"))
 
 
-# I N T E R E C C I O N E S:[]
- 
-#Supplementary table 3. 4 Mortality Model evaluating Diabetes and Obesity interactions
-# 
-#Diabetes (yes)
-#Obesity (yes)
-#Sex (male)
-#Age (years)
-#Hypertension (yes)
-#Hyperlipidaemia (yes)
-#Cardiovascular diseases (yes)
-#Heart failure (yes)
-#Chronic renal insufficiency (yes)
-#COPD (yes)
-#Diabetes (yes): Obesity (yes)
 
  
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#fer-ho!!!!!:[]
-#formula.text("ajuste8","Death2",a="G_DIABETIC*DG.IRC")
+# M1_Exitus_INTERECCIONS1<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.OB",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+#list(M1_Exitus_INTERECCIONS1) %>%  
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+#                    title = "Mortality model evaluating diabetes and Obesity interactions",
+#                    p.style = "numeric_stars") 
  
  
-################################################################################################ 
-# M1_Exitus_INTERECCIONS1<-glm(Death2 ~ G_DIABETIC +
+ 
+#M1_Exitus_INTERECCIONS2<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.Hyperlip",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+#list(M1_Exitus_INTERECCIONS2) %>%  
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+#                    title = "Mortality model evaluating diabetes and Hyperlipidemia interactions",
+#                    p.style = "numeric_stars") 
+
+
+
+
+ 
+
+
+#M1_Exitus_INTERECCIONS3<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.INSUF_CARD",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+ 
+#list(M1_Exitus_INTERECCIONS3) %>%  
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+#                    title = "Mortality model evaluating diabetes and Heart failure interactions",
+#                    p.style = "numeric_stars") 
+
+
+
+
+#M1_Exitus_INTERECCIONS4<-glm(Death2 ~ G_DIABETIC +
 #          DG2.OB+ 
 #          SEXO.SEX + 
 #          EDAD.AGE  + 
@@ -919,210 +935,40 @@ list(M1_Exitus,M2_VM) %>%
 #          DG2.COMP_CARDIOVASC + 
 #          DG2.INSUF_CARD + 
 #          DG.IRC + 
-#          DG.EPOC_ENFISEMA+G_DIABETIC*DG2.OB,family = "binomial", data = TAULA_PLANA_exc)
-################################################################################################  
- 
- 
- M1_Exitus_INTERECCIONS1<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.OB",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial") 
-
-list(M1_Exitus_INTERECCIONS1) %>%  
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Mortality model evaluating diabetes and Obesity interactions",
-                    p.style = "numeric_stars") 
- 
- 
- 
-#Supplementary table 3. 5 Mortality Model evaluating Diabetes and Hyperlipidemia interactions
-#
-#Diabetes (yes)
-#Hyperlipidaemia (yes)
-#Sex (male)
-#Age (years)
-#Obesity (yes)
-#Hypertension (yes)
-#Cardiovascular diseases (yes)
-#Heart failure (yes)
-#Chronic renal insufficiency (yes)
-#COPD (yes)
-#Diabetes (yes): Hyperlipidaemia (yes)
-
-
-
-# M1_Exitus_INTERECCIONS2<-glm(Death2 ~ G_DIABETIC +
-#          DG2.OB+ 
-#          SEXO.SEX + 
-#          EDAD.AGE  + 
-#          DG2.HTA + 
-#          DG2.Hyperlip + 
-#          DG2.COMP_CARDIOVASC + 
-#          DG2.INSUF_CARD + 
-#          DG.IRC + 
-#          DG.EPOC_ENFISEMA+G_DIABETIC*DG2.Hyperlip,family = "binomial", data = #TAULA_PLANA_exc)
-
-M1_Exitus_INTERECCIONS2<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.Hyperlip",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial") 
-
-list(M1_Exitus_INTERECCIONS2) %>%  
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Mortality model evaluating diabetes and Hyperlipidemia interactions",
-                    p.style = "numeric_stars") 
-
-
-
-
- 
-#Supplementary table 3. 6 Mortality Model evaluating Diabetes and Heart failure interactions 
-#
-#Predictors
-#Diabetes (yes)
-#Heart failure (yes)
-#Sex (male)
-#Age (years)
-#Obesity (yes)
-#Hypertension (yes)
-#Hyperlipidaemia (yes)
-#Cardiovascular diseases (yes)
-#Chronic renal insufficiency (yes)
-#COPD (yes)
-#Diabetes (yes): Heart failure (yes)
-
-
-#M1_Exitus_INTERECCIONS3<-glm(Death2 ~ G_DIABETIC +
-#          DG2.OB+ 
-#          SEXO.SEX + 
-#          EDAD.AGE  + 
-#          DG2.HTA + 
-#          DG2.Hyperlip + 
-#          DG2.COMP_CARDIOVASC + 
-#          DG2.INSUF_CARD + 
-#          DG.IRC + 
-#          DG.EPOC_ENFISEMA+G_DIABETIC*DG2.INSUF_CARD,family = "binomial", data = #TAULA_PLANA_exc)
-
-M1_Exitus_INTERECCIONS3<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.INSUF_CARD",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial") 
-
- 
-list(M1_Exitus_INTERECCIONS3) %>%  
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Mortality model evaluating diabetes and Heart failure interactions",
-                    p.style = "numeric_stars") 
-
-
-
-
-#Supplementary table 3. 7 Mortality Model evaluating Diabetes, obesity and hyperlipidemia interactions
-#   
-#Diabetes (yes)
-#Obesity (yes)
-#Hyperlipidaemia (yes)
-#Sex (male)
-#Age (years)
-#Hypertension (yes)
-#Cardiovascular diseases (yes)
-#Heart failure (yes)
-#Chronic renal insufficiency (yes)
-#COPD (yes)
-#Diabetes (yes): Obesity (yes)
-#Diabetes (yes): Hyperlipidaemia (yes)
-
-
-M1_Exitus_INTERECCIONS4<-glm(Death2 ~ G_DIABETIC +
-          DG2.OB+ 
-          SEXO.SEX + 
-          EDAD.AGE  + 
-          DG2.HTA + 
-          DG2.Hyperlip + 
-          DG2.COMP_CARDIOVASC + 
-          DG2.INSUF_CARD + 
-          DG.IRC + 
-          DG.EPOC_ENFISEMA+
-          G_DIABETIC*DG2.OB+
-          G_DIABETIC*DG2.Hyperlip,
-          family = "binomial", data = TAULA_PLANA_exc)
+#          DG.EPOC_ENFISEMA+
+#          G_DIABETIC*DG2.OB+
+#          G_DIABETIC*DG2.Hyperlip,
+#          family = "binomial", data = TAULA_PLANA_exc)
  
 
-list(M1_Exitus_INTERECCIONS4) %>%  
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Mortality model evaluating diabetes, obesity and hyperlipidemia interactions",
-                    p.style = "numeric_stars") 
+#list(M1_Exitus_INTERECCIONS4) %>%  
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+#                    title = "Mortality model evaluating diabetes, obesity and hyperlipidemia interactions",
+#                    p.style = "numeric_stars") 
 
 
 
 
 
 
-# Supplementary table 3. 8 Mortality Model evaluating Diabetes, and chronic renal insufficiency
-#
-#Diabetes (yes)
-#Chronic renal insufficiency (yes)
-#Sex (male)
-#Age (years)
-#Obesity (yes)
-#Hypertension (yes)
-#Hyperlipidaemia (yes)
-#Cardiovascular diseases (yes)
-#Heart failure (yes)
-#COPD (yes)
-#Diabetes (yes): Chronic renal insufficiency (yes)
+#M1_Exitus_INTERECCIONS5<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.IRC",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
 
-
-
-#M1_Exitus_INTERECCIONS5<-glm(Death2 ~ G_DIABETIC +
-#          DG2.OB+ 
-#          SEXO.SEX + 
-#          EDAD.AGE  + 
-#          DG2.HTA + 
-#          DG2.Hyperlip + 
-#          DG2.COMP_CARDIOVASC + 
-#          DG2.INSUF_CARD + 
-#          DG.IRC + 
-#          DG.EPOC_ENFISEMA+G_DIABETIC*DG.IRC,family = "binomial", data = TAULA_PLANA_exc)
-######################################
-
-M1_Exitus_INTERECCIONS5<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.IRC",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial") 
-
-list(M1_Exitus_INTERECCIONS5) %>%  
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Mortality model evaluating diabetes, and chronic renal insufficiency",
-                    p.style = "numeric_stars") 
+#list(M1_Exitus_INTERECCIONS5) %>%  
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+#                    title = "Mortality model evaluating diabetes, and chronic renal insufficiency",
+#                    p.style = "numeric_stars") 
 
  
-#Supplementary table 3. 9 Mortality Model evaluating Diabetes, and COPD
-#
-#Diabetes (yes)
-#COPD (yes)
-#Sex (male)
-#Age (years)
-#Obesity (yes)
-#Hypertension (yes)
-#Hyperlipidaemia (yes)
-#Cardiovascular diseases (yes)
-#Heart failure (yes)
-#Chronic renal insufficiency (yes)
-#Diabetes (yes): COPD (yes)
- 
 
-#M1_Exitus_INTERECCIONS6<-glm(Death2 ~ G_DIABETIC +
-#          DG2.OB+ 
-#          SEXO.SEX + 
-#          EDAD.AGE  + 
-#          DG2.HTA + 
-#          DG2.Hyperlip + 
-#          DG2.COMP_CARDIOVASC + 
-#          DG2.INSUF_CARD + 
-#          DG.IRC + 
-#          DG.EPOC_ENFISEMA+G_DIABETIC*DG.EPOC_ENFISEMA,family = "binomial", data = TAULA_PLANA_exc)
-
-M1_Exitus_INTERECCIONS6<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.EPOC_ENFISEMA",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
-  glm(data = TAULA_PLANA_exc, family = "binomial") 
+#M1_Exitus_INTERECCIONS6<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG.EPOC_ENFISEMA",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+#  glm(data = TAULA_PLANA_exc, family = "binomial") 
 
  
-list(M1_Exitus_INTERECCIONS6) %>%  
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
-                    title = "Mortality model evaluating diabetes, and COPD",
-                    p.style = "numeric_stars") 
+#list(M1_Exitus_INTERECCIONS6) %>%  
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death"),
+#                    title = "Mortality model evaluating diabetes, and COPD",
+#                    p.style = "numeric_stars") 
 
     
 
@@ -1137,37 +983,24 @@ list(M1_Exitus_INTERECCIONS6) %>%
 
 ```{r resultats9, include=T, warning=F}
 
-#Supplementary table 5.1 
-#Clinical characteristics at baseline associated to in-hospital death stratified for diabetes status
-
-#Sex (male)
-#Age 
-#Obesity (yes)
-#Hypertension (yes)
-#Hyperlipidaemia (yes)
-#Cardiovascular diseases (yes)
-#Heart failure (yes)
-#Chronic renal insufficiency (yes)
-#COPD (yes)
-
-#Mortality Model evaluating Diabetes and Obesity interactions
 
 
-formu<-formula.text("ajuste8","Death2",taulavariables = conductor)
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
-  map(~glm(formu,data=.x,family = "binomial")) %>%
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
-                    title = "Mortality odds ratio model evaluating  with diabetes and without diabetes",
-                    p.style = "numeric_stars")
+#formu<-formula.text("ajuste8","Death2",taulavariables = conductor)
+
+#split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+#  map(~glm(formu,data=.x,family = "binomial")) %>%
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
+#                    title = "Mortality odds ratio model evaluating  with diabetes and without diabetes",
+#                    p.style = "numeric_stars")
 
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
-  map(~glm(formu,data=.x,family = "binomial")) %>%
-  sjPlot::plot_models(prefix.labels = "label", 
-                      legend.title = "Subgroup",
-                      title = "Mortality odds ratio model evaluating  with diabetes and without diabetes",
-                      m.labels = c("Without diabetes", "Diabetes"))
+#split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+#  map(~glm(formu,data=.x,family = "binomial")) %>%
+#  sjPlot::plot_models(prefix.labels = "label", 
+#                      legend.title = "Subgroup",
+#                      title = "Mortality odds ratio model evaluating  with diabetes and without diabetes",
+#                      m.labels = c("Without diabetes", "Diabetes"))
 
 
 ```
@@ -1179,23 +1012,23 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
 
 ```{r resultats10, include=T, warning=F}
 
-formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor)
+#formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor)
 
 #Death or Invasive mechanical ventilation Mortality Model evaluating Diabetes
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
-  map(~glm(formu,data=.x,family = "binomial")) %>%
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
-                    title = "Mortality  or Invasive mechanical ventilation  odds ratio model evaluating  with diabetes and without diabetes",
-                    p.style = "numeric_stars")
+#split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+#  map(~glm(formu,data=.x,family = "binomial")) %>%
+#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Without diabetes", "Diabetes"),
+#                    title = "Mortality  or Invasive mechanical ventilation  odds ratio model evaluating  with diabetes #and without diabetes",
+#                    p.style = "numeric_stars")
 
 
-split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
-  map(~glm(formu,data=.x,family = "binomial")) %>%
-  sjPlot::plot_models(prefix.labels = "label", 
-                      legend.title = "Subgroup",
-                      title = "Mortality  or Invasive mechanical ventilation  odds ratio model evaluating  with diabetes and without diabetes",
-                      m.labels = c("Without diabetes", "Diabetes"))
+#split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>% 
+#  map(~glm(formu,data=.x,family = "binomial")) %>%
+#  sjPlot::plot_models(prefix.labels = "label", 
+#                      legend.title = "Subgroup",
+#                      title = "Mortality  or Invasive mechanical ventilation  odds ratio model evaluating  with diabetes and without diabetes",
+#                      m.labels = c("Without diabetes", "Diabetes"))
 
 
 ```
@@ -1205,14 +1038,14 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
 ### 3.6 Modelo no paramétricos con término spline(Glucosa) de mortalidad población total 
 
 ```{r resultats11, include=T, warning=F}
-formu<-
-  formula.text("ajuste8","Death2",a="s(max_pacient_valor_GLU_,k=5)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
+#formu<-
+#  formula.text("ajuste8","Death2",a="s(max_pacient_valor_GLU_,k=5)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
 
-mod.gam.spline<-
-  mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
+#mod.gam.spline<-
+#  mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
-mod.gam.spline %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality model with glucose spline term", p.style = "numeric_stars")
+#mod.gam.spline %>% 
+#  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality model with glucose spline term", p.style = "numeric_stars")
 
 ############################## ############################## ##############################
 #https://www.cienciadedatos.net/documentos/32_metodos_de_regresion_no_lineal_polinomica_splines_gams
@@ -1220,17 +1053,17 @@ mod.gam.spline %>%
 ############################## ############################## ##############################
 
 
-mgcViz::getViz(mod.gam.spline) %>% 
-  plot.gamViz() +
-  labs(title = "Association of glucose versus mortality")+
-  l_fitLine(linetype = 1)  +
-  l_ciLine(linetype = 3) +
-  l_rug() +
-  theme_grey() +
-  ylab("Logit")+xlab("Glucose") # Canvi d'escala
+#mgcViz::getViz(mod.gam.spline) %>% 
+#  plot.gamViz() +
+#  labs(title = "Association of glucose versus mortality")+
+#  l_fitLine(linetype = 1)  +
+#  l_ciLine(linetype = 3) +
+#  l_rug() +
+#  theme_grey() +
+#  ylab("Logit")+xlab("Glucose") # Canvi d'escala
 
-sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"))+
-  xlab("Glucose (mg/dL)")
+#sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"))+
+#  xlab("Glucose (mg/dL)")
   
   
 
@@ -1247,33 +1080,33 @@ sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"
 
 ```{r resultats12, include=T, warning=F}
 
-TAULA_PLANA_exc <- TAULA_PLANA_exc %>%  mutate(Death_DG.Mechanical_ventialtion.2=as.numeric(Death_DG.Mechanical_ventialtion=="Yes"))
+#TAULA_PLANA_exc <- TAULA_PLANA_exc %>%  mutate(Death_DG.Mechanical_ventialtion.2=as.numeric(Death_DG.Mechanical_ventialtion=="Yes"))
 
 # Modelos no parametricos
-formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion.2",a="s(max_pacient_valor_GLU_,k=5)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
+#formu<-formula.text("ajuste8","Death_DG.Mechanical_ventialtion.2",a="s(max_pacient_valor_GLU_,k=5)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
 
 
-mod.gam.spline<-
-  mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
+#mod.gam.spline<-
+#  mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
 #Mortality model with Glucose spline term
-mod.gam.spline %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
+#mod.gam.spline %>% 
+#  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
 
-mgcViz::getViz(mod.gam.spline) %>% 
-  plot.gamViz() +
-  labs(title = "Association of Glucose versus mortality or VM")+
-  l_fitLine(linetype = 1)  +
-  l_ciLine(linetype = 3) +
-  l_rug() +
-  theme_grey() +ylab("Logit")+xlab("Glucose (mg/dL)") # Canvi d'escala
+#mgcViz::getViz(mod.gam.spline) %>% 
+#  plot.gamViz() +
+#  labs(title = "Association of Glucose versus mortality or VM")+
+#  l_fitLine(linetype = 1)  +
+#  l_ciLine(linetype = 3) +
+#  l_rug() +
+#  theme_grey() +ylab("Logit")+xlab("Glucose (mg/dL)") # Canvi d'escala
 
 #scale_y_continuous(trans='exp',labels=function(x) round(exp(x),1)) +  # Canvi d'escala
 
-sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"))+
-  ggplot2::ggtitle("Predicted values of Death or mechanical ventilation")+
-  ylab("Death or mechanical ventilation")+
-  xlab("Glucose (mg/dL)")
+#sjPlot::plot_model(mod.gam.spline,type="pred",terms = c("max_pacient_valor_GLU_"))+
+#  ggplot2::ggtitle("Predicted values of Death or mechanical ventilation")+
+#  ylab("Death or mechanical ventilation")+
+#  xlab("Glucose (mg/dL)")
   
 
 

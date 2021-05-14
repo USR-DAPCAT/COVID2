@@ -17,7 +17,6 @@ output:
   word_document: default
 
 params:
-  dir_dades: "dades"
   dir_dades_origen: "../../DADES/COVID_19/19_04_2021"
 ---
 
@@ -68,7 +67,7 @@ library("sjlabelled")
 link_source<-paste0("https://github.com/jrealgatius/Stat_codis/blob/master/funcions_propies.R","?raw=T")
 devtools::source_url(link_source)
 
-dir_dades<-"dades"
+#dir_dades<-"dades"
 directori_dades<-params$dir_dades_origen
 
 #] "../../DADES/EPIPEU_CAT3/dades/mostra"
@@ -435,7 +434,7 @@ CODIS<-CODIS_P1%>%
 #-------------------------------------------------------------------------#  
 #-------------------------------------------------------------------------#  
 
-write.csv(CODIS, file="././output/CODIS_2021.csv")
+write.csv(CODIS, file="CODIS_2021.csv")
 
 
 
@@ -1944,9 +1943,9 @@ problemas_salut2<-dt_plana_covid2%>%select(ID_ATC5,ATC5_NOMBRE.NAME)%>%group_by(
 problemas_salut3<-dt_plana_covid2%>%select(ID_ATC7,ATC7_NOMBRE.NAME)%>%group_by(ID_ATC7)%>%dplyr::slice(1)%>%ungroup()
 ############################################################################################
 
-write.csv(problemas_salut1, file="././output/Problemas_salut_2021.csv")
-write.csv(problemas_salut2, file="././output/FARMACS_ATC5_2021.csv")
-write.csv(problemas_salut3, file="././output/FARMACS_ATC7_2021.csv")
+write.csv(problemas_salut1, file="Problemas_salut_2021.csv")
+write.csv(problemas_salut2, file="FARMACS_ATC5_2021.csv")
+write.csv(problemas_salut3, file="FARMACS_ATC7_2021.csv")
 
 
 ```

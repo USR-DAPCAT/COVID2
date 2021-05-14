@@ -17,8 +17,7 @@ output:
   word_document: default
 
 params:
-  dir_dades: "dades"
-  dir_dades_origen: "../../DADES/COVID_19/24_04_2020"
+  dir_dades_origen: "../../DADES/COVID_19/24_04_2020" 
 ---
 
 &nbsp;
@@ -68,10 +67,10 @@ library("sjlabelled")
 link_source<-paste0("https://github.com/jrealgatius/Stat_codis/blob/master/funcions_propies.R","?raw=T")
 devtools::source_url(link_source)
 
-dir_dades<-"dades"
+#dir_dades<-"dades"
 directori_dades<-params$dir_dades_origen
 
-#] "../../DADES/EPIPEU_CAT3/dades/mostra"
+# "../../DADES/EPIPEU_CAT3/dades/mostra"
 #directori_dades<-dir_dades
 
 
@@ -206,185 +205,185 @@ dt_06<-data.table::fread(here::here(directori_dades,"06.txt"))%>%as_tibble()
 #[57] "PROC_12"    "PROC_13"    "PROC_14"    "PROC_15"    "PROC_16"    "PROC_17"    "PROC_18"    "PROC_19"   
 #[65] "PROC_20"   
 #---------------------------------------------------------#
-CODIS_P1<-dt_05 %>%select(DIA_PPAL)%>%rename(COD=DIA_PPAL)
-CODIS_P2<-dt_05 %>%select(DIA_02)%>%rename(COD=DIA_02)
-CODIS_P3<-dt_05 %>%select(DIA_03)%>%rename(COD=DIA_03)
-CODIS_P4<-dt_05 %>%select(DIA_04)%>%rename(COD=DIA_04)
-CODIS_P5<-dt_05 %>%select(DIA_05)%>%rename(COD=DIA_05)
-CODIS_P6<-dt_05 %>%select(DIA_06)%>%rename(COD=DIA_06)
-CODIS_P7<-dt_05 %>%select(DIA_07)%>%rename(COD=DIA_07)
-CODIS_P8<-dt_05 %>%select(DIA_08)%>%rename(COD=DIA_08)
-CODIS_P9<-dt_05 %>%select(DIA_09)%>%rename(COD=DIA_09)
-CODIS_P10<-dt_05 %>%select(DIA_10)%>%rename(COD=DIA_10)
-CODIS_P11<-dt_05 %>%select(DIA_11)%>%rename(COD=DIA_11)
-CODIS_P12<-dt_05 %>%select(DIA_12)%>%rename(COD=DIA_12)
-CODIS_P13<-dt_05 %>%select(PROC_01)%>%rename(COD=PROC_01)
-CODIS_P14<-dt_05 %>%select(PROC_02)%>%rename(COD=PROC_02)
-CODIS_P15<-dt_05 %>%select(PROC_03)%>%rename(COD=PROC_03)
-CODIS_P16<-dt_05 %>%select(PROC_04)%>%rename(COD=PROC_04)
-CODIS_P17<-dt_05 %>%select(PROC_05)%>%rename(COD=PROC_05)
-CODIS_P18<-dt_06 %>%select(DIA_PPAL)%>%rename(COD=DIA_PPAL)
-CODIS_P19<-dt_06 %>%select(DIA_02)%>%rename(COD=DIA_02)
-CODIS_P20<-dt_06 %>%select(DIA_03)%>%rename(COD=DIA_03)
-CODIS_P21<-dt_06 %>%select(DIA_04)%>%rename(COD=DIA_04)
-CODIS_P22<-dt_06 %>%select(DIA_05)%>%rename(COD=DIA_05)
-CODIS_P23<-dt_06 %>%select(DIA_06)%>%rename(COD=DIA_06)
-CODIS_P24<-dt_06 %>%select(DIA_07)%>%rename(COD=DIA_07)
-CODIS_P25<-dt_06 %>%select(DIA_08)%>%rename(COD=DIA_08)
-CODIS_P26<-dt_06 %>%select(DIA_09)%>%rename(COD=DIA_09)
-CODIS_P27<-dt_06 %>%select(DIA_10)%>%rename(COD=DIA_10)
-CODIS_P28<-dt_06 %>%select(DIA_11)%>%rename(COD=DIA_11)
-CODIS_P29<-dt_06 %>%select(DIA_12)%>%rename(COD=DIA_12)
-CODIS_P30<-dt_06 %>%select(DIA_13)%>%rename(COD=DIA_13)
-CODIS_P31<-dt_06 %>%select(DIA_14)%>%rename(COD=DIA_14)
-CODIS_P32<-dt_06 %>%select(DIA_15)%>%rename(COD=DIA_15)
-CODIS_P33<-dt_06 %>%select(DIA_16)%>%rename(COD=DIA_16)
-CODIS_P34<-dt_06 %>%select(DIA_17)%>%rename(COD=DIA_17)
-CODIS_P35<-dt_06 %>%select(DIA_18)%>%rename(COD=DIA_18)
-CODIS_P36<-dt_06 %>%select(DIA_19)%>%rename(COD=DIA_19)
-CODIS_P37<-dt_06 %>%select(NEO_01)%>%rename(COD=NEO_01)
-CODIS_P38<-dt_06 %>%select(NEO_02)%>%rename(COD=NEO_02)
-CODIS_P39<-dt_06 %>%select(NEO_03)%>%rename(COD=NEO_03)
-CODIS_P40<-dt_06 %>%select(NEO_04)%>%rename(COD=NEO_04)
-CODIS_P41<-dt_06 %>%select(NEO_05)%>%rename(COD=NEO_05)
-CODIS_P42<-dt_06 %>%select(NEO_06)%>%rename(COD=NEO_06)
-CODIS_P43<-dt_06 %>%select(POAD_02)%>%rename(COD=POAD_02)
-CODIS_P44<-dt_06 %>%select(POAD_03)%>%rename(COD=POAD_03)
-CODIS_P45<-dt_06 %>%select(POAD_04)%>%rename(COD=POAD_04)
-CODIS_P46<-dt_06 %>%select(POAD_05)%>%rename(COD=POAD_05)
-CODIS_P47<-dt_06 %>%select(POAD_06)%>%rename(COD=POAD_06)
-CODIS_P48<-dt_06 %>%select(POAD_07)%>%rename(COD=POAD_07)
-CODIS_P49<-dt_06 %>%select(POAD_08)%>%rename(COD=POAD_08)
-CODIS_P50<-dt_06 %>%select(POAD_09)%>%rename(COD=POAD_09)
-CODIS_P51<-dt_06 %>%select(POAD_10)%>%rename(COD=POAD_10)
-CODIS_P52<-dt_06 %>%select(POAD_11)%>%rename(COD=POAD_11)
-CODIS_P53<-dt_06 %>%select(POAD_12)%>%rename(COD=POAD_12)
-CODIS_P54<-dt_06 %>%select(POAD_13)%>%rename(COD=POAD_13)
-CODIS_P55<-dt_06 %>%select(POAD_14)%>%rename(COD=POAD_14)
-CODIS_P56<-dt_06 %>%select(POAD_15)%>%rename(COD=POAD_15)
-CODIS_P57<-dt_06 %>%select(POAD_16)%>%rename(COD=POAD_16)
-CODIS_P58<-dt_06 %>%select(POAD_17)%>%rename(COD=POAD_17)
-CODIS_P59<-dt_06 %>%select(POAD_18)%>%rename(COD=POAD_18)
-CODIS_P60<-dt_06 %>%select(POAD_19)%>%rename(COD=POAD_19)
-CODIS_P61<-dt_06 %>%select(POAD_PPAL)%>%rename(COD=POAD_PPAL)
-CODIS_P62<-dt_06 %>%select(PROC_01)%>%rename(COD=PROC_01)
-CODIS_P63<-dt_06 %>%select(PROC_02)%>%rename(COD=PROC_02)
-CODIS_P64<-dt_06 %>%select(PROC_03)%>%rename(COD=PROC_03)
-CODIS_P65<-dt_06 %>%select(PROC_04)%>%rename(COD=PROC_04)
-CODIS_P66<-dt_06 %>%select(PROC_05)%>%rename(COD=PROC_05)
-CODIS_P67<-dt_06 %>%select(PROC_06)%>%rename(COD=PROC_06)
-CODIS_P68<-dt_06 %>%select(PROC_07)%>%rename(COD=PROC_07)
-CODIS_P69<-dt_06 %>%select(PROC_08)%>%rename(COD=PROC_08)
-CODIS_P70<-dt_06 %>%select(PROC_09)%>%rename(COD=PROC_09)
-CODIS_P71<-dt_06 %>%select(PROC_10)%>%rename(COD=PROC_10)
-CODIS_P72<-dt_06 %>%select(PROC_11)%>%rename(COD=PROC_11)
-CODIS_P73<-dt_06 %>%select(PROC_12)%>%rename(COD=PROC_12)
-CODIS_P74<-dt_06 %>%select(PROC_13)%>%rename(COD=PROC_13)
-CODIS_P75<-dt_06 %>%select(PROC_14)%>%rename(COD=PROC_14)
-CODIS_P76<-dt_06 %>%select(PROC_15)%>%rename(COD=PROC_15)
-CODIS_P77<-dt_06 %>%select(PROC_16)%>%rename(COD=PROC_16)
-CODIS_P78<-dt_06 %>%select(PROC_17)%>%rename(COD=PROC_17)
-CODIS_P79<-dt_06 %>%select(PROC_18)%>%rename(COD=PROC_18)
-CODIS_P80<-dt_06 %>%select(PROC_19)%>%rename(COD=PROC_19)
-CODIS_P81<-dt_06 %>%select(PROC_20)%>%rename(COD=PROC_20)
+#CODIS_P1<-dt_05 %>%select(DIA_PPAL)%>%rename(COD=DIA_PPAL)
+#CODIS_P2<-dt_05 %>%select(DIA_02)%>%rename(COD=DIA_02)
+#CODIS_P3<-dt_05 %>%select(DIA_03)%>%rename(COD=DIA_03)
+#CODIS_P4<-dt_05 %>%select(DIA_04)%>%rename(COD=DIA_04)
+#CODIS_P5<-dt_05 %>%select(DIA_05)%>%rename(COD=DIA_05)
+#CODIS_P6<-dt_05 %>%select(DIA_06)%>%rename(COD=DIA_06)
+#CODIS_P7<-dt_05 %>%select(DIA_07)%>%rename(COD=DIA_07)
+#CODIS_P8<-dt_05 %>%select(DIA_08)%>%rename(COD=DIA_08)
+#CODIS_P9<-dt_05 %>%select(DIA_09)%>%rename(COD=DIA_09)
+#CODIS_P10<-dt_05 %>%select(DIA_10)%>%rename(COD=DIA_10)
+#CODIS_P11<-dt_05 %>%select(DIA_11)%>%rename(COD=DIA_11)
+#CODIS_P12<-dt_05 %>%select(DIA_12)%>%rename(COD=DIA_12)
+#CODIS_P13<-dt_05 %>%select(PROC_01)%>%rename(COD=PROC_01)
+#CODIS_P14<-dt_05 %>%select(PROC_02)%>%rename(COD=PROC_02)
+#CODIS_P15<-dt_05 %>%select(PROC_03)%>%rename(COD=PROC_03)
+#CODIS_P16<-dt_05 %>%select(PROC_04)%>%rename(COD=PROC_04)
+#CODIS_P17<-dt_05 %>%select(PROC_05)%>%rename(COD=PROC_05)
+#CODIS_P18<-dt_06 %>%select(DIA_PPAL)%>%rename(COD=DIA_PPAL)
+#CODIS_P19<-dt_06 %>%select(DIA_02)%>%rename(COD=DIA_02)
+#CODIS_P20<-dt_06 %>%select(DIA_03)%>%rename(COD=DIA_03)
+#CODIS_P21<-dt_06 %>%select(DIA_04)%>%rename(COD=DIA_04)
+#CODIS_P22<-dt_06 %>%select(DIA_05)%>%rename(COD=DIA_05)
+#CODIS_P23<-dt_06 %>%select(DIA_06)%>%rename(COD=DIA_06)
+#CODIS_P24<-dt_06 %>%select(DIA_07)%>%rename(COD=DIA_07)
+#CODIS_P25<-dt_06 %>%select(DIA_08)%>%rename(COD=DIA_08)
+#CODIS_P26<-dt_06 %>%select(DIA_09)%>%rename(COD=DIA_09)
+#CODIS_P27<-dt_06 %>%select(DIA_10)%>%rename(COD=DIA_10)
+#CODIS_P28<-dt_06 %>%select(DIA_11)%>%rename(COD=DIA_11)
+#CODIS_P29<-dt_06 %>%select(DIA_12)%>%rename(COD=DIA_12)
+#CODIS_P30<-dt_06 %>%select(DIA_13)%>%rename(COD=DIA_13)
+#CODIS_P31<-dt_06 %>%select(DIA_14)%>%rename(COD=DIA_14)
+#CODIS_P32<-dt_06 %>%select(DIA_15)%>%rename(COD=DIA_15)
+#CODIS_P33<-dt_06 %>%select(DIA_16)%>%rename(COD=DIA_16)
+#CODIS_P34<-dt_06 %>%select(DIA_17)%>%rename(COD=DIA_17)
+#CODIS_P35<-dt_06 %>%select(DIA_18)%>%rename(COD=DIA_18)
+#CODIS_P36<-dt_06 %>%select(DIA_19)%>%rename(COD=DIA_19)
+#CODIS_P37<-dt_06 %>%select(NEO_01)%>%rename(COD=NEO_01)
+#CODIS_P38<-dt_06 %>%select(NEO_02)%>%rename(COD=NEO_02)
+#CODIS_P39<-dt_06 %>%select(NEO_03)%>%rename(COD=NEO_03)
+#CODIS_P40<-dt_06 %>%select(NEO_04)%>%rename(COD=NEO_04)
+#CODIS_P41<-dt_06 %>%select(NEO_05)%>%rename(COD=NEO_05)
+#CODIS_P42<-dt_06 %>%select(NEO_06)%>%rename(COD=NEO_06)
+#CODIS_P43<-dt_06 %>%select(POAD_02)%>%rename(COD=POAD_02)
+#CODIS_P44<-dt_06 %>%select(POAD_03)%>%rename(COD=POAD_03)
+#CODIS_P45<-dt_06 %>%select(POAD_04)%>%rename(COD=POAD_04)
+#CODIS_P46<-dt_06 %>%select(POAD_05)%>%rename(COD=POAD_05)
+#CODIS_P47<-dt_06 %>%select(POAD_06)%>%rename(COD=POAD_06)
+#CODIS_P48<-dt_06 %>%select(POAD_07)%>%rename(COD=POAD_07)
+#CODIS_P49<-dt_06 %>%select(POAD_08)%>%rename(COD=POAD_08)
+#CODIS_P50<-dt_06 %>%select(POAD_09)%>%rename(COD=POAD_09)
+#CODIS_P51<-dt_06 %>%select(POAD_10)%>%rename(COD=POAD_10)
+#CODIS_P52<-dt_06 %>%select(POAD_11)%>%rename(COD=POAD_11)
+#CODIS_P53<-dt_06 %>%select(POAD_12)%>%rename(COD=POAD_12)
+#CODIS_P54<-dt_06 %>%select(POAD_13)%>%rename(COD=POAD_13)
+#CODIS_P55<-dt_06 %>%select(POAD_14)%>%rename(COD=POAD_14)
+#CODIS_P56<-dt_06 %>%select(POAD_15)%>%rename(COD=POAD_15)
+#CODIS_P57<-dt_06 %>%select(POAD_16)%>%rename(COD=POAD_16)
+#CODIS_P58<-dt_06 %>%select(POAD_17)%>%rename(COD=POAD_17)
+#CODIS_P59<-dt_06 %>%select(POAD_18)%>%rename(COD=POAD_18)
+#CODIS_P60<-dt_06 %>%select(POAD_19)%>%rename(COD=POAD_19)
+#CODIS_P61<-dt_06 %>%select(POAD_PPAL)%>%rename(COD=POAD_PPAL)
+#CODIS_P62<-dt_06 %>%select(PROC_01)%>%rename(COD=PROC_01)
+#CODIS_P63<-dt_06 %>%select(PROC_02)%>%rename(COD=PROC_02)
+#CODIS_P64<-dt_06 %>%select(PROC_03)%>%rename(COD=PROC_03)
+#CODIS_P65<-dt_06 %>%select(PROC_04)%>%rename(COD=PROC_04)
+#CODIS_P66<-dt_06 %>%select(PROC_05)%>%rename(COD=PROC_05)
+#CODIS_P67<-dt_06 %>%select(PROC_06)%>%rename(COD=PROC_06)
+#CODIS_P68<-dt_06 %>%select(PROC_07)%>%rename(COD=PROC_07)
+#CODIS_P69<-dt_06 %>%select(PROC_08)%>%rename(COD=PROC_08)
+#CODIS_P70<-dt_06 %>%select(PROC_09)%>%rename(COD=PROC_09)
+#CODIS_P71<-dt_06 %>%select(PROC_10)%>%rename(COD=PROC_10)
+#CODIS_P72<-dt_06 %>%select(PROC_11)%>%rename(COD=PROC_11)
+#CODIS_P73<-dt_06 %>%select(PROC_12)%>%rename(COD=PROC_12)
+#CODIS_P74<-dt_06 %>%select(PROC_13)%>%rename(COD=PROC_13)
+#CODIS_P75<-dt_06 %>%select(PROC_14)%>%rename(COD=PROC_14)
+#CODIS_P76<-dt_06 %>%select(PROC_15)%>%rename(COD=PROC_15)
+#CODIS_P77<-dt_06 %>%select(PROC_16)%>%rename(COD=PROC_16)
+#CODIS_P78<-dt_06 %>%select(PROC_17)%>%rename(COD=PROC_17)
+#CODIS_P79<-dt_06 %>%select(PROC_18)%>%rename(COD=PROC_18)
+#CODIS_P80<-dt_06 %>%select(PROC_19)%>%rename(COD=PROC_19)
+#CODIS_P81<-dt_06 %>%select(PROC_20)%>%rename(COD=PROC_20)
 #---------------------------------------------------------#
-CODIS<-CODIS_P1%>%
-  bind_rows(CODIS_P2)%>%
-  bind_rows(CODIS_P3)%>%
-  bind_rows(CODIS_P4)%>%
-  bind_rows(CODIS_P5)%>%
-  bind_rows(CODIS_P6)%>%
-  bind_rows(CODIS_P7)%>%
-  bind_rows(CODIS_P8)%>%
-  bind_rows(CODIS_P9)%>%
-  bind_rows(CODIS_P10)%>%
-  bind_rows(CODIS_P11)%>%
-  bind_rows(CODIS_P12)%>%
-  bind_rows(CODIS_P13)%>%
-  bind_rows(CODIS_P14)%>%
-  bind_rows(CODIS_P15)%>%
-  bind_rows(CODIS_P16)%>%
-  bind_rows(CODIS_P17)%>%
-  bind_rows(CODIS_P18)%>%
-  bind_rows(CODIS_P19)%>%
-  bind_rows(CODIS_P20)%>%
-  bind_rows(CODIS_P21)%>%
-  bind_rows(CODIS_P22)%>%
-  bind_rows(CODIS_P23)%>%
-  bind_rows(CODIS_P24)%>%
-  bind_rows(CODIS_P25)%>%
-  bind_rows(CODIS_P26)%>%
-  bind_rows(CODIS_P27)%>%
-  bind_rows(CODIS_P28)%>%
-  bind_rows(CODIS_P29)%>%
-  bind_rows(CODIS_P30)%>%
-  bind_rows(CODIS_P31)%>%
-  bind_rows(CODIS_P32)%>%
-  bind_rows(CODIS_P33)%>%
-  bind_rows(CODIS_P34)%>%
-  bind_rows(CODIS_P35)%>%
-  bind_rows(CODIS_P36)%>%
-  bind_rows(CODIS_P37)%>%
-  bind_rows(CODIS_P38)%>%
-  bind_rows(CODIS_P39)%>%
-  bind_rows(CODIS_P40)%>%
-  bind_rows(CODIS_P41)%>%
-  bind_rows(CODIS_P42)%>%
-  bind_rows(CODIS_P43)%>%
-  bind_rows(CODIS_P44)%>%
-  bind_rows(CODIS_P45)%>%
-  bind_rows(CODIS_P46)%>%
-  bind_rows(CODIS_P47)%>%
-  bind_rows(CODIS_P48)%>%
-  bind_rows(CODIS_P49)%>%
-  bind_rows(CODIS_P50)%>%
-  bind_rows(CODIS_P51)%>%
-  bind_rows(CODIS_P52)%>%
-  bind_rows(CODIS_P53)%>%
-  bind_rows(CODIS_P54)%>%
-  bind_rows(CODIS_P55)%>%
-  bind_rows(CODIS_P56)%>%
-  bind_rows(CODIS_P57)%>%
-  bind_rows(CODIS_P58)%>%
-  bind_rows(CODIS_P59)%>%
-  bind_rows(CODIS_P60)%>%
-  bind_rows(CODIS_P61)%>%
-  bind_rows(CODIS_P62)%>%
-  bind_rows(CODIS_P63)%>%
-  bind_rows(CODIS_P64)%>%
-  bind_rows(CODIS_P65)%>%
-  bind_rows(CODIS_P66)%>%
-  bind_rows(CODIS_P67)%>%
-  bind_rows(CODIS_P68)%>%
-  bind_rows(CODIS_P69)%>%
-  bind_rows(CODIS_P70)%>%
-  bind_rows(CODIS_P71)%>%
-  bind_rows(CODIS_P72)%>%
-  bind_rows(CODIS_P73)%>%
-  bind_rows(CODIS_P74)%>%
-  bind_rows(CODIS_P75)%>%
-  bind_rows(CODIS_P76)%>%
-  bind_rows(CODIS_P77)%>%
-  bind_rows(CODIS_P78)%>%
-  bind_rows(CODIS_P79)%>%
-  bind_rows(CODIS_P80)%>%
-  bind_rows(CODIS_P81)%>%
-  arrange(COD)%>%
-    group_by(COD)%>%
-        slice(1)%>% 
-          ungroup()%>%
-              select(COD)
-
-
+#CODIS<-CODIS_P1%>%
+#  bind_rows(CODIS_P2)%>%
+#  bind_rows(CODIS_P3)%>%
+#  bind_rows(CODIS_P4)%>%
+#  bind_rows(CODIS_P5)%>%
+#  bind_rows(CODIS_P6)%>%
+#  bind_rows(CODIS_P7)%>%
+#  bind_rows(CODIS_P8)%>%
+#  bind_rows(CODIS_P9)%>%
+#  bind_rows(CODIS_P10)%>%
+#  bind_rows(CODIS_P11)%>%
+#  bind_rows(CODIS_P12)%>%
+#  bind_rows(CODIS_P13)%>%
+#  bind_rows(CODIS_P14)%>%
+#  bind_rows(CODIS_P15)%>%
+#  bind_rows(CODIS_P16)%>%
+#  bind_rows(CODIS_P17)%>%
+#  bind_rows(CODIS_P18)%>%
+#  bind_rows(CODIS_P19)%>%
+#  bind_rows(CODIS_P20)%>%
+#  bind_rows(CODIS_P21)%>%
+#  bind_rows(CODIS_P22)%>%
+#  bind_rows(CODIS_P23)%>%
+#  bind_rows(CODIS_P24)%>%
+#  bind_rows(CODIS_P25)%>%
+#  bind_rows(CODIS_P26)%>%
+#  bind_rows(CODIS_P27)%>%
+#  bind_rows(CODIS_P28)%>%
+#  bind_rows(CODIS_P29)%>%
+#  bind_rows(CODIS_P30)%>%
+#  bind_rows(CODIS_P31)%>%
+#  bind_rows(CODIS_P32)%>%
+#  bind_rows(CODIS_P33)%>%
+#  bind_rows(CODIS_P34)%>%
+#  bind_rows(CODIS_P35)%>%
+#  bind_rows(CODIS_P36)%>%
+#  bind_rows(CODIS_P37)%>%
+#  bind_rows(CODIS_P38)%>%
+#  bind_rows(CODIS_P39)%>%
+#  bind_rows(CODIS_P40)%>%
+#  bind_rows(CODIS_P41)%>%
+#  bind_rows(CODIS_P42)%>%
+#  bind_rows(CODIS_P43)%>%
+#  bind_rows(CODIS_P44)%>%
+#  bind_rows(CODIS_P45)%>%
+#  bind_rows(CODIS_P46)%>%
+#  bind_rows(CODIS_P47)%>%
+#  bind_rows(CODIS_P48)%>%
+#  bind_rows(CODIS_P49)%>%
+#  bind_rows(CODIS_P50)%>%
+#  bind_rows(CODIS_P51)%>%
+#  bind_rows(CODIS_P52)%>%
+#  bind_rows(CODIS_P53)%>%
+#  bind_rows(CODIS_P54)%>%
+#  bind_rows(CODIS_P55)%>%
+#  bind_rows(CODIS_P56)%>%
+#  bind_rows(CODIS_P57)%>%
+#  bind_rows(CODIS_P58)%>%
+#  bind_rows(CODIS_P59)%>%
+#  bind_rows(CODIS_P60)%>%
+#  bind_rows(CODIS_P61)%>%
+#  bind_rows(CODIS_P62)%>%
+#  bind_rows(CODIS_P63)%>%
+#  bind_rows(CODIS_P64)%>%
+#  bind_rows(CODIS_P65)%>%
+#  bind_rows(CODIS_P66)%>%
+#  bind_rows(CODIS_P67)%>%
+#  bind_rows(CODIS_P68)%>%
+#  bind_rows(CODIS_P69)%>%
+#  bind_rows(CODIS_P70)%>%
+#  bind_rows(CODIS_P71)%>%
+#  bind_rows(CODIS_P72)%>%
+#  bind_rows(CODIS_P73)%>%
+#  bind_rows(CODIS_P74)%>%
+#  bind_rows(CODIS_P75)%>%
+#  bind_rows(CODIS_P76)%>%
+#  bind_rows(CODIS_P77)%>%
+#  bind_rows(CODIS_P78)%>%
+#  bind_rows(CODIS_P79)%>%
+#  bind_rows(CODIS_P80)%>%
+#  bind_rows(CODIS_P81)%>%
+#  arrange(COD)%>%
+#    group_by(COD)%>%
+#        slice(1)%>% 
+#          ungroup()%>%
+#              select(COD)
 #variable.names(CODIS)
 
   
 #-------------------------------------------------------------------------#  
 #-------------------------------------------------------------------------#  
 
-write.csv(CODIS, file="././output/CODIS.csv")
+#write.csv(CODIS, file="CODIS.csv")
 
 
+
+#rmarkdown::render(input="./codi/1_lectura_COVID3.Rmd",
 
 
 
@@ -1553,6 +1552,22 @@ GR2 <-GR2%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 GR3 <-GR3%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 
 
+# Didac: GRUP_A: i,ii,iii,iv  GRUP_B: v
+
+GRUP_A<-dt_plana_DM_agr1%>%
+  bind_rows(dt_plana_DM_agr2)%>%
+  bind_rows(dt_plana_DM_agr3)%>%
+  bind_rows(dt_plana_DM_agr4)%>%
+  arrange(idp)%>%
+  group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GRUP_A=1)
+
+GRUP_B<-dt_plana_DM_agr5%>%
+  arrange(idp)%>%
+  group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GRUP_B=1)
+
+
+
+
 #31.3.2021
 # MIRAR AQUI ,NO ESTAN REPETITS, OI?
 
@@ -1805,6 +1820,8 @@ dt_plana_covid_INGRES_agr3<-dt_plana_covid_INGRES_agr3%>%mutate(PATIENT.ID=idp)%
 C_DIABETICS_E10<-C_DIABETICS_E10%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 C_DIABETICS_E11<-C_DIABETICS_E11%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 
+GRUP_A<-GRUP_A%>%mutate(PATIENT.ID=idp)%>% select(-idp)
+GRUP_B<-GRUP_B%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 
 
 ```
@@ -1830,7 +1847,10 @@ TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID
                                  left_join(C_DIABETICS_E11,by="PATIENT.ID")%>%
                                  left_join(GR1,by="PATIENT.ID")%>%
                                  left_join(GR2,by="PATIENT.ID")%>%
-                                 left_join(GR3,by="PATIENT.ID")
+                                 left_join(GR3,by="PATIENT.ID")%>%
+                                 left_join(GRUP_A,by="PATIENT.ID")%>%
+                                 left_join(GRUP_B,by="PATIENT.ID")
+  
   
  
 
@@ -1860,6 +1880,24 @@ TAULA_PLANA<-TAULA_PLANA %>% mutate(
 #table(TAULA_PLANA$GRUP_DIABETIC_CAT)
 
 ################################################################
+
+################################################################
+
+# mirar tots els problemes de Salut :[[20_07_2020]]########################################
+#i)
+problemas_salut1<-dt_diagnostics%>%select(cod)%>%group_by(cod)%>%dplyr::slice(1)%>%ungroup()
+############################################################################################
+#ii)
+problemas_salut2<-dt_plana_covid2%>%select(ID_ATC5,ATC5_NOMBRE.NAME)%>%group_by(ID_ATC5)%>%dplyr::slice(1)%>%ungroup()
+############################################################################################
+#iii)
+problemas_salut3<-dt_plana_covid2%>%select(ID_ATC7,ATC7_NOMBRE.NAME)%>%group_by(ID_ATC7)%>%dplyr::slice(1)%>%ungroup()
+############################################################################################
+
+write.csv(problemas_salut1, file="Problemas_salut.csv")
+write.csv(problemas_salut2, file="FARMACS_ATC5.csv")
+write.csv(problemas_salut3, file="FARMACS_ATC7.csv")
+
 
 
 ```

@@ -16,9 +16,6 @@ output:
   pdf_document: default
   word_document: default
 
-params:
-  dir_dades: "dades" 
-  dir_dades_origen: "../../DADES/COVID_19/24_04_2020"
 ---
 
 &nbsp;
@@ -167,7 +164,7 @@ link_source<-paste0("https://github.com/jrealgatius/Stat_codis/blob/master/funci
 devtools::source_url(link_source)
 
 # directori_dades<-params$dir_dades
-directori_dades<-params$dir_dades
+#directori_dades<-params$dir_dades
 
 conductor<-here::here("conductor_Covid.xlsx")
 conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
@@ -240,10 +237,16 @@ TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM2") ),funs(ifelse(is.na
 #table(TAULA_PLANA$DM1.E10)
 #table(TAULA_PLANA$DM2.E11)
 
+#DM-article
+
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GR1") ),funs(ifelse(is.na(.),"No","Yes")))
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GR2") ),funs(ifelse(is.na(.),"No","Yes")))
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GR3") ),funs(ifelse(is.na(.),"No","Yes")))
 
+#DM-Didac!
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GRUP_A") ),funs(ifelse(is.na(.),"No","Yes")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GRUP_B") ),funs(ifelse(is.na(.),"No","Yes")))
 
 
 ```
@@ -445,10 +448,7 @@ TAULA_PLANA_exc_NO_DIAB<-TAULA_PLANA_exc%>%filter(G_DIABETIC=="No")
 
 
 
-TAULA_PLANA_exc<-TAULA_PLANA_exc%>% mutate(GRUP_DIABETIC_CAT=case_when(GRUP_DIABETIC_CAT==0~"No Diabetes",
-                                              GRUP_DIABETIC_CAT==1~"DM1",
-                                              GRUP_DIABETIC_CAT==2~"DM2",
-                                              GRUP_DIABETIC_CAT==3~"Others DM"))
+TAULA_PLANA_exc<-TAULA_PLANA_exc%>% mutate(GRUP_DIABETIC_CAT=case_when(GRUP_DIABETIC_CAT==0~"No Diabetes",GRUP_DIABETIC_CAT==1~"DM1",GRUP_DIABETIC_CAT==2~"DM2",GRUP_DIABETIC_CAT==3~"Others DM"))
 
 
 
@@ -543,43 +543,68 @@ table1::table1(~EDAD.AGE|G_DIABETIC,
 
 # Fer-ho!  12.05.2021
 
-formula1<-formula.text("Taula01B",y="GR1",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
-formula2<-formula.text("Taula01B",y="GR2",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
-formula3<-formula.text("Taula01B",y="GR3",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
+#formula1<-formula.text("Taula01B",y="GR1",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
+#formula2<-formula.text("Taula01B",y="GR2",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
+#formula3<-formula.text("Taula01B",y="GR3",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
+
+#formula4<-formula.text("Taula01B",y="GRUP_A",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
+#formula5<-formula.text("Taula01B",y="GRUP_B",taulavariables = conductor,dt=TAULA_PLANA_exc2) 
 
 
-descrTable(formula1,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 1c.DM Problemas de salut+Fármacos DM: Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
+#descrTable(formula1,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc2,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 1c.DM Problemas de salut+Fármacos DM: Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
 
 
-descrTable(formula2,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 1d.DM tengan Hemoglobina Glicosilada >=6.5 : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
+#descrTable(formula2,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc2,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 1d.DM tengan Hemoglobina Glicosilada >=6.5 : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
 
 
-descrTable(formula3,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 1d.DM administrados Insulina +Glucosa Màxima>=200 : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
+#descrTable(formula3,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc2,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 1e.DM administrados Insulina +Glucosa Màxima>=200 : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
 
+
+
+#descrTable(formula4,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc2,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 1f.DM Problema de salud+DM Fármaco+Hemoglobina Glicosilada>=6.5+DM administrados Insulina  : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
+
+
+#descrTable(formula5,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc2,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 1g.Glucosa Màxima>=200  : Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
 
 ```
 ### 2.1 Descriptiva  Problemas de salud
@@ -738,6 +763,74 @@ descrTable(formula,
 
 
 
+
+formula1<-formula.text("Taula08",y="GR1",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+formula2<-formula.text("Taula08",y="GR2",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+formula3<-formula.text("Taula08",y="GR3",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+
+formula4<-formula.text("Taula08",y="GRUP_A",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+formula5<-formula.text("Taula08",y="GRUP_B",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+
+# Taules Article!:
+
+descrTable(formula1,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=TAULA_PLANA_exc,
+                 max.xlev = 100, 
+                 show.p.overall=FALSE,
+                 show.n = T,
+                 hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6i.Eventos y complicaciones.DM Problemas de salut+Fármacos DM.**")
+
+
+descrTable(formula2,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=TAULA_PLANA_exc2,
+                 max.xlev = 100, 
+                 show.p.overall=FALSE,
+                 show.n = T,
+                 hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6ii.Eventos y complicaciones.DM tengan Hemoglobina Glicosilada >=6.5.**")
+
+
+descrTable(formula3,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=TAULA_PLANA_exc2,
+                 max.xlev = 100, 
+                 show.p.overall=FALSE,
+                 show.n = T,
+                 hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6iii.Eventos y complicaciones.DM administrados Insulina +Glucosa Màxima>=200.**")
+
+
+# Taules Didac:
+
+descrTable(formula4,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=TAULA_PLANA_exc2,
+                 max.xlev = 100, 
+                 show.p.overall=FALSE,
+                 show.n = T,
+               hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6iv.Eventos y complicaciones.DM Problema de salud+DM Fármaco+Hemoglobina Glicosilada>=6.5+DM administrados Insulina.**")
+
+
+descrTable(formula5,
+                 method =2,
+                 Q1 = 0, Q3 = 1,
+                 data=TAULA_PLANA_exc2,
+                 max.xlev = 100, 
+                 show.p.overall=FALSE,
+                 show.n = T,
+                 hide.no="No",simplify=F) %>% 
+  export2md(caption="**TABLA 6v.Eventos y complicaciones.Glucosa Màxima>=200.**")
+
+
+
 formula<-formula.text("Taula08",y="SEXO.SEX",taulavariables = conductor,dt = TAULA_PLANA_exc_DIAB)
 descrTable(formula,
                          method =2,
@@ -793,6 +886,7 @@ descrTable(formula,
                          show.n = T,
                          hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 6d. Eventos y complicaciones  en pacientes no diabéticos <=65 años, > 65 años **")
+
 
 
 
