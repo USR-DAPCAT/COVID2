@@ -1329,7 +1329,10 @@ dt_plana_covid56_gather2<-dt_plana_covid5_gather2%>%bind_rows(dt_plana_covid6_ga
 dt_plana_DM_agr1<-agregar_problemes(select(dt_plana_covid56_gather2,idp,cod,dat),
                                     bd.dindex = "20000601",
                                     dt.agregadors=select(dt_cataleg2,cod,agr=agr5),
-                                    finestra.dies=c(-Inf,Inf),prefix = "DM.") 
+                                    finestra.dies=c(-Inf,Inf),prefix = "DM_P.") 
+
+
+
 #----------------------------------------------------------------------------#
 #dt_plana_DM_agr1
 #----------------------------------------------------------------------------#
@@ -1414,7 +1417,7 @@ dt_plana_covid2B<-dt_plana_covid2%>% transmute(idp=PATIENT.ID,cod=as.character(I
 dt_plana_DM_agr2<-agregar_problemes(select(dt_plana_covid2B,idp,cod,dat),
                                     bd.dindex = "20000601",
                                     dt.agregadors=select(dt_cataleg2,cod,agr=agr5),
-                                    finestra.dies=c(-Inf,Inf),prefix = "DM.") 
+                                    finestra.dies=c(-Inf,Inf),prefix = "DM_F.") 
 #----------------------------------------------------------------------------#
 GRUP2<-dt_plana_covid2B%>%inner_join(dt_plana_DM_agr2,by="idp")%>%select(idp,cod)
 GRUP2<-GRUP2%>%inner_join(CATAL,by="cod")
@@ -1444,7 +1447,7 @@ dt_plana_DM_agr3                   <-dt_plana_covid4_agr_B
 dt_plana_DM_agr3$valor             <-as.double(dt_plana_DM_agr3$valor)
 dt_plana_DM_agr3<-dt_plana_DM_agr3%>% filter(cod=="HBA1C_" & valor >=6.5 )
 GRUP3<-dt_plana_DM_agr3%>%select(PATIENT.ID,valor, cod)
-dt_plana_DM_agr3<-dt_plana_DM_agr3%>% transmute(idp=PATIENT.ID,dtindex="20000601", DM.DM="20200520")
+dt_plana_DM_agr3<-dt_plana_DM_agr3%>% transmute(idp=PATIENT.ID,dtindex="20000601", DM.GLI="20200520")
 dt_plana_DM_agr3$idp<-as.numeric(dt_plana_DM_agr3$idp)
 
 
@@ -1482,7 +1485,8 @@ dt_plana_DM_agr4<-agregar_problemes(select(DIA_INDEX2,idp,cod,dat),
                                     dt.agregadors=select(dt_cataleg2,cod,agr=agr6),
                                     finestra.dies=c(0,1),prefix = "Far.") 
 
-dt_plana_DM_agr4<-dt_plana_DM_agr4%>%transmute(idp,dtindex,DG.DM=Far.INSU)
+#AQUI FER-HO!
+dt_plana_DM_agr4<-dt_plana_DM_agr4%>%transmute(idp,dtindex,DM.INSU=Far.INSU)
 
 
 #-------------------------------------------------------#
@@ -1503,16 +1507,13 @@ GRUP4<-DIA_INDEX2%>%inner_join(dt_plana_DM_agr4,by="idp")%>%inner_join(CATAL_INS
 dt_plana_DM_agr5<-dt_plana_covid4_agr3%>%select(PATIENT.ID,max_pacient_valor_GLU_)
 GRUP5<-dt_plana_DM_agr5%>% filter(max_pacient_valor_GLU_>=200 )
 dt_plana_DM_agr5<-dt_plana_DM_agr5%>% filter(max_pacient_valor_GLU_>=200 )
-dt_plana_DM_agr5<-dt_plana_DM_agr5%>%transmute(idp=PATIENT.ID)
+dt_plana_DM_agr5<-dt_plana_DM_agr5%>%transmute(idp=PATIENT.ID,DM.GLU_MAX=max_pacient_valor_GLU_)
 dt_plana_DM_agr5$idp<-as.numeric(dt_plana_DM_agr5$idp)
 #-------------------------------------------------------#
 
 
-#table(dt_plana_DM_agr1$idp)
-#table(dt_plana_DM_agr2$idp)
-#table(dt_plana_DM_agr3$idp)
-#table(dt_plana_DM_agr4$idp)
-#table(dt_plana_DM_agr5$idp)
+
+
 
 
 #-----------------------------------------------------------------------------------------------------#
@@ -1531,6 +1532,10 @@ C_DIABETICS<-dt_plana_DM_agr1%>%
 # GRUP1:dt_plana_DM_agr1+dt_plana_DM_agr2
 # GRUP2:dt_plana_DM_agr3
 # GRUP3:dt_plana_DM_agr4+dt_plana_DM_agr5
+
+
+
+
 
 GR1<-dt_plana_DM_agr1%>%
   bind_rows(dt_plana_DM_agr2)%>%
@@ -1554,18 +1559,44 @@ GR3 <-GR3%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 
 # Didac: GRUP_A: i,ii,iii,iv  GRUP_B: v
 
+#[]
+
+#@raypuig@gmail.com , se tiene que calcular , excluyendo los que tienen código DM
+#S'ha assignat a l'usuari actual
+#
+
+#GRUP_A sujetos con código diagnostico de DM y/o tratamiento y/o glicada (HbA1C=>6.5) 
+
+#GRUP_B con stress hiperglicemia, 
+#que incluye  los pacientes con serum glucose en inclusion >=200 y /o inslulin en primeros 24 h ,
+#(Ojo: excluyendo los sujetos con código diagnostico de DM y/o tratamiento y/o glicada (HbA1C=>6.5))
+#
+#Tienen que ser excluyentes y sumar el numero total que tenemos de DM ahora 448
+
+
+#GRUP_A
+#table(dt_plana_DM_agr1$idp)::PROBLEMES  
+#table(dt_plana_DM_agr2$idp)::Farmacs
+#table(dt_plana_DM_agr3$idp)::Cod=="HBA1C_" & valor >=6.5 
+
+#GRUP_B
+#table(dt_plana_DM_agr4$idp)::Far.INSU 24 hores.
+#table(dt_plana_DM_agr5$idp)::Max_pacient_valor_GLU_>=200 
+
+
 GRUP_A<-dt_plana_DM_agr1%>%
   bind_rows(dt_plana_DM_agr2)%>%
   bind_rows(dt_plana_DM_agr3)%>%
-  bind_rows(dt_plana_DM_agr4)%>%
   arrange(idp)%>%
   group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GRUP_A=1)
 
 GRUP_B<-dt_plana_DM_agr5%>%
+  bind_rows(dt_plana_DM_agr4)%>%
   arrange(idp)%>%
   group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GRUP_B=1)
 
 
+# DG.DM // max_pacient_valor_GLU_
 
 
 #31.3.2021
@@ -1823,6 +1854,33 @@ C_DIABETICS_E11<-C_DIABETICS_E11%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 GRUP_A<-GRUP_A%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 GRUP_B<-GRUP_B%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 
+#############
+#[19.5.2021]#
+#############
+
+dt_plana_DM_agr1b<-dt_plana_DM_agr1%>%arrange(idp)%>%
+  group_by(idp)%>% slice(1) %>% ungroup() 
+
+dt_plana_DM_agr2b<-dt_plana_DM_agr2%>%arrange(idp)%>%
+  group_by(idp)%>% slice(1) %>% ungroup()
+
+dt_plana_DM_agr3b<-dt_plana_DM_agr3%>%arrange(idp)%>%
+  group_by(idp)%>% slice(1) %>% ungroup() 
+
+dt_plana_DM_agr4b<-dt_plana_DM_agr4%>%arrange(idp)%>%
+  group_by(idp)%>% slice(1) %>% ungroup() 
+
+dt_plana_DM_agr5b<-dt_plana_DM_agr5%>%arrange(idp)%>%
+  group_by(idp)%>% slice(1) %>% ungroup() 
+
+
+#######################################################################################
+dt_plana_DM_agr1b<-dt_plana_DM_agr1b%>%mutate(PATIENT.ID=idp)%>% select(-idp,-dtindex)
+dt_plana_DM_agr2b<-dt_plana_DM_agr2b%>%mutate(PATIENT.ID=idp)%>% select(-idp,-dtindex)
+dt_plana_DM_agr3b<-dt_plana_DM_agr3b%>%mutate(PATIENT.ID=idp)%>% select(-idp,-dtindex)
+dt_plana_DM_agr4b<-dt_plana_DM_agr4b%>%mutate(PATIENT.ID=idp)%>% select(-idp,-dtindex)
+dt_plana_DM_agr5b<-dt_plana_DM_agr5b%>%mutate(PATIENT.ID=idp)%>% select(-idp)
+#######################################################################################
 
 ```
 
@@ -1849,8 +1907,12 @@ TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID
                                  left_join(GR2,by="PATIENT.ID")%>%
                                  left_join(GR3,by="PATIENT.ID")%>%
                                  left_join(GRUP_A,by="PATIENT.ID")%>%
-                                 left_join(GRUP_B,by="PATIENT.ID")
-  
+                                 left_join(GRUP_B,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_DM_agr1b,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_DM_agr2b,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_DM_agr3b,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_DM_agr4b,by="PATIENT.ID")%>%
+                                 left_join(dt_plana_DM_agr5b,by="PATIENT.ID")
   
  
 
@@ -1911,9 +1973,6 @@ write.csv(problemas_salut3, file="FARMACS_ATC7.csv")
 #variable.names(dt_01)
 #table(dt_01$F_INGRESO.ADMISSION_D_ING.INPAT)
 #5.2.2020/25.4.2020
-
-
-
 
 save(TAULA_PLANA,CVD
      ,file=here::here("COVID1.Rdata"))

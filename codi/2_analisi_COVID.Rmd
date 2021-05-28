@@ -220,7 +220,8 @@ load(here::here("COVID1.Rdata"))
 
 ```{r recodes1}
 
-#TAULA_PLANA
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate(GLU_MAX=DM.GLU_MAX)
 
 #Hem canviat el Yes!
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DG.") ),funs(ifelse(is.na(.),"No","Yes")))
@@ -234,8 +235,24 @@ TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("CVD.") ),funs(ifelse(is.n
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM1") ),funs(ifelse(is.na(.),"No","Yes")))
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM2") ),funs(ifelse(is.na(.),"No","Yes")))
 
-#table(TAULA_PLANA$DM1.E10)
-#table(TAULA_PLANA$DM2.E11)
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM_P") ),funs(ifelse(is.na(.),0,1)))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM_F") ),funs(ifelse(is.na(.),0,1)))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM.GLI") ),funs(ifelse(is.na(.),0,1)))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM.INSU") ),funs(ifelse(is.na(.),0,1)))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("DM.GLU_MAX") ),funs(ifelse(is.na(.),0,1)))
+
+
+
+table(TAULA_PLANA$DM_P.DM)
+table(TAULA_PLANA$DM_F.DM)
+table(TAULA_PLANA$DM.GLI)
+table(TAULA_PLANA$DM.INSU)
+table(TAULA_PLANA$DM.GLU_MAX)
+
+
+
+
 
 #DM-article
 
@@ -245,8 +262,139 @@ TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GR3") ),funs(ifelse(is.na
 
 #DM-Didac!
 
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GRUP_A") ),funs(ifelse(is.na(.),"No","Yes")))
-TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GRUP_B") ),funs(ifelse(is.na(.),"No","Yes")))
+#max_pacient_valor_GLU_>=200
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GRUP_A") ),funs(ifelse(is.na(.) ,"No","Yes")))
+TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GRUP_B") ),funs(ifelse(is.na(.) ,"No","Yes")))
+
+table(TAULA_PLANA$G_DIABETIC)
+table(TAULA_PLANA$GRUP_A)
+table(TAULA_PLANA$GRUP_B)
+
+# canvi 18.5.2021
+
+table(TAULA_PLANA$GRUP_B)
+
+#GRUP_A<-dt_plana_DM_agr1%>%
+#  bind_rows(dt_plana_DM_agr2)%>%
+#  bind_rows(dt_plana_DM_agr3)%>%
+#  arrange(idp)%>%
+#  group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GRUP_A=1)
+
+#GRUP_B<-dt_plana_DM_agr5%>%
+#  bind_rows(dt_plana_DM_agr4)%>%
+#  arrange(idp)%>%
+#  group_by(idp)%>% slice(1) %>% ungroup() %>%select(idp)%>%mutate(GRUP_B=1)
+
+table(TAULA_PLANA$DM_P.DM)
+table(TAULA_PLANA$DM_F.DM)
+table(TAULA_PLANA$DM.GLI)
+table(TAULA_PLANA$DM.INSU)
+table(TAULA_PLANA$DM.GLU_MAX)
+
+TAULA_PLANA$GRUP_A<-ifelse( (TAULA_PLANA$DM_P.DM==1  | TAULA_PLANA$DM_F.DM==1  | TAULA_PLANA$DM.GLI==1 )  
+                            & (TAULA_PLANA$DM.INSU==0)  & (TAULA_PLANA$DM.GLU_MAX==0), "Si","No") 
+                           
+                            
+TAULA_PLANA$GRUP_B<-ifelse((TAULA_PLANA$DM.INSU==1  | TAULA_PLANA$DM.GLU_MAX==1   )  
+                            & (TAULA_PLANA$DM_P.DM==0)  & (TAULA_PLANA$DM_F.DM==0) & (TAULA_PLANA$DM.GLI==0)  , "Si","No") 
+                            
+
+
+
+
+
+
+#  mutate(
+#    type = case_when(
+#      height > 200 | mass > 200 ~ "large",
+#      species == "Droid"        ~ "robot",
+#      TRUE                      ~  "other"
+#    )
+#  )
+
+
+#TAULA_PLANA$GRUP_C <- NULL 
+#TAULA_PLANA$GRUP_D <- NULL 
+#TAULA_PLANA$GRUP_E <- NULL 
+
+
+#TAULA_PLANA<-TAULA_PLANA%>%mutate(
+#            GRUP_C=case_when(
+#            ((DM_P.DM==1 | DM_F.DM==1 | DM.GLI==1) &  DM.INSU==0 & DM.GLU_MAX==0) ~"Grupo_DM_Far_Glic",
+#            ((DM_P.DM==0 & DM_F.DM==0 & DM.GLI==0) & (DM.INSU==1 | DM.GLU_MAX==1)) ~"Grupo_Insul_Glu_max",
+#            (DM_P.DM==1 | DM_F.DM==1 | DM.GLI==1 |  DM.INSU==1 | DM.GLU_MAX==1) ~"Altres_Dm",
+#            TRUE~  "No Dm"))
+
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate(
+                  GRUP_D=case_when(
+                  ((DM_P.DM==1 | DM_F.DM==1 | DM.GLI==1)) ~"Grupo DM+Far+Glic",
+                  (is.na(G_DIABETIC)) ~"Grupo No DM",
+                  TRUE             ~  "Grupo  No DM+Far+Glic"))
+
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate(
+                  GRUP_E=case_when(
+                  ((DM_P.DM==0 & DM_F.DM==0 & DM.GLI==0) & (DM.INSU==1 | DM.GLU_MAX==1)) ~"Grupo Stress hiperglicemia",
+                  (is.na(G_DIABETIC)) ~"Grupo No DM",
+                  TRUE~  "Grupo No Stress hiperglicemia"))
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate(
+                  GRUP_F=case_when(
+                  ((DM.INSU==1 | DM.GLU_MAX==1)) ~"Grupo Stress hiperglicemia",
+                  (is.na(G_DIABETIC)) ~"Grupo No DM",
+                  TRUE~  "Grupo No Stress hiperglicemia"))
+
+
+TAULA_PLANA<-TAULA_PLANA%>%mutate(
+                  GRUP_G=case_when(
+                  ((DM_P.DM==1 | DM_F.DM==1 | DM.GLI==1)) ~"Grupo DM+Far+Glic",
+                  ((DM_P.DM==0 & DM_F.DM==0 & DM.GLI==0) & (DM.INSU==1 | DM.GLU_MAX==1)) ~"Grupo Stress hiperglicemia",
+                  (is.na(G_DIABETIC)) ~"Grupo No DM"))
+                  
+DT_TEMP<-TAULA_PLANA%>%select(PATIENT.ID,DM_P.DM,DM_F.DM,DM.GLI,DM.INSU,DM.GLU_MAX,GRUP_D,GRUP_E,GRUP_F,G_DIABETIC)
+
+
+#table(TAULA_PLANA$DM_P.DM)
+#table(TAULA_PLANA$DM_F.DM)
+#table(TAULA_PLANA$DM.GLI)
+#table(TAULA_PLANA$DM.INSU)
+#table(TAULA_PLANA$DM.GLU_MAX)
+#table(TAULA_PLANA$GRUP_D)
+#table(TAULA_PLANA$GRUP_E)
+#table(TAULA_PLANA$GRUP_F)
+
+#table(TAULA_PLANA$GRUP_C)
+#table(TAULA_PLANA$GRUP_D)
+#table(TAULA_PLANA$GRUP_E)
+
+#Gracias Ray, 
+#creo que no te llego el comentario de Google doc, pero, lo que decía Didac es crear 2 grupos:
+
+#Punto 1.
+
+#solo habrá que tener 2 grupos:  
+
+#Un grupo de preexisting diabetes que incluye: 
+# sujetos con código diagnostico de DM y/o tratamiento y/o glicada (HbA1C=>6.5) 
+
+#Grupo con stress hiperglicemia, 
+#que incluye  los pacientes con serum glucose en inclusion >=200 y /o inslulin en primeros 24 h ,
+
+#Ojo: excluyendo los sujetos con código diagnostico de DM y/o tratamiento y/o glicada (HbA1C=>6.5)
+
+#Tienen que ser excluyentes y sumar el numero total que tenemos de DM ahora 448
+
+
+#table(TAULA_PLANA$GRUP_D,TAULA_PLANA$GRUP_E)
+#                       
+#                        Grupo No DM Grupo No Stress hiperglicemia Grupo Stress hiperglicemia
+#  Grupo  No DM+Far+Glic           0                             0                        150
+#  Grupo DM+Far+Glic               0                           332                          0
+#  Grupo No DM                  1824                             0                          0
+##################################################
+
 
 
 ```
@@ -257,11 +405,8 @@ TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("GRUP_B") ),funs(ifelse(is
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV1.") ),funs(ifelse(is.na(.),"No","Yes")))
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV2.") ),funs(ifelse(is.na(.),"No","Yes")))
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("EV3.") ),funs(ifelse(is.na(.),"No","Yes")))
-
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("G_DIABETIC") ),funs(ifelse(is.na(.),"No","Yes")))
-
 TAULA_PLANA<-TAULA_PLANA%>%mutate_at(vars(starts_with("Neurologic_Comp") ),funs(ifelse(is.na(.),"No","Yes")))
-
 
 ```
 
@@ -294,8 +439,6 @@ TAULA_PLANA$agecat2<-ifelse(TAULA_PLANA$EDAD.AGE>=61,"2",TAULA_PLANA$agecat2)
 
 
 ## 1.Flow Chart
-
-
 
 ```{r flow_chart, include = TRUE,message = FALSE,warning = FALSE,echo = FALSE}
 #flow chartS : eps m'ha fallat!!! 
@@ -343,17 +486,17 @@ criteris_exclusio_diagrama(dt=TAULA_PLANA,
 
 
 
-criteris_exclusio_diagrama2(dt=TAULA_PLANA,
-                                        taulavariables=conductor,
-                                        criteris = "exc_pre",
-                                        ordre="exc_ordre",
-                                        grups="G_DIABETIC",
-                                        etiquetes="descripcio2",
-                                        sequencial = T,
-                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
-                                        colors=c("white","grey"),
-                                        POB=2306 ,
-                                        POB_LAB="Covid Data Save Lives ")
+#criteris_exclusio_diagrama2(dt=TAULA_PLANA,
+#                                        taulavariables=conductor,
+#                                        criteris = "exc_pre",
+#                                        ordre="exc_ordre",
+#                                        grups="G_DIABETIC",
+#                                        etiquetes="descripcio2",
+#                                        sequencial = T,
+#                                        pob_lab=c("Covid Data Save Lives","Muestra con Covid positivo"),
+#                                        colors=c("white","grey"),
+#                                        POB=2306 ,
+#                                        POB_LAB="Covid Data Save Lives ")
 
 # prova!
 
@@ -379,6 +522,40 @@ criteris_exclusio_diagrama2(dt=TAULA_PLANA,
 
 TAULA_PLANA_exc<-criteris_exclusio(TAULA_PLANA,taulavariables=conductor,criteris="exc_pre")
 
+DT_TEMP2<-TAULA_PLANA_exc%>%select(PATIENT.ID,DM.GLU_MAX,GRUP_G,DM_P.DM,DM_F.DM,DM.INSU,GLU_MAX)
+
+#Glicemia >550!
+
+table(DT_TEMP2$GLU_MAX)
+
+
+
+DT_TEMP2$GRUP_550<-ifelse(DT_TEMP2$GLU_MAX<=550 |  is.na(DT_TEMP2$GLU_MAX),0,1)
+
+table(DT_TEMP2$GLU_MAX)
+table(DT_TEMP2$GRUP_550,DT_TEMP2$GRUP_G)
+
+########################################################################################
+# Grupo                        DM+Far+Glic Grupo No DM Grupo Stress hiperglicemia
+#  Glicemia <=550 OR Na         301        1621             145
+#  Glicemia >550                 1           0               1
+#########################################################################################
+
+# els màxims valors:
+
+# 516   
+# 531   
+# 538 
+# 550.9 
+# 686.9 
+
+
+
+#dt_plana_DM_agr5<-dt_plana_DM_agr5%>% filter(max_pacient_valor_GLU_>=200 )
+
+
+#prova:
+#temp<-TAULA_PLANA_exc%>%filter(GRUP_B=="Yes")%>%select(PATIENT.ID,GRUP_B,max_pacient_valor_GLU_,DM_P.DM,DM_F.DM)
 
 #table(TAULA_PLANA_exc$DM1.E10)
 #table(TAULA_PLANA_exc$DM2.E11)
@@ -403,7 +580,7 @@ TAULA_PLANA_exc<-TAULA_PLANA_exc%>%
 ```
 
 
-```{r taules9, include = FALSE}
+```{r preparacio5, include = FALSE}
 
 TAULA_PLANA_exc$agecat<-9999
 
@@ -429,7 +606,7 @@ TAULA_PLANA_exc$Death2<-ifelse(TAULA_PLANA_exc$Death=="Yes",1,0)
 ```
 
 
-```{r fusio_dt_general, include=FALSE}
+```{r preparacio6, include=FALSE}
 
 #mirar-ho!! ull parlar amb en Jordi tema etiquetar variables i etiquetar valors?
 
@@ -452,6 +629,9 @@ TAULA_PLANA_exc<-TAULA_PLANA_exc%>% mutate(GRUP_DIABETIC_CAT=case_when(GRUP_DIAB
 
 
 
+
+
+
 ```
 
 
@@ -459,6 +639,18 @@ TAULA_PLANA_exc<-TAULA_PLANA_exc%>% mutate(GRUP_DIABETIC_CAT=case_when(GRUP_DIAB
 
 
 ```{r resultats1, include=T}
+
+
+hist(DT_TEMP2$GLU_MAX,
+     main="Distribucion de los valores de la Glicemia Max",
+     xlab="Valor max de la Glicemia   ",
+     ylab="Frecuencia ",
+     col="green",
+     freq=T,
+     xlim=c(120,700) ,
+     ylim=c(0,25) ,
+     breaks = 100,
+         )
 
 
 #CVD#
@@ -470,6 +662,7 @@ descrTable(formula,method =2,
            max.xlev = 100, 
            show.p.overall=TRUE,
            show.n = T,
+           show.all=T,
            hide.no="No",
            simplify=F) %>% 
   export2md(caption="**TABLA CVD.**")
@@ -493,6 +686,7 @@ descrTable(DIAB_GRUP,method =1,
            max.xlev = 100, 
            show.p.overall=FALSE,
            show.n = T,
+           show.all=T,
            simplify=F) %>% 
   export2md(caption="TABLA 0. Type of DIABETES.")
 
@@ -506,6 +700,7 @@ descrTable(formula,method =2,
            max.xlev = 100, 
            show.p.overall=TRUE,
            show.n = T,
+           show.all=T,
            hide.no="No",
            simplify=F) %>% 
   export2md(caption="**TABLA 1a. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso,  si ha habido, datos del paso por UCI, si ha habido.Todos los pacientes.**")
@@ -532,6 +727,7 @@ descrTable(formula,
                  max.xlev = 100, 
                  show.p.overall=FALSE,
                  show.n = T,
+                 show.all=T,
                  hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 1b. Registros de pacientes ingresados: Demográficos, datos del episodio del ingreso, datos del episodio de urgencias previo, si ha habido, datos del paso por UCI, si ha habido.SOLO URGENCIAS.**")
 
@@ -625,6 +821,7 @@ descrTable(formula,
                 max.xlev = 100, 
                 show.p.overall=TRUE,
                 show.n = T,
+                show.all=T,
                 hide.no="No",simplify=F) %>% 
   export2md(caption="**Tabla 2a. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
 
@@ -639,6 +836,7 @@ descrTable(formula,
                 max.xlev = 100, 
                 show.p.overall=TRUE,
                 show.n = T,
+                show.all=T,
                 hide.no="No",simplify=F) %>% 
   export2md(caption="**Tabla 2b. Registros de la codificación de la urgencia e  ingreso según la CIE10.Todos los pacientes.**") 
 
@@ -658,6 +856,7 @@ descrTable(formula,
                  max.xlev = 100, 
                  show.p.overall=TRUE,
                  show.n = T,
+                 show.all=T,
                  hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 3.Registros de las constantes vitales  durante el ingreso(no se recogen las de UCI),con la función!.**")
 
@@ -683,6 +882,7 @@ descrTable(formula,
                 max.xlev = 100, 
                 show.p.overall=TRUE,
                 show.n = T,
+                show.all=T,
                 hide.no="No",simplify=F,digits = 2) %>% 
   export2md(caption="**TABLA 4. Registros de los resultados de peticiones de laboratorio realizadas durante el ingreso,con la función!.**")
 
@@ -708,6 +908,7 @@ descrTable(formula,
                 max.xlev = 100, 
                 show.p.overall=TRUE,
                 show.n = T,
+                show.all=T,
                 hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 5a. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
 
@@ -722,6 +923,7 @@ descrTable(formula,
                 max.xlev = 100, 
                 show.p.overall=TRUE,
                 show.n = T,
+                show.all=T,
                 hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 5b. Registros de la medicacion pautada y administrada durante el ingreso (no se recoge la medicación de UCI).**")
 
@@ -758,8 +960,9 @@ descrTable(formula,
                          max.xlev = 100, 
                          show.p.overall=TRUE,
                          show.n = T,
+                         show.all=T,
                          hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 6.Eventos y complicaciones  en pacientes diabéticos i no diabéticos **")
+  export2md(caption="**TABLA 6i.Eventos y complicaciones  en pacientes diabéticos i no diabéticos **")
 
 
 
@@ -771,65 +974,91 @@ formula3<-formula.text("Taula08",y="GR3",taulavariables = conductor,dt=TAULA_PLA
 formula4<-formula.text("Taula08",y="GRUP_A",taulavariables = conductor,dt=TAULA_PLANA_exc) 
 formula5<-formula.text("Taula08",y="GRUP_B",taulavariables = conductor,dt=TAULA_PLANA_exc) 
 
+formula6<-formula.text("Taula08",y="GRUP_D",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+formula7<-formula.text("Taula08",y="GRUP_E",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+
+formula8<-formula.text("Taula08",y="GRUP_G",taulavariables = conductor,dt=TAULA_PLANA_exc) 
+
+
 # Taules Article!:
 
-descrTable(formula1,
+#descrTable(formula1,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 6i.Eventos y complicaciones.DM Problemas de salut+Fármacos DM.**")
+
+
+#descrTable(formula2,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 6ii.Eventos y complicaciones.DM tengan Hemoglobina Glicosilada >=6.5.**")
+
+
+#descrTable(formula3,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 6iii.Eventos y complicaciones.DM administrados Insulina +Glucosa Màxima>=200.**")
+
+
+# Taules Didac:
+
+
+
+
+#descrTable(formula6,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#               hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 6ii.Eventos y complicaciones.DM Problema de salud+DM Fármaco+Hemoglobina Glicosilada>=6.5.**")
+#
+#
+#descrTable(formula7,
+#                 method =2,
+#                 Q1 = 0, Q3 = 1,
+#                 data=TAULA_PLANA_exc,
+#                 max.xlev = 100, 
+#                 show.p.overall=FALSE,
+#                 show.n = T,
+#                 hide.no="No",simplify=F) %>% 
+#  export2md(caption="**TABLA 6iii.Eventos y complicaciones.Stress hiperglicemia.**")
+#
+#########################################################################################################################
+
+
+descrTable(formula8,
                  method =2,
                  Q1 = 0, Q3 = 1,
                  data=TAULA_PLANA_exc,
                  max.xlev = 100, 
                  show.p.overall=FALSE,
                  show.n = T,
+                 show.all=T,
                  hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 6i.Eventos y complicaciones.DM Problemas de salut+Fármacos DM.**")
+  export2md(caption="**TABLA 6i.Eventos y complicaciones.DM Problema de salud+DM Fármaco+Hemoglobina Glicosilada>=6.5.Stress hiperglicemia.**")
 
 
-descrTable(formula2,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 6ii.Eventos y complicaciones.DM tengan Hemoglobina Glicosilada >=6.5.**")
 
 
-descrTable(formula3,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 6iii.Eventos y complicaciones.DM administrados Insulina +Glucosa Màxima>=200.**")
-
-
-# Taules Didac:
-
-descrTable(formula4,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-               hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 6iv.Eventos y complicaciones.DM Problema de salud+DM Fármaco+Hemoglobina Glicosilada>=6.5+DM administrados Insulina.**")
-
-
-descrTable(formula5,
-                 method =2,
-                 Q1 = 0, Q3 = 1,
-                 data=TAULA_PLANA_exc2,
-                 max.xlev = 100, 
-                 show.p.overall=FALSE,
-                 show.n = T,
-                 hide.no="No",simplify=F) %>% 
-  export2md(caption="**TABLA 6v.Eventos y complicaciones.Glucosa Màxima>=200.**")
-
-
+#########################################################################################################################
 
 formula<-formula.text("Taula08",y="SEXO.SEX",taulavariables = conductor,dt = TAULA_PLANA_exc_DIAB)
 descrTable(formula,
@@ -839,6 +1068,7 @@ descrTable(formula,
                          max.xlev = 100, 
                          show.p.overall=TRUE,
                          show.n = T,
+                         show.all=T,
                          hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 6a. Eventos y complicaciones  en pacientes diabéticos+Sexo **")
 
@@ -852,6 +1082,7 @@ descrTable(formula,
                          max.xlev = 100, 
                          show.p.overall=TRUE,
                          show.n = T,
+                         show.all=T,
                          hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 6b. Eventos y complicaciones  en pacientes No diabéticos+Sexo **")
 
@@ -869,6 +1100,7 @@ descrTable(formula,
                          max.xlev = 100, 
                          show.p.overall=TRUE,
                          show.n = T,
+                         show.all=T,
                          hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 6b. Eventos y complicaciones  en pacientes diabéticos <=65 años, > 65 años **")
 
@@ -884,6 +1116,7 @@ descrTable(formula,
                          max.xlev = 100, 
                          show.p.overall=TRUE,
                          show.n = T,
+                         show.all=T,
                          hide.no="No",simplify=F) %>% 
   export2md(caption="**TABLA 6d. Eventos y complicaciones  en pacientes no diabéticos <=65 años, > 65 años **")
 
@@ -931,6 +1164,17 @@ descrTable(formula,
 #table(TAULA_PLANA_exc$DG2.HTA)
 #table(TAULA_PLANA_exc$DG2.Hyperlip)
 
+#--------------------------------------------------------------------#
+test_HL<-function(model){
+  
+  
+  pp<-hoslem.test(model$y, fitted(model))
+  round(pp$p.value,2)  
+  
+  }
+#--------------------------------------------------------------------#
+
+
 
 c("ajuste1","ajuste2","ajuste3") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
@@ -939,6 +1183,26 @@ c("ajuste1","ajuste2","ajuste3") %>%
                     title = "Mortality models",
                     p.style = "numeric_stars")
 
+#hoslem.test(TAULA_PLANA_exc$Death2, fitted(k1))
+
+library(rcompanion)
+library(lmtest)
+library(ResourceSelection) 
+library("kableExtra")
+
+#https://rcompanion.org/rcompanion/e_06.html
+
+ajuste_A<-c("ajuste1","ajuste2","ajuste3") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial"))
+
+
+names(ajuste_A)<-c(" M1 "," M2 "," M3 ")
+map_df(ajuste_A,~test_HL(.x)) %>% kable(caption = "The Hosmer–Lemeshow test P-Value")%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+
+
 
 c("ajuste4","ajuste5","ajuste6") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
@@ -946,6 +1210,18 @@ c("ajuste4","ajuste5","ajuste6") %>%
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M4", "M5","M6"),
                     title = "Mortality models",
                     p.style = "numeric_stars")
+
+ajuste_B<-c("ajuste4","ajuste5","ajuste6") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) 
+
+
+
+names(ajuste_B)<-c(" M4 "," M5 "," M6 ")
+map_df(ajuste_B,~test_HL(.x)) %>% kable(caption = "The Hosmer–Lemeshow test P-Value")%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+
 ```
 
 
@@ -960,6 +1236,18 @@ c("ajuste1","ajuste2","ajuste3") %>%
                     title = "Death or Invasive mechanical ventilation models",
                     p.style = "numeric_stars")
 
+
+ajuste_C<-c("ajuste1","ajuste2","ajuste3") %>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial"))
+
+
+
+names(ajuste_C)<-c(" M1 "," M2 "," M3 ")
+map_df(ajuste_C,~test_HL(.x))%>% kable(caption = "The Hosmer–Lemeshow test P-Value")%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+
 c("ajuste4","ajuste5","ajuste6") %>% 
   map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
@@ -967,9 +1255,18 @@ c("ajuste4","ajuste5","ajuste6") %>%
                     title = "Death or Invasive mechanical ventilation models",
                     p.style = "numeric_stars")
 
+ajuste_D<-c("ajuste4","ajuste5","ajuste6") %>% 
+  map(~formula.text(.x,"Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial"))
+
+
+names(ajuste_D)<-c(" M4 "," M5 "," M6 ")
+map_df(ajuste_D,~test_HL(.x))%>% kable(caption = "The Hosmer–Lemeshow test P-Value")%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+
 
 ```
-
 
 ### 3.2 Modelos finales de Mortalidad población total 
 
@@ -1001,7 +1298,21 @@ list(M1_Exitus,M2_VM) %>%
  list(M1_Exitus,M2_VM) %>% 
   sjPlot::plot_models(prefix.labels = "label",show.p = T,m.labels = c("Death", "Death or Invasive mechanical ventilation"))
 
+ 
+	
+ 
+ajuste_E<-formula.text("ajuste7","Death2",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+test_HL(ajuste_E)%>% kable(caption = "M7.Death.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
 
+ajuste_F<-formula.text("ajuste7","Death_DG.Mechanical_ventialtion=='Yes'",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% glm(data = TAULA_PLANA_exc, family = "binomial") 
+test_HL(ajuste_F)%>% kable(caption = "M7.Death or Invasive mechanical ventilation.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+ 
+ 
+ 
 # I N T E R E C C I O N E S:[]
  
 #Supplementary table 3. 4 Mortality Model evaluating Diabetes and Obesity interactions
@@ -1048,6 +1359,14 @@ list(M1_Exitus_INTERECCIONS1) %>%
  
  
  
+ajuste_G<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.OB",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+test_HL(ajuste_G)%>% kable(caption = "Mortality model evaluating diabetes and Obesity interactions.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+
+
 #Supplementary table 3. 5 Mortality Model evaluating Diabetes and Hyperlipidemia interactions
 #
 #Diabetes (yes)
@@ -1084,6 +1403,14 @@ list(M1_Exitus_INTERECCIONS2) %>%
                     p.style = "numeric_stars") 
 
 
+
+ 
+ajuste_H<-formula.text("ajuste7","Death2",a="G_DIABETIC*DG2.Hyperlip",taulavariables = conductor,dt=TAULA_PLANA_exc)%>% 
+  glm(data = TAULA_PLANA_exc, family = "binomial") 
+
+
+test_HL(ajuste_H)%>% kable(caption = "Mortality model evaluating diabetes and Hyperlipidemia interactions.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
 
 
  
@@ -1125,6 +1452,10 @@ list(M1_Exitus_INTERECCIONS3) %>%
 
 
 
+test_HL(M1_Exitus_INTERECCIONS3)%>% kable(caption = "Mortality model evaluating diabetes and Heart failure interactions.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+
 
 #Supplementary table 3. 7 Mortality Model evaluating Diabetes, obesity and hyperlipidemia interactions
 #   
@@ -1163,6 +1494,9 @@ list(M1_Exitus_INTERECCIONS4) %>%
                     p.style = "numeric_stars") 
 
 
+
+test_HL(M1_Exitus_INTERECCIONS4)%>% kable(caption = "Mortality model evaluating diabetes, obesity and hyperlipidemia interactions.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
 
 
 
@@ -1203,6 +1537,12 @@ list(M1_Exitus_INTERECCIONS5) %>%
                     title = "Mortality model evaluating diabetes, and chronic renal insufficiency",
                     p.style = "numeric_stars") 
 
+
+
+test_HL(M1_Exitus_INTERECCIONS5)%>% kable(caption = "Mortality model evaluating diabetes, and chronic renal insufficiency.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+
  
 #Supplementary table 3. 9 Mortality Model evaluating Diabetes, and COPD
 #
@@ -1239,7 +1579,13 @@ list(M1_Exitus_INTERECCIONS6) %>%
                     title = "Mortality model evaluating diabetes, and COPD",
                     p.style = "numeric_stars") 
 
-    
+  
+
+
+test_HL(M1_Exitus_INTERECCIONS6)%>% kable(caption = "Mortality model evaluating diabetes, and COPD.The Hosmer–Lemeshow test P-Value",col.names=c("P-Value"))%>%
+kable_styling(bootstrap_options = "striped", font_size = 12)
+
+  
 
 ```
 
@@ -1283,6 +1629,10 @@ split(TAULA_PLANA_exc,TAULA_PLANA_exc$DG2.DM) %>%
                       legend.title = "Subgroup",
                       title = "Mortality odds ratio model evaluating  with diabetes and without diabetes",
                       m.labels = c("Without diabetes", "Diabetes"))
+
+
+
+
 
 
 ```
